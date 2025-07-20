@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1571,6 +1572,12 @@
             } else {
                 data.fotoName = '';
                 data.fotoUrl = '';
+            }
+
+            // Eliminar el objeto File original del objeto 'data' antes de enviarlo a Firestore
+            // Esto es crucial porque Firestore no puede almacenar objetos File directamente.
+            if (data.foto && typeof data.foto === 'object' && data.foto instanceof File) {
+                delete data.foto;
             }
 
             data.timestamp = new Date().toISOString();
