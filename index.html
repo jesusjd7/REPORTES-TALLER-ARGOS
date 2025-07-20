@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -217,7 +216,7 @@
             <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Datos de REPORTE</h3>
 
             <!-- Botón Descargar Excel -->
-            <div class="flex justify-center mb-6">
+            <div id="downloadExcelContainer" class="flex justify-center mb-6">
                 <button id="downloadExcel"
                         class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     Descargar Excel
@@ -254,6 +253,41 @@
                 </table>
             </div>
             <p id="userIdDisplay" class="text-sm text-gray-600 text-center mt-4">ID de Usuario: Cargando...</p>
+        </div>
+
+        <!-- Nueva Vista: Todos los Reportes (Inicialmente oculta) -->
+        <div id="allReportsView" style="display: none;">
+            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Todos los Reportes de Talleres</h3>
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Origen</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conjunto</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parte</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estandar</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción Detallada</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
+                            <th scope="col" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teléfono</td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (URL/Nombre)</th>
+                            <th scope="col" class="relative px-6 py-3">
+                                <span class="sr-only">Acciones</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="allReportsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Los datos se cargarán aquí mediante JavaScript -->
+                        <tr>
+                            <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando todos los reportes...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-sm text-gray-600 text-center mt-4">ID de Usuario: Cargando...</p>
         </div>
     </div>
 
@@ -1083,11 +1117,18 @@
                     if (user) {
                         userId = user.uid;
                         document.getElementById('userIdDisplay').textContent = `ID de Usuario: ${userId}`;
+                        // También actualiza el ID de usuario en la vista de "Todos los Reportes" si está visible
+                        if (document.getElementById('allReportsView').style.display === 'block') {
+                            document.querySelector('#allReportsView p.text-sm').textContent = `ID de Usuario: ${userId}`;
+                        }
                         console.log('Firebase autenticado con UID:', userId);
                         // No cambiar la vista aquí, la vista la controla el login de la app
                     } else {
                         userId = null;
                         document.getElementById('userIdDisplay').textContent = 'ID de Usuario: No autenticado';
+                        if (document.getElementById('allReportsView').style.display === 'block') {
+                            document.querySelector('#allReportsView p.text-sm').textContent = 'ID de Usuario: No autenticado';
+                        }
                         console.log('Firebase: Usuario desautenticado.');
                     }
                 });
@@ -1138,10 +1179,14 @@
         const parteSelect = document.getElementById('parte'); 
         const textoEstandarSelect = document.getElementById('textoEstandar'); 
         const dataTableBody = document.getElementById('dataTableBody');
+        const downloadExcelContainer = document.getElementById('downloadExcelContainer'); // Contenedor del botón
         const downloadExcelBtn = document.getElementById('downloadExcel');
         const workshopSelectionView = document.getElementById('workshopSelectionView');
         const formView = document.getElementById('formView');
         const backToMenuBtn = document.getElementById('backToMenuBtn');
+        const allReportsView = document.getElementById('allReportsView'); // Nueva vista para todos los reportes
+        const allReportsTableBody = document.getElementById('allReportsTableBody'); // tbody para la tabla de todos los reportes
+
 
         // Popula los datos de talleres para KAEL con la estructura completa
         const equiposKael = [
@@ -1210,6 +1255,7 @@
             loginView.style.display = 'flex'; // Usa flex para centrar
             workshopSelectionView.style.display = 'none';
             formView.style.display = 'none';
+            allReportsView.style.display = 'none'; // Oculta la nueva vista
             mainPageTitle.textContent = ''; // Título vacío para la vista de inicio de sesión
             reportSubtitle.style.display = 'none'; // Oculta el subtítulo
             leftHeaderElements.style.display = 'none'; // Oculta elementos izquierdos
@@ -1221,6 +1267,7 @@
             loginView.style.display = 'none';
             workshopSelectionView.style.display = 'grid'; // Usa grid para las tarjetas
             formView.style.display = 'none';
+            allReportsView.style.display = 'none'; // Oculta la nueva vista
             mainPageTitle.textContent = 'TALLER'; // Título para la selección de taller
             reportSubtitle.style.display = 'none'; // Oculta el subtítulo
             leftHeaderElements.style.display = 'none'; // Oculta elementos izquierdos
@@ -1234,6 +1281,7 @@
             loginView.style.display = 'none';
             workshopSelectionView.style.display = 'none';
             formView.style.display = 'block';
+            allReportsView.style.display = 'none'; // Oculta la nueva vista
             mainPageTitle.textContent = workshopDisplayNames[currentWorkshop]; // Título para la vista del formulario
             reportSubtitle.style.display = 'block'; // Muestra el subtítulo "REPORTE"
             leftHeaderElements.style.display = 'flex'; // Muestra elementos izquierdos
@@ -1242,6 +1290,33 @@
             truckIcon.style.display = 'block'; // Asegura que el icono del camión sea visible
             argosLogo.style.display = 'block'; // Asegura que el logo de Argos sea visible
             logoutBtn.style.display = 'none'; // Oculta el botón de cerrar sesión en la vista del formulario
+
+            // Controla la visibilidad del botón de descarga de Excel
+            if (loggedInUser === "ARGOS") {
+                downloadExcelContainer.style.display = 'flex'; // Mostrar para ARGOS
+            } else {
+                downloadExcelContainer.style.display = 'none'; // Ocultar para otros talleres
+            }
+        }
+
+        function showAllReportsView() {
+            loginView.style.display = 'none';
+            workshopSelectionView.style.display = 'none';
+            formView.style.display = 'none';
+            allReportsView.style.display = 'block'; // Mostrar la nueva vista de todos los reportes
+            mainPageTitle.textContent = 'Todos los Reportes'; // Título para esta vista
+            reportSubtitle.style.display = 'block'; // Mantener el subtítulo "REPORTE"
+            leftHeaderElements.style.display = 'flex'; // Mostrar elementos izquierdos
+            rightHeaderElements.style.display = 'flex'; // Mostrar elementos derechos
+            backToMenuBtn.style.display = 'block'; // Mostrar botón de retroceso
+            truckIcon.style.display = 'block'; // Mostrar icono del camión
+            argosLogo.style.display = 'block'; // Mostrar logo de Argos
+            logoutBtn.style.display = 'none'; // Ocultar botón de cerrar sesión
+
+            // Ocultar el botón de descarga de Excel en esta vista si es necesario, o mantenerlo si ARGOS lo necesita aquí
+            downloadExcelContainer.style.display = 'none'; // No hay descarga directa desde aquí, se podría añadir si se requiere un excel consolidado
+
+            loadAllReportsData(); // Cargar todos los datos para esta vista
         }
 
         // --- Lógica de Inicio de Sesión ---
@@ -1303,14 +1378,14 @@
 
         // URLs de imágenes de talleres (marcadores de posición, reemplazar con tus imágenes reales)
         const workshopImages = {
-            "KAEL": { src: "https://placehold.co/150x150/e0f2f7/0288d1?text=KAEL", alt: "Logo KAEL" }, 
-            "ABFREN": { src: "https://placehold.co/150x150/ffe0b2/e65100?text=ABFREN", alt: "Logo ABFREN" }, 
-            "SOMEC": { src: "https://placehold.co/150x150/c8e6c9/2e7d32?text=SOMEC", alt: "Logo SOMEC" },
-            "DRACSO": { src: "https://placehold.co/150x150/ffcdd2/c62828?text=DRACSO", alt: "Logo DRACSO" },
-            "JS OUT": { src: "https://placehold.co/150x150/e1bee7/6a1b9a?text=JS+OUT", alt: "Logo JS OUT" },
-            "MG": { src: "https://placehold.co/150x150/bbdefb/1565c0?text=MG+SOL", alt: "Logo MG SOL" }, 
-            "SIMIYP": { src: "https://placehold.co/150x150/d1c4e9/4527a0?text=SIMIYP", alt: "Logo SIMIYP" },
-            "SERVII": { src: "https://placehold.co/150x150/b2dfdb/00695c?text=SERVII", alt: "Logo SERVII" } 
+            "KAEL": { src: "image_7a6b82.png", alt: "Logo KAEL" }, 
+            "ABFREN": { src: "image_7a7668.png", alt: "Logo ABFREN" }, 
+            "SOMEC": { src: "image_7a76a4.png", alt: "Logo SOMEC" },
+            "DRACSO": { src: "image_6f2c46.png", alt: "Logo DRACSO" },
+            "JS OUT": { src: "image_6f8a19.png", alt: "Logo JS OUT" },
+            "MG": { src: "image_6f9980.png", alt: "Logo MG SOL" }, 
+            "SIMIYP": { src: "image_6fa080.png", alt: "Logo SIMIYP" },
+            "SERVII": { src: "image_6eb83d.png", alt: "Logo SERVII" } 
         };
 
         // --- Inicializa la Aplicación basada en el Taller ---
@@ -1337,7 +1412,28 @@
             let workshopsToDisplay = [];
 
             if (loggedInUser === "ARGOS") {
-                workshopsToDisplay = allWorkshops; // ARGOS ve todos los talleres
+                workshopsToDisplay = allWorkshops;
+                // Añadir tarjeta "Todos los Reportes" para ARGOS
+                const allReportsCard = document.createElement('div');
+                allReportsCard.className = `
+                    bg-blue-100 rounded-lg shadow-md p-4 flex flex-col items-center justify-center
+                    cursor-pointer hover:bg-blue-200 hover:shadow-lg transition ease-in-out duration-150
+                    border border-blue-300
+                `;
+                allReportsCard.addEventListener('click', () => showAllReportsView());
+
+                const icon = document.createElement('span');
+                icon.className = 'text-4xl mb-3'; // Icono más grande
+                icon.innerHTML = '📊'; // Un icono emoji adecuado para informes
+
+                const name = document.createElement('p');
+                name.textContent = 'Todos los Reportes';
+                name.className = 'text-lg font-semibold text-blue-800 text-center';
+
+                allReportsCard.appendChild(icon);
+                allReportsCard.appendChild(name);
+                workshopSelectionView.appendChild(allReportsCard);
+
             } else {
                 // Otros usuarios solo ven su taller específico
                 if (allWorkshops.includes(loggedInUser)) {
@@ -1544,6 +1640,83 @@
                 `;
             });
         }
+
+        // --- Carga de TODOS los Datos desde Firestore (para la vista de ARGOS) ---
+        async function loadAllReportsData() {
+            allReportsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando todos los reportes...</td>
+                </tr>
+            `;
+
+            const allData = [];
+            const fetchPromises = allWorkshops.map(async (workshopName) => {
+                const workshopCollectionRef = collection(db, `/artifacts/${appId}/public/data/${workshopName.toLowerCase()}_registros`);
+                try {
+                    const querySnapshot = await getDocs(workshopCollectionRef);
+                    querySnapshot.forEach(doc => {
+                        allData.push({ id: doc.id, workshop: workshopName, ...doc.data() }); // Añadir el nombre del taller
+                    });
+                } catch (error) {
+                    console.error(`Error fetching data for ${workshopName}:`, error);
+                }
+            });
+
+            await Promise.all(fetchPromises);
+
+            allReportsTableBody.innerHTML = ''; // Limpiar mensaje de carga
+            if (allData.length === 0) {
+                allReportsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay reportes disponibles.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            allData.forEach((data) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.workshop || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${data.fotoUrl ? `<a href="${data.fotoUrl}" target="_blank" class="text-blue-600 hover:underline">Ver Foto</a>` : (data.fotoName || 'N/A')}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button data-id="${data.id}" data-workshop="${data.workshop}" class="delete-all-btn px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
+                    </td>
+                `;
+                allReportsTableBody.appendChild(row);
+            });
+
+            // Añadir event listeners para los botones de eliminar en la tabla de todos los reportes
+            document.querySelectorAll('.delete-all-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const docId = e.target.dataset.id;
+                    const workshopName = e.target.dataset.workshop; // Obtener el nombre del taller del atributo de datos
+                    console.log(`Intento de eliminar registro con ID: ${docId} del taller: ${workshopName}`);
+                    try {
+                        await deleteDoc(doc(db, `/artifacts/${appId}/public/data/${workshopName.toLowerCase()}_registros`, docId));
+                        console.log('Documento eliminado con éxito:', docId);
+                        // Recargar todos los reportes después de la eliminación
+                        loadAllReportsData();
+                    } catch (error) {
+                        console.error('Error al eliminar documento:', error);
+                    }
+                });
+            });
+        }
+
 
         // --- Manejador de Envío de Formulario ---
         dataForm.addEventListener('submit', async (e) => {
