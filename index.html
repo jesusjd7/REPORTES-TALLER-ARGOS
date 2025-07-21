@@ -12,11 +12,17 @@
         /* Estilos generales del cuerpo */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff; /* Fondo blanco */
+            background-image: url('FONDO.png'); /* Ruta de la imagen de fondo */
+            background-size: cover; /* La imagen cubrirá todo el área */
+            background-position: center; /* Centra la imagen de fondo */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            background-attachment: fixed; /* La imagen de fondo se mantiene fija al hacer scroll */
+            background-color: transparent; /* Fondo transparente para que la imagen sea visible */
         }
         /* Contenedor principal para centrar el contenido */
         .container {
             max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con ligera transparencia para el contenido */
         }
         /* Estilos personalizados para la barra de desplazamiento de la tabla */
         ::-webkit-scrollbar {
@@ -1904,3 +1910,4 @@
     </script>
 </body>
 </html>
+
