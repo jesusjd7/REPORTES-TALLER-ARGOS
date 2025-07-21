@@ -58,9 +58,8 @@
                 <button id="backToMenuBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     ATRAS
                 </button>
-                <!-- Aumentado el tamaño del icono del camión a h-16 -->
-                <!-- Asegúrate de que 'truck_icon.png' sea el nombre exacto del archivo en tu GitHub -->
-                <img id="truckIcon" src="truck_icon.png" alt="Camión Icono" class="h-16 w-auto">
+                <!-- Icono del camión: Cambiado de 'truck_icon.png' a 'LOGO-CAMION.png' para coincidir con el repositorio de GitHub -->
+                <img id="truckIcon" src="LOGO-CAMION.png" alt="Camión Icono" class="h-16 w-auto">
             </div>
 
             <!-- Título principal de la página, dinámico (centrado) -->
@@ -68,9 +67,8 @@
             
             <!-- Contenedor para elementos derechos (Logo Argos y Botón Cerrar Sesión) -->
             <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2" style="display: none;">
-                <!-- Asegurado que el logo de Argos se muestre -->
-                <!-- Asegúrate de que 'LOGOARGOS.png' sea el nombre exacto del archivo en tu GitHub -->
-                <img id="argosLogo" src="LOGOARGOS.png" alt="Logo Argos" class="h-8 w-auto">
+                <!-- Logo Argos: Cambiado de 'LOGOARGOS.png' a 'LOGOARGOS.jpg' para coincidir con el repositorio de GitHub -->
+                <img id="argosLogo" src="LOGOARGOS.jpg" alt="Logo Argos" class="h-8 w-auto">
                 <button id="logoutBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     Cerrar Sesión
                 </button>
@@ -1407,14 +1405,14 @@
 
         // URLs de imágenes de talleres (marcadores de posición, reemplazar con tus imágenes reales)
         const workshopImages = {
-            "KAEL": { src: "LOGOKAEL.png", alt: "Logo KAEL" },
-            "ABFREN": { src: "image_7a7668.png", alt: "Logo ABFREN" },
-            "SOMEC": { src: "image_7a76a4.png", alt: "Logo SOMEC" },
-            "DRACSO": { src: "LOGODRACSO.png", alt: "Logo DRACSO" },
-            "JS OUT": { src: "image_6f8a19.png", alt: "Logo JS OUT" },
-            "MG": { src: "image_6f9980.png", alt: "Logo MG SOL" },
-            "SIMIYP": { src: "image_6fa080.png", alt: "Logo SIMIYP" },
-            "SERVII": { src: "image_6eb83d.png", alt: "Logo SERVII" }
+            "KAEL": { src: "LOGOKAEL.jpg", alt: "Logo KAEL" }, // Corregido a .jpg
+            "ABFREN": { src: "LOGOABFREN.png", alt: "Logo ABFREN" }, // Corregido de placeholder
+            "SOMEC": { src: "LOGOSOMEC.png", alt: "Logo SOMEC" }, // Corregido de placeholder
+            "DRACSO": { src: "https://placehold.co/96x96/e0e0e0/000000?text=DRACSO", alt: "Logo DRACSO" }, // Placeholder, no encontrado en repo
+            "JS OUT": { src: "LOGOJS.png", alt: "Logo JS OUT" }, // Corregido de placeholder
+            "MG": { src: "LOGOMG.png", alt: "Logo MG SOL" }, // Corregido de placeholder
+            "SIMIYP": { src: "LOGOSIMIYP.png", alt: "Logo SIMIYP" }, // Corregido de placeholder
+            "SERVII": { src: "https://placehold.co/96x96/e0e0e0/000000?text=SERVII", alt: "Logo SERVII" } // Placeholder, no encontrado en repo
         };
 
         // --- Inicializa la Aplicación basada en el Taller ---
@@ -1906,4 +1904,3 @@
     </script>
 </body>
 </html>
-
