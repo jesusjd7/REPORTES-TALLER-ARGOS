@@ -1239,7 +1239,7 @@
         }
 
 
-        // Popula los datos de talleres para KAEL con la estructura completa
+        // Popula los datos de equipos para KAEL
         const equiposKael = [
             "COLMX0361", "COLMX0362", "COLMX0383", "COLMX0390", "COLMX0399", "COLMX0402", "COLMX0406", "COLMX0419",
             "COLMX0420", "COLMX0424", "COLMX0426", "COLMX0432", "COLMX0437", "COLMX0445", "COLMX0448", "COLMX0451",
@@ -1266,17 +1266,8 @@
         // Datos para EQUIPO, CONJUNTO, PARTE y TEXTO ESTANDAR de cada taller.
         // Esta estructura se llenará con los datos proporcionados.
         const allWorkshopsData = {
-            "KAEL": {
-                // Equipos para KAEL (poblados dinámicamente)
-            },
-            "ABFREN": {
-                "Maquinaria A": {
-                    "Motor A1": {
-                        "Cilindro A1": ["Revisar presión", "Cambiar sello"],
-                        "Biela A2": ["Ajustar", "Lubricar"]
-                    }
-                }
-            },
+            "KAEL": {},
+            "ABFREN": {},
             "SOMEC": {}, 
             "DRACSO": {}, 
             "JS OUT": {}, 
@@ -1285,21 +1276,20 @@
             "SERVII": {}  
         };
 
-        equiposKael.forEach(equipo => {
-            allWorkshopsData["KAEL"][equipo] = {};
-            // Popula los Conjuntos para cada Equipo
-            for (const conjuntoName in conjuntoToParteMap) {
-                if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
-                    allWorkshopsData["KAEL"][equipo][conjuntoName] = {};
-                    // Popula las Partes para cada Conjunto
-                    conjuntoToParteMap[conjuntoName].forEach(parteName => {
-                        // Asigna Texto Estandar del nuevo mapa, o un valor por defecto si no se encuentra
-                        allWorkshopsData["KAEL"][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
-                    });
+        // Populate all workshops with the same data structure as KAEL
+        for (const workshopKey in allWorkshopsData) {
+            equiposKael.forEach(equipo => {
+                allWorkshopsData[workshopKey][equipo] = {};
+                for (const conjuntoName in conjuntoToParteMap) {
+                    if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
+                        allWorkshopsData[workshopKey][equipo][conjuntoName] = {};
+                        conjuntoToParteMap[conjuntoName].forEach(parteName => {
+                            allWorkshopsData[workshopKey][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
+                        });
+                    }
                 }
-            }
-        });
-
+            });
+        }
 
         // --- Funciones de Gestión de Vistas ---
         function showLoginView() {
@@ -1928,3 +1918,4 @@
     </script>
 </body>
 </html>
+
