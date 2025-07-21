@@ -21,9 +21,27 @@
         }
         /* Contenedor principal para centrar el contenido */
         .container {
-            max-width: 900px;
+            /* Ajusta el ancho máximo para que el fondo se vea más */
+            max-width: 90%; /* Ajustado para que el fondo sea más visible */
             background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con ligera transparencia para el contenido */
+            padding: 1.5rem; /* Espaciado interno */
         }
+
+        /* Ajuste específico para la vista de inicio de sesión */
+        #loginView {
+            max-width: 400px; /* Ajusta este valor para controlar el tamaño del cuadro blanco */
+            margin: auto; /* Centra el cuadro blanco */
+            background-color: white; /* Asegura que el fondo sea blanco */
+            padding: 2rem; /* Añade un poco de padding */
+            border-radius: 0.5rem; /* Bordes redondeados */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+        /* Estilos para las tarjetas de selección de taller */
+        #workshopSelectionView .card {
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con ligera transparencia para las tarjetas */
+        }
+
         /* Estilos personalizados para la barra de desplazamiento de la tabla */
         ::-webkit-scrollbar {
             width: 8px;
@@ -1910,4 +1928,3 @@
     </script>
 </body>
 </html>
-
