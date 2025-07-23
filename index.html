@@ -319,6 +319,7 @@
         let dataCollectionRef; // Reference to the Firestore collection
         let unsubscribeSnapshot = null; // To store the unsubscribe function for real-time listener
         let loggedInUser = null; // To store the username of the logged-in user
+        let isAuthReady = false; // New flag to track authentication status
 
         // --- DOM Elements ---
         const appContainer = document.getElementById('appContainer'); // Main application container
@@ -1216,19 +1217,20 @@
                 userId = user.uid;
                 document.getElementById('userIdDisplay').textContent = `ID de Usuario: ${userId}`;
                 console.log('Firebase initialized and user authenticated:', userId);
-                // After Firebase auth, show login view initially
-                showLoginView();
+                isAuthReady = true; // Set auth ready flag
+                showLoginView(); // Show login view initially
             } else {
-                // Sign in anonymously if no custom token is provided or if it fails
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
                     } else {
                         await signInAnonymously(auth);
                     }
+                    // onAuthStateChanged will be triggered again with the user object after successful sign-in
                 } catch (error) {
                     console.error("Error signing in to Firebase:", error);
                     document.getElementById('userIdDisplay').textContent = 'Error authenticating.';
+                    isAuthReady = false; // Auth failed
                     showLoginView(); // Still show login view even if anonymous auth fails
                 }
             }
@@ -1465,9 +1467,24 @@
                 unsubscribeSnapshot(); // Unsubscribe from previous listener if any
             }
 
+            if (!isAuthReady) { // Check if auth is ready
+                console.warn("Authentication not ready. Cannot load data yet.");
+                dataTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Esperando autenticación...</td>
+                    </tr>
+                `;
+                return;
+            }
+
             // Ensure dataCollectionRef is set before subscribing
             if (!dataCollectionRef) {
-                console.warn("dataCollectionRef is not defined. Waiting for authentication.");
+                console.warn("dataCollectionRef is not defined. This should be set by initApp.");
+                dataTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Seleccione un taller para cargar datos.</td>
+                    </tr>
+                `;
                 return;
             }
 
