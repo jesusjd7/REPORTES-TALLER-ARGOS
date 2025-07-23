@@ -11,7 +11,11 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Changed background from image to solid color as Firebase Storage is not used */
+            background-image: url('uploaded:image_c70201.png-b05c21ef-a29b-44f8-b2f0-be5ded1754a7'); /* Assuming FONDO.png is the correct background image */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-position: center center; /* Center the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
             background-color: #f3f4f6; /* Fallback color */
             display: flex; /* Use flexbox for body to control content alignment */
             align-items: center; /* Center content vertically by default */
@@ -338,7 +342,7 @@
 
         // Workshop image URLs (using contentFetchId for uploaded images)
         const workshopImages = {
-            "KAEL": { src: "uploaded:image_d511bf.png-576df45a-cc7b-4ad1-875a-e2a795e0c0b1", alt: "Logo KAEL" },
+            "KAEL": { src: "uploaded:image_d511bf.png-576df45a-cc7b-4ad5-875a-e2a795e0c0b1", alt: "Logo KAEL" },
             "ABFREN": { src: "uploaded:image_e55c90.png-95852ca7-bd44-41cd-bf86-1870e98048d9", alt: "Logo ABFREN" },
             "SOMEC": { src: "uploaded:image_d42d7a.png-aac7793e-55de-4cee-b5b5-9ff05bf26570", alt: "Logo SOMEC" },
             "DRACSO": { src: "uploaded:image_d5f791.png-35f9f1e5-b8a8-4383-8768-cad9ce8bdc34", alt: "Logo DRACSO" },
