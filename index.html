@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,11 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-image: url('FONDO.png'); /* Assuming FONDO.png is in the same directory or accessible path */
-            background-size: cover; /* Cover the entire background */
-            background-repeat: no-repeat; /* Do not repeat the image */
-            background-position: center center; /* Center the image */
-            background-attachment: fixed; /* Keep background fixed when scrolling */
+            /* Changed background from image to solid color as Firebase Storage is not used */
             background-color: #f3f4f6; /* Fallback color */
             display: flex; /* Use flexbox for body to control content alignment */
             align-items: center; /* Center content vertically by default */
@@ -84,8 +79,8 @@
     <div id="loginView" class="flex flex-col items-center justify-center p-8 w-full">
         <!-- New wrapper for login box styling -->
         <div class="border border-black rounded-lg p-6 shadow-xl bg-white max-w-sm w-full mx-auto">
-            <!-- Updated Login Truck Image -->
-            <img src="CAMION.png" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
+            <!-- Updated Login Truck Image using contentFetchId -->
+            <img src="uploaded:image_a33d11.png-9df482c0-dc3d-4168-8feb-74b2d19ee436" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
             <div class="w-full">
                 <div class="mb-4">
@@ -236,7 +231,7 @@
                            class="inline-flex items-center px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer">
                         Añadir Foto
                     </label>
-                    <p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes requiere Firebase Storage.</p>
+                    <p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes no es compatible con el almacenamiento local.</p>
                 </div>
 
                 <!-- Botón Guardar -->
@@ -277,7 +272,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (URL/Nombre)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (Nombre)</th>
                             <th scope="col" class="relative px-6 py-3">
                                 <span class="sr-only">Acciones</span>
                             </th>
@@ -291,37 +286,18 @@
                     </tbody>
                 </table>
             </div>
-            <p id="userIdDisplay" class="text-sm text-gray-600 text-center mt-4">ID de Usuario: Cargando...</p>
+            <!-- Removed userIdDisplay as Firebase Auth is not used -->
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- SheetJS (xlsx) CDN for Excel export -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // SheetJS (xlsx) CDN for Excel export
-        // Note: This is a large library, consider loading it only when needed for production.
         import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
         window.XLSX = XLSX; // Make XLSX globally available for the script below
 
-        // Firebase Configuration (provided by the environment)
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        let userId = null; // Will store the authenticated user ID
-        let dataCollectionRef; // Reference to the Firestore collection
-        let unsubscribeSnapshot = null; // To store the unsubscribe function for real-time listener
         let loggedInUser = null; // To store the username of the logged-in user
-        let isAuthReady = false; // New flag to track authentication status
-
+        let currentWorkshop = ''; // No default workshop initially selected
+        
         // --- DOM Elements ---
         const appContainer = document.getElementById('appContainer'); // Main application container
         const mainPageTitle = document.getElementById('mainPageTitle'); // Reference to the main H1
@@ -347,7 +323,6 @@
 
         // --- Data for Workshops and Dependent Dropdowns ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
-        let currentWorkshop = ''; // No default workshop initially selected
         
         // Workshop display names (for cards)
         const workshopDisplayNames = {
@@ -363,7 +338,7 @@
 
         // Workshop image URLs (using contentFetchId for uploaded images)
         const workshopImages = {
-            "KAEL": { src: "uploaded:image_d511bf.png-576df45a-cc7b-4ad5-875a-e2a795e0c0b1", alt: "Logo KAEL" },
+            "KAEL": { src: "uploaded:image_d511bf.png-576df45a-cc7b-4ad1-875a-e2a795e0c0b1", alt: "Logo KAEL" },
             "ABFREN": { src: "uploaded:image_e55c90.png-95852ca7-bd44-41cd-bf86-1870e98048d9", alt: "Logo ABFREN" },
             "SOMEC": { src: "uploaded:image_d42d7a.png-aac7793e-55de-4cee-b5b5-9ff05bf26570", alt: "Logo SOMEC" },
             "DRACSO": { src: "uploaded:image_d5f791.png-35f9f1e5-b8a8-4383-8768-cad9ce8bdc34", alt: "Logo DRACSO" },
@@ -1212,31 +1187,6 @@
         });
 
 
-        // --- Firebase Authentication ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                document.getElementById('userIdDisplay').textContent = `ID de Usuario: ${userId}`;
-                console.log('Firebase initialized and user authenticated:', userId);
-                isAuthReady = true; // Set auth ready flag
-                showLoginView(); // Show login view initially
-            } else {
-                try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    // onAuthStateChanged will be triggered again with the user object after successful sign-in
-                } catch (error) {
-                    console.error("Error signing in to Firebase:", error);
-                    document.getElementById('userIdDisplay').textContent = 'Error authenticating.';
-                    isAuthReady = false; // Auth failed
-                    showLoginView(); // Still show login view even if anonymous auth fails
-                }
-            }
-        });
-
         // --- View Management Functions ---
         function showLoginView() {
             loginView.style.display = 'flex'; // Show login form
@@ -1305,13 +1255,8 @@
 
         // --- Logout Logic ---
         logoutBtn.addEventListener('click', () => {
-            // In a real app, you might also want to sign out from Firebase Auth here:
-            // auth.signOut().then(() => {
-            //     console.log('User signed out');
-            // }).catch((error) => {
-            //     console.error('Error signing out:', error);
-            // });
             console.log('User logged out.');
+            loggedInUser = null; // Clear logged-in user
             showLoginView(); // Go back to login view
         });
 
@@ -1321,12 +1266,8 @@
             mainPageTitle.textContent = workshopDisplayNames[workshopName]; // Set main H1 to workshop name
             reportSubtitle.style.display = 'block'; // Show "REPORTE" subtitle
             
-            // Update Firestore collection reference
-            dataCollectionRef = collection(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`);
-            
             populateEquipoDropdown(); // Repopulate dropdowns for the new workshop
-            // No need to dispatch change here, as populateEquipoDropdown will handle initial state
-            loadData(); // Load data specific to the new workshop
+            loadData(); // Load data specific to the new workshop from local storage
 
             showFormView(); // Show form view
         }
@@ -1462,92 +1403,74 @@
         });
 
 
-        // --- Load Data from Firestore (Real-time) ---
+        // --- Local Storage Functions ---
+        function getLocalStorageKey(workshop) {
+            return `workshop_data_${workshop.toLowerCase()}`;
+        }
+
+        function loadDataFromLocalStorage(workshop) {
+            const key = getLocalStorageKey(workshop);
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveDataToLocalStorage(workshop, data) {
+            const key = getLocalStorageKey(workshop);
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // --- Load Data from Local Storage and Render Table ---
         function loadData() {
-            if (unsubscribeSnapshot) {
-                unsubscribeSnapshot(); // Unsubscribe from previous listener if any
-            }
+            dataTableBody.innerHTML = ''; // Clear existing table rows
+            const records = loadDataFromLocalStorage(currentWorkshop);
 
-            if (!isAuthReady) { // Check if auth is ready
-                console.warn("Authentication not ready. Cannot load data yet.");
+            if (records.length === 0) {
                 dataTableBody.innerHTML = `
                     <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Esperando autenticación...</td>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
                     </tr>
                 `;
                 return;
             }
 
-            // Ensure dataCollectionRef is set before subscribing
-            if (!dataCollectionRef) {
-                console.warn("dataCollectionRef is not defined. This should be set by initApp.");
-                dataTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Seleccione un taller para cargar datos.</td>
-                    </tr>
+            records.forEach((data, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50'; // Add hover effect
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${data.fotoName || 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
+                    </td>
                 `;
-                return;
-            }
+                dataTableBody.appendChild(row);
+            });
 
-            unsubscribeSnapshot = onSnapshot(dataCollectionRef, (snapshot) => {
-                dataTableBody.innerHTML = ''; // Clear existing table rows
-                if (snapshot.empty) {
-                    dataTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50'; // Add hover effect
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${data.fotoUrl ? `<a href="${data.fotoUrl}" target="_blank" class="text-blue-600 hover:underline">Ver Foto</a>` : (data.fotoName || 'N/A')}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button data-id="${doc.id}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
-                        </td>
-                    `;
-                    dataTableBody.appendChild(row);
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const indexToDelete = parseInt(e.target.dataset.index);
+                    // IMPORTANT: Do NOT use confirm() or alert() in production. Use a custom modal UI.
+                    if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+                        let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                        currentRecords.splice(indexToDelete, 1); // Remove item at the specific index
+                        saveDataToLocalStorage(currentWorkshop, currentRecords);
+                        loadData(); // Reload table after deletion
+                        console.log('Registro eliminado con éxito.');
+                    }
                 });
-
-                // Add event listeners for delete buttons
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const docId = e.target.dataset.id;
-                        // IMPORTANT: Do NOT use confirm() or alert() in production. Use a custom modal UI.
-                        if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
-                            try {
-                                await deleteDoc(doc(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`, docId));
-                                console.log('Documento eliminado con éxito:', docId);
-                            } catch (error) {
-                                console.error('Error al eliminar documento:', error);
-                            }
-                        }
-                    });
-                });
-            }, (error) => {
-                console.error("Error al cargar datos de Firestore:", error);
-                dataTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-500">Error al cargar datos.</td>
-                    </tr>
-                `;
             });
         }
 
@@ -1561,28 +1484,24 @@
                 data[key] = value;
             }
 
-            // Handle file input separately
+            // Handle file input separately (only storing name, no actual upload to local storage)
             const fotoInput = document.getElementById('foto');
             if (fotoInput.files.length > 0) {
-                // For simplicity, we'll just store the file name.
-                // For actual file uploads, you would use Firebase Storage here.
-                // Example: const file = fotoInput.files[0];
-                // Upload file to Firebase Storage and get a downloadable URL
-                // data.fotoUrl = 'URL_DEL_ARCHIVO_EN_STORAGE';
                 data.fotoName = fotoInput.files[0].name; // Store just the name
-                data.fotoUrl = ''; // Placeholder for actual URL if you implement Storage
             } else {
                 data.fotoName = '';
-                data.fotoUrl = '';
             }
 
             // Add timestamp
             data.timestamp = new Date().toISOString();
 
             try {
-                await addDoc(dataCollectionRef, data);
+                let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                currentRecords.push(data); // Add new record
+                saveDataToLocalStorage(currentWorkshop, currentRecords); // Save updated array
                 dataForm.reset(); // Clear the form
                 populateEquipoDropdown(); // Reset all dependent dropdowns
+                loadData(); // Reload table after saving
                 console.log('Datos guardados con éxito:', data);
             } catch (error) {
                 console.error('Error al guardar datos:', error);
@@ -1592,61 +1511,50 @@
         });
 
         // --- Excel Download Handler ---
-        downloadExcelBtn.addEventListener('click', async () => {
-            try {
-                // Fetch all data from the current workshop's collection for export
-                const querySnapshot = await getDocs(dataCollectionRef);
-                const allData = [];
-                querySnapshot.forEach((doc) => {
-                    allData.push(doc.data());
-                });
+        downloadExcelBtn.addEventListener('click', () => {
+            const allData = loadDataFromLocalStorage(currentWorkshop);
 
-                if (allData.length === 0) {
-                    alert('No hay datos para descargar.');
-                    return;
-                }
-
-                const dataToExport = [];
-                // Define headers explicitly to ensure order and correctness
-                const headers = [
-                    "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
-                    "Texto Estandar", "Descripción Detallada", "Prioridad",
-                    "Técnico", "Teléfono", "Foto (URL/Nombre)"
-                ];
-                dataToExport.push(headers);
-
-                allData.forEach(item => {
-                    const rowData = [
-                        item.equipo || '',
-                        item.fecha || '',
-                        item.otOrigen || '',
-                        item.conjunto || '',
-                        item.parte || '',
-                        item.textoEstandar || '',
-                        item.descripcionDetallada || '',
-                        item.prioridad || '',
-                        item.tecnico || '',
-                        item.telefono || '',
-                        item.fotoUrl || item.fotoName || 'N/A' // Prefer URL if available
-                    ];
-                    dataToExport.push(rowData);
-                });
-
-                // Create a new workbook and worksheet
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.aoa_to_sheet(dataToExport);
-
-                // Add the worksheet to the workbook
-                XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
-
-                // Write the workbook and trigger download
-                XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
-                console.log('Excel descargado con éxito.');
-
-            } catch (error) {
-                console.error('Error al descargar Excel:', error);
-                alert('Error al descargar el archivo Excel. Por favor, inténtalo de nuevo.');
+            if (allData.length === 0) {
+                alert('No hay datos para descargar.');
+                return;
             }
+
+            const dataToExport = [];
+            // Define headers explicitly to ensure order and correctness
+            const headers = [
+                "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
+                "Texto Estandar", "Descripción Detallada", "Prioridad",
+                "Técnico", "Teléfono", "Foto (Nombre)"
+            ];
+            dataToExport.push(headers);
+
+            allData.forEach(item => {
+                const rowData = [
+                    item.equipo || '',
+                    item.fecha || '',
+                    item.otOrigen || '',
+                    item.conjunto || '',
+                    item.parte || '',
+                    item.textoEstandar || '',
+                    item.descripcionDetallada || '',
+                    item.prioridad || '',
+                    item.tecnico || '',
+                    item.telefono || '',
+                    item.fotoName || 'N/A' // Only fotoName is stored locally
+                ];
+                dataToExport.push(rowData);
+            });
+
+            // Create a new workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(dataToExport);
+
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
+
+            // Write the workbook and trigger download
+            XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
+            console.log('Excel descargado con éxito.');
         });
 
         // --- Back to Menu Button Handler ---
@@ -1654,8 +1562,10 @@
             showWorkshopSelectionView(); // Go back to workshop selection
         });
 
-        // Initial setup when the page loads (after Firebase auth)
-        // populateWorkshopCards is now called inside onAuthStateChanged, which then calls showLoginView
+        // Initial setup when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showLoginView(); // Always start with the login view
+        });
     </script>
 </body>
 </html>
