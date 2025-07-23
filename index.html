@@ -9,45 +9,20 @@
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos generales del cuerpo */
         body {
             font-family: 'Inter', sans-serif;
-            background-image: url('FONDO.png'); /* Ruta de la imagen de fondo */
-            background-size: cover; /* La imagen cubrirá todo el área */
-            background-position: center; /* Centra la imagen de fondo */
-            background-repeat: no-repeat; /* Evita que la imagen se repita */
-            background-attachment: fixed; /* La imagen de fondo se mantiene fija al hacer scroll */
-            background-color: transparent; /* Fondo transparente para que la imagen sea visible */
+            background-image: url('FONDO.png'); /* Assuming FONDO.png is in the same directory or accessible path */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-position: center center; /* Center the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling - Confirmed fixed */
+            background-color: #f3f4f6; /* Fallback color */
         }
-        /* Contenedor principal para centrar el contenido */
         .container {
-            max-width: 100%; /* Permitir que ocupe el ancho completo */
-            background-color: transparent; /* Fondo transparente */
-            padding: 0; /* Sin padding */
-            display: flex; /* Usar flexbox para centrar el contenido */
-            flex-direction: column; /* Organizar elementos en columna */
-            align-items: center; /* Centrar horizontalmente */
-            justify-content: center; /* Centrar verticalmente */
-            min-height: 100vh; /* Ocupar toda la altura de la ventana */
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background for content */
         }
-
-        /* Ajuste específico para la vista de inicio de sesión */
-        #loginView {
-            max-width: 500px; /* Aumentado para ser más grande */
-            width: 90%; /* Asegura que no se desborde en pantallas pequeñas */
-            background-color: white; /* Asegura que el fondo sea blanco */
-            padding: 3rem; /* Más padding para que el contenido se vea mejor */
-            border-radius: 0.5rem; /* Bordes redondeados */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-            margin: auto;
-        }
-
-        /* Estilos para las tarjetas de selección de taller */
-        #workshopSelectionView .card {
-            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con ligera transparencia para las tarjetas */
-        }
-
-        /* Estilos personalizados para la barra de desplazamiento de la tabla */
+        /* Custom scrollbar for table */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -63,23 +38,15 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-
-        /* Estilos para el título principal y subtítulo para mejorar la visibilidad */
-        #mainPageTitle, #reportSubtitle {
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
-            padding: 0.5rem 1rem; /* Padding para que el texto no esté pegado */
-            border-radius: 0.375rem; /* Bordes ligeramente redondeados */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
-        }
     </style>
     <script>
-        // Configuración de Tailwind CSS para colores personalizados basados en las imágenes del camión
+        // Custom Tailwind colors from the truck image
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        customGreen: '#65A30D', /* Verde aproximado del camión */
-                        customBlue: '#1E3A8A',  /* Azul oscuro aproximado del camión */
+                        customGreen: '#65A30D', // Approximate green from the truck
+                        customBlue: '#1E3A8A',  // Approximate dark blue from the truck
                     }
                 }
             }
@@ -87,131 +54,129 @@
     </script>
 </head>
 <body class="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-screen">
-    <div class="container mx-auto">
-        <!-- Contenedor principal del encabezado para títulos e iconos -->
-        <div class="relative flex items-center justify-center mb-8 w-full">
-            <!-- Contenedor para elementos izquierdos (botón ATRAS e Icono de Camión) -->
-            <div id="leftHeaderElements" class="absolute left-0 flex items-center space-x-2 z-10" style="display: none;">
+    <div class="container mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <!-- Main header container for titles and icons -->
+        <div class="relative flex items-center justify-center mb-8">
+            <!-- Container for left elements (ATRAS button and Truck Icon) -->
+            <!-- Truck Icon is now removed as per request -->
+            <div id="leftHeaderElements" class="absolute left-0 flex items-center space-x-2" style="display: none;">
                 <button id="backToMenuBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     ATRAS
                 </button>
-                <!-- Icono del camión: Cambiado de 'truck_icon.png' a 'LOGO-CAMION.png' para coincidir con el repositorio de GitHub -->
-                <img id="truckIcon" src="LOGO-CAMION.png" alt="Camión Icono" class="h-16 w-auto">
             </div>
 
-            <!-- Título principal de la página, dinámico (centrado) -->
-            <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center relative z-0"></h1>
+            <!-- Main page title, dynamic (centered) -->
+            <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center"></h1>
             
-            <!-- Contenedor para elementos derechos (Logo Argos y Botón Cerrar Sesión) -->
-            <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2 z-10" style="display: none;">
-                <!-- Logo Argos: Cambiado de 'LOGOARGOS.png' a 'LOGOARGOS.jpg' para coincidir con el repositorio de GitHub -->
-                <img id="argosLogo" src="LOGOARGOS.jpg" alt="Logo Argos" class="h-8 w-auto">
+            <!-- Container for right elements (Argos Logo and Logout Button) -->
+            <!-- Argos Logo is now removed as per request -->
+            <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2" style="display: none;">
                 <button id="logoutBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     Cerrar Sesión
                 </button>
             </div>
         </div>
-        <!-- Subtítulo "REPORTE" que aparecerá debajo del título principal -->
-        <h2 id="reportSubtitle" class="text-xl font-semibold text-center text-gray-600 mb-8 relative z-0" style="display: none;">REPORTE</h2>
+        <!-- Subtitle "REPORTE" that will appear below the main title -->
+        <h2 id="reportSubtitle" class="text-xl font-semibold text-center text-gray-600 mb-8" style="display: none;">REPORTE</h2>
 
-        <!-- Vista de Inicio de Sesión (Inicialmente visible) -->
+        <!-- Login View (Initially visible) -->
         <div id="loginView" class="flex flex-col items-center justify-center p-8">
-            <!-- La imagen de inicio de sesión se ha cambiado a CAMION.png -->
-            <img src="CAMION.png" alt="Camión Argos" class="w-64 h-auto mb-8 rounded-md">
+            <!-- Updated Login Truck Image -->
+            <img src="uploaded:image_67975e.png-bb0e21fe-260b-42ca-8e50-e2cab112a9df" alt="Camión Argos" class="w-64 h-auto mb-8 rounded-md">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Iniciar Sesión</h2>
             <div class="w-full max-w-sm">
                 <div class="mb-4">
                     <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
                     <input type="text" id="username" name="username" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
                 <div class="mb-6">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
                     <input type="password" id="password" name="password" required
-                           class="mt-1 block w-3/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
                 <button id="loginBtn"
-                        class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md transition ease-in-out duration-150">
+                        class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     INGRESAR
                 </button>
                 <p id="loginError" class="text-red-600 text-center mt-4" style="display: none;"></p>
             </div>
         </div>
 
-        <!-- Vista de Selección de Taller (Menú de Tarjetas - Inicialmente oculta) -->
-        <div id="workshopSelectionView" class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" style="display: none;">
-            <!-- Las tarjetas de taller se generarán dinámicamente aquí -->
+        <!-- Workshop Selection View (Card Menu - Initially hidden) -->
+        <div id="workshopSelectionView" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" style="display: none;">
+            <!-- Workshop cards will be dynamically generated here -->
         </div>
 
-        <!-- Vista del Formulario de Registro (Inicialmente oculta) -->
+        <!-- Registration Form View (Initially hidden) -->
         <div id="formView" style="display: none;">
-            <!-- Formulario de Registro -->
-            <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
-                <!-- Campo EQUIPO -->
+            <!-- Registration Form -->
+            <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Field EQUIPO -->
                 <div>
                     <label for="equipo" class="block text-sm font-medium text-gray-700 mb-1">EQUIPO *</label>
                     <select id="equipo" name="equipo" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Equipo</option>
                     </select>
                 </div>
 
-                <!-- Campo FECHA -->
+                <!-- Field FECHA -->
                 <div>
                     <label for="fecha" class="block text-sm font-medium text-gray-700 mb-1">FECHA *</label>
                     <input type="date" id="fecha" name="fecha" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
 
-                <!-- Campo OT ORIGEN -->
+                <!-- Field OT ORIGEN -->
                 <div>
                     <label for="otOrigen" class="block text-sm font-medium text-gray-700 mb-1">OT ORIGEN *</label>
                     <input type="number" id="otOrigen" name="otOrigen" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                            value="0">
                 </div>
 
-                <!-- Campo CONJUNTO -->
+                <!-- Field CONJUNTO -->
                 <div>
                     <label for="conjunto" class="block text-sm font-medium text-gray-700 mb-1">CONJUNTO *</label>
                     <select id="conjunto" name="conjunto" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
                         <option value="">Seleccione un Conjunto</option>
                     </select>
                 </div>
 
-                <!-- Nuevo Campo: PARTE -->
+                <!-- New Field: PARTE -->
                 <div>
                     <label for="parte" class="block text-sm font-medium text-gray-700 mb-1">PARTE *</label>
                     <select id="parte" name="parte" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
                         <option value="">Seleccione una Parte</option>
                     </select>
                 </div>
 
-                <!-- Nuevo Campo: TEXTO ESTANDAR (Cambiado a select) -->
+                <!-- New Field: TEXTO ESTANDAR (Changed to select) -->
                 <div>
                     <label for="textoEstandar" class="block text-sm font-medium text-gray-700 mb-1">TEXTO ESTANDAR *</label>
                     <select id="textoEstandar" name="textoEstandar" required disabled
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Texto Estandar</option>
                     </select>
                 </div>
 
-                <!-- Nuevo Campo: DESCRIPCION DETALLADA -->
+                <!-- New Field: DESCRIPCION DETALLADA -->
                 <div class="md:col-span-2">
                     <label for="descripcionDetallada" class="block text-sm font-medium text-gray-700 mb-1">DESCRIPCION DETALLADA *</label>
                     <textarea id="descripcionDetallada" name="descripcionDetallada" rows="3" required
-                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"></textarea>
+                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                 </div>
 
-                <!-- Campo PRIORIDAD -->
+                <!-- Field PRIORIDAD -->
                 <div>
                     <label for="prioridad" class="block text-sm font-medium text-gray-700 mb-1">PRIORIDAD *</label>
                     <select id="prioridad" name="prioridad" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione una Prioridad</option>
                         <option value="Alta">Alta</option>
                         <option value="Media">Media</option>
@@ -219,21 +184,21 @@
                     </select>
                 </div>
 
-                <!-- Campo TECNICO -->
+                <!-- Field TECNICO -->
                 <div>
                     <label for="tecnico" class="block text-sm font-medium text-gray-700 mb-1">TECNICO *</label>
                     <input type="text" id="tecnico" name="tecnico" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
 
-                <!-- Campo TELEFONO -->
+                <!-- Field TELEFONO -->
                 <div>
                     <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">TELEFONO *</label>
                     <input type="text" id="telefono" name="telefono" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
 
-                <!-- Campo FOTO (Marcador de posición) -->
+                <!-- Field FOTO (Placeholder) -->
                 <div>
                     <label for="foto" class="block text-sm font-medium text-gray-700 mb-1">FOTO</label>
                     <input type="file" id="foto" name="foto"
@@ -243,7 +208,7 @@
 
                 <!-- Botón Guardar -->
                 <div class="md:col-span-2 flex justify-center">
-                    <button type="submit" id="saveUpdateBtn"
+                    <button type="submit"
                             class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                         Guardar Registro
                     </button>
@@ -252,19 +217,19 @@
 
             <hr class="my-8 border-gray-300">
 
-            <!-- Sección de Datos Registrados -->
-            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6 bg-white p-2 rounded-md shadow-sm">Datos de REPORTE</h3>
+            <!-- Registered Data Section -->
+            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Datos de REPORTE</h3>
 
-            <!-- Botón Descargar Excel -->
-            <div id="downloadExcelContainer" class="flex justify-center mb-6">
+            <!-- Download Excel Button -->
+            <div class="flex justify-center mb-6">
                 <button id="downloadExcel"
                         class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     Descargar Excel
                 </button>
             </div>
 
-            <!-- Tabla de Datos -->
-            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-white">
+            <!-- Data Table -->
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -277,7 +242,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción Detallada</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
-                            <th scope="col" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teléfono</td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (URL/Nombre)</th>
                             <th scope="col" class="relative px-6 py-3">
                                 <span class="sr-only">Acciones</span>
@@ -285,7 +250,7 @@
                         </tr>
                     </thead>
                     <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Los datos se cargarán aquí mediante JavaScript -->
+                        <!-- Data will be loaded here by JavaScript -->
                         <tr>
                             <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando datos...</td>
                         </tr>
@@ -294,68 +259,211 @@
             </div>
             <p id="userIdDisplay" class="text-sm text-gray-600 text-center mt-4">ID de Usuario: Cargando...</p>
         </div>
-
-        <!-- Nueva Vista: Todos los Reportes (Inicialmente oculta) -->
-        <div id="allReportsView" style="display: none;">
-            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6 bg-white p-2 rounded-md shadow-sm">Todos los Reportes de Talleres</h3>
-            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-white">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Origen</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conjunto</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parte</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estandar</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción Detallada</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
-                            <th scope="col" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teléfono</td>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (URL/Nombre)</th>
-                            <th scope="col" class="relative px-6 py-3">
-                                <span class="sr-only">Acciones</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="allReportsTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Los datos se cargarán aquí mediante JavaScript -->
-                        <tr>
-                            <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando todos los reportes...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="text-sm text-gray-600 text-center mt-4">ID de Usuario: Cargando...</p>
-        </div>
-    </div>
-
-    <!-- Custom Message Box HTML -->
-    <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
-        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
-            <p id="messageBoxText" class="text-lg font-semibold mb-4"></p>
-            <button id="messageBoxCloseBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Cerrar</button>
-        </div>
     </div>
 
     <!-- Firebase SDKs -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js"; // Import getAnalytics
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDoc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; // Added getDocs
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-
-        // SheetJS (xlsx) CDN para exportación a Excel
+        // SheetJS (xlsx) CDN for Excel export
+        // Note: This is a large library, consider loading it only when needed for production.
         import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
-        window.XLSX = XLSX; // Hace que XLSX esté disponible globalmente para el script
+        window.XLSX = XLSX; // Make XLSX globally available for the script below
 
-        // --- Datos para CONJUNTO, PARTE y TEXTO ESTANDAR ---
-        // Este mapa contiene la relación entre PARTE y TEXTO ESTANDAR.
-        // Se poblará con los datos proporcionados por el usuario.
+        // Firebase Configuration (provided by the environment)
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let userId = null; // Will store the authenticated user ID
+        let dataCollectionRef; // Reference to the Firestore collection
+        let unsubscribeSnapshot = null; // To store the unsubscribe function for real-time listener
+        let loggedInUser = null; // To store the username of the logged-in user
+
+        // --- DOM Elements ---
+        const mainPageTitle = document.getElementById('mainPageTitle'); // Reference to the main H1
+        const reportSubtitle = document.getElementById('reportSubtitle'); // Reference to the H2 for "REPORTE"
+        const loginView = document.getElementById('loginView');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn'); // Logout button
+        // Removed truckIcon and argosLogo as per request
+        const leftHeaderElements = document.getElementById('leftHeaderElements'); // Container for left header elements
+        const rightHeaderElements = document.getElementById('rightHeaderElements'); // Container for right header elements
+        const dataForm = document.getElementById('dataForm');
+        const equipoSelect = document.getElementById('equipo');
+        const conjuntoSelect = document.getElementById('conjunto');
+        const parteSelect = document.getElementById('parte'); // Parte dropdown
+        const textoEstandarSelect = document.getElementById('textoEstandar'); // Changed to select
+        const dataTableBody = document.getElementById('dataTableBody');
+        const downloadExcelBtn = document.getElementById('downloadExcel');
+        const workshopSelectionView = document.getElementById('workshopSelectionView');
+        const formView = document.getElementById('formView');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
+
+        // --- Firebase Authentication ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById('userIdDisplay').textContent = `ID de Usuario: ${userId}`;
+                console.log('Firebase initialized and user authenticated:', userId);
+                // After Firebase auth, show login view initially
+                showLoginView();
+            } else {
+                // Sign in anonymously if no custom token is provided or if it fails
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Error signing in to Firebase:", error);
+                    document.getElementById('userIdDisplay').textContent = 'Error authenticating.';
+                    showLoginView(); // Still show login view even if anonymous auth fails
+                }
+            }
+        });
+
+        // --- View Management Functions ---
+        function showLoginView() {
+            loginView.style.display = 'flex'; // Use flex for centering
+            workshopSelectionView.style.display = 'none';
+            formView.style.display = 'none';
+            mainPageTitle.textContent = ''; // Set title to empty for login view
+            reportSubtitle.style.display = 'none'; // Hide subtitle
+            leftHeaderElements.style.display = 'none'; // Hide left elements
+            rightHeaderElements.style.display = 'none'; // Hide right elements
+            loggedInUser = null; // Clear logged in user on logout
+        }
+
+        function showWorkshopSelectionView() {
+            loginView.style.display = 'none';
+            workshopSelectionView.style.display = 'grid'; // Use grid for cards
+            formView.style.display = 'none';
+            mainPageTitle.textContent = 'TALLER'; // Set title for workshop selection
+            reportSubtitle.style.display = 'none'; // Hide subtitle
+            leftHeaderElements.style.display = 'none'; // Hide left elements
+            rightHeaderElements.style.display = 'flex'; // Show right elements
+            logoutBtn.style.display = 'block'; // Make sure logout button is visible
+            // Removed argosLogo.style.display = 'none'; as per request
+            populateWorkshopCards(); // Ensure cards are populated based on loggedInUser
+        }
+
+        function showFormView() {
+            loginView.style.display = 'none';
+            workshopSelectionView.style.display = 'none';
+            formView.style.display = 'block';
+            mainPageTitle.textContent = workshopDisplayNames[currentWorkshop]; // Set title for form view
+            reportSubtitle.style.display = 'block'; // Show "REPORTE" subtitle
+            leftHeaderElements.style.display = 'flex'; // Show left elements
+            rightHeaderElements.style.display = 'flex'; // Show right elements
+            backToMenuBtn.style.display = 'block'; // Make sure back button is visible
+            // Removed truckIcon.style.display = 'block'; as per request
+            // Removed argosLogo.style.display = 'block'; as per request
+            logoutBtn.style.display = 'none'; // Hide logout button in form view
+        }
+
+        // --- Login Logic ---
+        // New valid credentials object
+        const validCredentials = {
+            "KAEL": "KAEL",
+            "ABFREN": "ABFREN",
+            "SOMEC": "SOMEC",
+            "DRACSO": "DRACSO",
+            "JS OUT": "JS OUT",
+            "MG": "MG",
+            "SIMIYP": "SIMIYP",
+            "SERVII": "SERVII",
+            "ARGOS": "ARGOS" // New ARGOS user
+        };
+
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (validCredentials[username] === password) {
+                loginError.style.display = 'none';
+                loggedInUser = username; // Store the logged-in username
+                showWorkshopSelectionView(); // Go to workshop selection after successful login
+            } else {
+                loginError.textContent = 'Usuario o contraseña incorrectos.';
+                loginError.style.display = 'block';
+            }
+        });
+
+        // --- Logout Logic ---
+        logoutBtn.addEventListener('click', () => {
+            // In a real app, you might also want to sign out from Firebase Auth here:
+            // auth.signOut().then(() => {
+            //     console.log('User signed out');
+            // }).catch((error) => {
+            //     console.error('Error signing out:', error);
+            // });
+            showLoginView(); // Go back to login view
+        });
+
+        // --- Data for Workshops and Dependent Dropdowns ---
+        const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
+        let currentWorkshop = ''; // No default workshop initially selected
+        
+        // Workshop display names (for cards)
+        const workshopDisplayNames = {
+            "KAEL": "KAEL",
+            "ABFREN": "ABFREN",
+            "SOMEC": "SOMEC",
+            "DRACSO": "DRACSO",
+            "JS OUT": "JS OUT",
+            "MG": "MG SOL", // Display as MG SOL
+            "SIMIYP": "SIMIYP",
+            "SERVII": "SERVII"
+        };
+
+        // Workshop image URLs (using contentFetchId for uploaded images)
+        const workshopImages = {
+            "KAEL": { src: "uploaded:image_d511bf.png-576df45a-cc7b-4ad5-875a-e2a795e0c0b1", alt: "Logo KAEL" },
+            "ABFREN": { src: "uploaded:image_e55c90.png-95852ca7-bd44-41cd-bf86-1870e98048d9", alt: "Logo ABFREN" },
+            "SOMEC": { src: "uploaded:image_d42d7a.png-aac7793e-55de-4cee-b5b5-9ff05bf26570", alt: "Logo SOMEC" },
+            "DRACSO": { src: "uploaded:image_d5f791.png-35f9f1e5-b8a8-4383-8768-cad9ce8bdc34", alt: "Logo DRACSO" },
+            "JS OUT": { src: "uploaded:image_e2b8fb.png-ca9cc0ae-0944-4de7-8d12-eedfff29ccca", alt: "Logo JS OUT" },
+            "MG": { src: "uploaded:image_3a9ec5.png-659f3790-0c33-40ca-b130-3a85291fee98", alt: "Logo MG SOL" },
+            "SIMIYP": { src: "uploaded:image_d5eff2.png-83ab0ccf-0679-4d32-b268-78cc78794e83", alt: "Logo SIMIYP" },
+            "SERVII": { src: "uploaded:image_d43087.png-9c1ead57-30d1-48a7-a72f-60e2e97720b2", alt: "Logo SERVII" }
+        };
+
+        // Data for each workshop's EQUIPO, CONJUNTO, PARTE, and TEXTO ESTANDAR.
+        // This structure will be populated with the provided data.
+        const allWorkshopsData = {
+            "KAEL": {
+                // Equipos para KAEL (populated dynamically)
+            },
+            "ABFREN": {
+                "Maquinaria A": {
+                    "Motor A1": {
+                        "Cilindro A1": ["Revisar presión", "Cambiar sello"],
+                        "Biela A2": ["Ajustar", "Lubricar"]
+                    }
+                }
+            },
+            "SOMEC": {}, // Placeholder, please populate with real data
+            "DRACSO": {}, // Placeholder, please populate with real data
+            "JS OUT": {}, // Placeholder, please populate with real data
+            "MG": {},     // Placeholder, please populate with real data
+            "SIMIYP": {}, // Placeholder, please populate with real data
+            "SERVII": {}  // Placeholder, please populate with real data
+        };
+
+        // This map holds the relationship between PARTE and TEXTO ESTANDAR.
+        // It will be populated from user-provided data.
         const parteToTextoEstandarMap = {
             "Accesorios": [
                 "CAMBIAR TAPETES CABINA", "REPARAR TOMA ELEC 12V CABINA", "CAMBIAR CINTA DE TIMON",
@@ -433,8 +541,14 @@
                 "CAMBIAR CERRADURA", "CAMBIAR BISAGRAS PUERTA", "CAMBIAR MANIJA EXTERNA DERECHA",
                 "CAMBIAR KIT CILINDRO PUERTA STARTED", "CAMBIAR ACTUADOR SEGURO PUERTA", "REPARAR LATONERIA PUERTA",
                 "CAMBIAR CARTERA INTERNA PUERTA IZQ", "CAMBIAR TAPIZADO PUERTA INTERNA", "CAMBIAR INTERRUPTOR PUERTA DER",
-                "CAMBIAR INTERRUPTOR PUERTA IZQ", "CAMBIAR MAQUINA ELEVAVIDRIOS", "CAMBIAR MODULO ELEVAVIDIOS DER",
-                "CAMBIAR MODULO ELEVAVIDIOS IZQ", "CAMBIAR TAPIZADO PUERTA INTERNA DER", "CAMBIAR TAPIZADO PUERTA INTERNA IZQ", "REPARAR LATONERIA PUERTA DER",
+                "CAMBIAR INTERRUPTOR PUERTA IZQ", "CAMBIAR MAQUINA ELEVAVIDRIOS", "CAMBIAR MODULO ELEVAVIDRIOS",
+                "AJUSTAR PUERTA IZQ", "AJUSTAR PUERTA DER", "CAMBIAR ACTUADOR SEGURO PUERTA DER",
+                "CAMBIAR ACTUADOR SEGURO PUERTA IZQ", "CAMBIAR BISAGRAS PUERTA DER", "CAMBIAR BISAGRAS PUERTA IZQ",
+                "CAMBIAR CAUCHO PUERTA DER", "CAMBIAR CAUCHO PUERTA IZQ", "CAMBIAR CERRADURA DER",
+                "CAMBIAR CERRADURA IZQ", "CAMBIAR MANIJA EXTERNA PUERTA DER", "CAMBIAR MANIJA EXTERNA PUERTA IZQ",
+                "CAMBIAR MANIJA INTERNA PUERTA DER", "CAMBIAR MANIJA INTERNA PUERTA IZQ", "CAMBIAR MAQUINA ELEVA VIDRIOS DER",
+                "CAMBIAR MAQUINA ELEVA VIDRIOS IZQ", "CAMBIAR MODULO ELEVAVIDRIOS DER", "CAMBIAR MODULO ELEVAVIDRIOS IZQ",
+                "CAMBIAR TAPIZADO PUERTA INTERNA DER", "CAMBIAR TAPIZADO PUERTA INTERNA IZQ", "REPARAR LATONERIA PUERTA DER",
                 "REPARAR LATONERIA PUERTA IZQ"
             ],
             "Silla": [
@@ -535,7 +649,7 @@
             ],
             "Puente_chasis": [
                 "CAMBIAR BASE O SOPORTE STOPS TRASEROS", "DESVARE EN OBRA Y/O VIA", "REPARAR PUENTE DE CHASIS",
-                "CAMBIAR PUENTE U DE CHASIS", "CAMBIAR PUENTE CHASIS", "CAMBIAR PUENTE H DE CHASIS"
+                "CAMBIAR PUENTE U DE CHASIS", "CAMBIAR PUENTE H DE CHASIS"
             ],
             "Soporte tanques aire": [
                 "CAMBIAR CABLES TANQUE DE AIRE", "CAMBIAR BASES TANQUES AIRE", "CAMBIAR BASES TANQUE AIRE"
@@ -613,7 +727,7 @@
                 "CAMBIAR ACEITE DIFERENCIAL TRASERO", "CAMBIAR KIT TRABA ANTIPATINAJE", "CAMBIAR MANGUERA SISTEMA ANTIPATINAJE",
                 "CBM ALERTA ANALISIS DE ACEITE", "DESCONCRETAR DIFERENCIAL TRASERO", "DESVARE EN OBRA Y/O VIA",
                 "CAMBIAR RETENEDOR DIFERENCIAL TRASERO", "REPARAR TRABA DIFERENCIAL TRASERO", "AJUSTAR DIFERENCIAL TRASERO",
-                "CAMBIAR HOUSING TROQUE TRASERO", "TOMAR MUESTRA DE ACEIT DIF TRAS MIX"
+                "CAMBIAR HOUSING TROQUE TRASERO", "TOMAR MUESTRA DE ACEIT DIF TRAS MIXER"
             ],
             "Divisor potencia": [
                 "HABITAR ANTIPATINAJE", "DESVARE EN OBRA Y/O VIA", "REPARAR DIVISOR POTENCIA",
@@ -684,7 +798,7 @@
                 "CAMBIAR ARNES"
             ],
             "Arranque": [
-                "DESVARE EN OBRA Y/O VIA", "REPARAR MOTOR ARRANQUE", "CAMBIAR MOTOR ARRANque"
+                "DESVARE EN OBRA Y/O VIA", "REPARAR MOTOR ARRANQUE", "CAMBIAR MOTOR ARRANQUE"
             ],
             "Batería": [
                 "INICIAR EQUIPO", "LIMPIAR BORNES DE BATERIA", "CAMBIAR CABLES BATERIAS",
@@ -1073,7 +1187,7 @@
             ]
         };
 
-        // Este mapa contiene la relación entre CONJUNTO y PARTE.
+        // This map holds the relationship between CONJUNTO and PARTE.
         const conjuntoToParteMap = {
             "CABINA": [
                 "Limpia_vidrios", "Cabina", "Vidrio", "Tablero instrumentos", "Aire_acondicionado", "Silla", "Accesorios", "Chapa", "Espejo", "Soporte cabina", "Capot", "Estribo", "Puerta", "Panorámico", "Tapicería", "Cinturón seguridad", "Persiana"
@@ -1100,7 +1214,7 @@
                 "Embudo_cargue", "Pedestal", "Tapa_canal", "Canal", "Plataforma", "Escalera", "Chute", "Platina_tornillo_fijación_chasis"
             ],
             "FRENOS": [
-                "Tanque_aire", "Ratchet", "Manguera", "Campana", "Bomba_freno", "Accesorios..", "Gobernador", "Valvula_Freno", "Cámara_seguridad", "Secador", "Compresor", "Banda"
+                "Tanque_aire", "Ratchet", "Manguera", "Campana", "Bomba_freno", "Accesorios..", "Gobernador", "Cámara_seguridad", "Secador", "Compresor", "Banda"
             ],
             "HIDRAULICO": [
                 "Bloque_Válvula", "Tanque", "Regulador_presión", "Cardán", "Enfriador_aceite_hco", "Actuador", "Acumulador", "Bomba_hidráulica", "Cilindro_hidráulico", "Filtro", "Motor_hidráulico", "Tubería", "Válvula_contención", "Valvula_Hd", "Manguera", "Accesorios"
@@ -1125,134 +1239,7 @@
             ]
         };
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDIrPjgIL5O6iCKZNCIdfcxOsggv_NYaVM",
-            authDomain: "reportetallerargos.firebaseapp.com",
-            projectId: "reportetallerargos",
-            storageBucket: "reportetallerargos.firebasestorage.app",
-            messagingSenderId: "151460933015",
-            appId: "1:151460933015:web:5b9ff541c98f7af0d268d2",
-            measurementId: "G-GQLWRLYKT8"
-        };
-        // Usa el projectId de tu firebaseConfig como el appId para las colecciones de Firestore
-        const appId = firebaseConfig.projectId;
-
-        // Inicializa Firebase
-        let app;
-        let db;
-        let auth;
-        let storage; // Variable para Firebase Storage
-        let analytics; // Variable para Firebase Analytics
-
-        window.onload = async function() {
-            if (!firebaseConfig || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
-                console.error('Error: La configuración de Firebase es inválida o incompleta.');
-                document.getElementById('loginError').textContent = 'Error: La configuración de Firebase es inválida o incompleta. Por favor, verifica tu archivo de configuración.';
-                document.getElementById('loginError').style.display = 'block';
-                return;
-            }
-
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                storage = getStorage(app); // Inicializa Firebase Storage
-                analytics = getAnalytics(app); // Inicializa Firebase Analytics
-
-                // Listener para el estado de autenticación de Firebase
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('userIdDisplay').textContent = `ID de Usuario: ${userId}`;
-                        // También actualiza el ID de usuario en la vista de "Todos los Reportes" si está visible
-                        if (document.getElementById('allReportsView').style.display === 'block') {
-                            document.querySelector('#allReportsView p.text-sm').textContent = `ID de Usuario: ${userId}`;
-                        }
-                        console.log('Firebase autenticado con UID:', userId);
-                        // No cambiar la vista aquí, la vista la controla el login de la app
-                    } else {
-                        userId = null;
-                        document.getElementById('userIdDisplay').textContent = 'ID de Usuario: No autenticado';
-                        if (document.getElementById('allReportsView').style.display === 'block') {
-                            document.querySelector('#allReportsView p.text-sm').textContent = 'ID de Usuario: No autenticado';
-                        }
-                        console.log('Firebase: Usuario desautenticado.');
-                    }
-                });
-
-                // Iniciar sesión anónimamente con Firebase al cargar la página
-                // Esto asegura que siempre haya un usuario de Firebase para interactuar con Firestore/Storage
-                try {
-                    await signInAnonymously(auth);
-                    console.log('Firebase: Sesión anónima iniciada con éxito.');
-                } catch (anonError) {
-                    console.error("Firebase: Error al iniciar sesión anónimamente:", anonError);
-                    document.getElementById('loginError').textContent = 'Error de conexión con la base de datos. Asegúrate de habilitar la autenticación anónima en la consola de Firebase.';
-                    document.getElementById('loginError').style.display = 'block';
-                }
-
-                // Mostrar la vista de inicio de sesión de la aplicación (tu formulario de login)
-                showLoginView();
-
-            } catch (error) {
-                console.error('Error initializing app:', error);
-                document.getElementById('loginError').textContent = 'Error al inicializar la aplicación. Por favor, inténtalo de nuevo.';
-                document.getElementById('loginError').style.display = 'block';
-            }
-        };
-
-
-        let userId = null; // Almacenará el ID de usuario autenticado de Firebase
-        let dataCollectionRef; // Referencia a la colección de Firestore
-        let unsubscribeSnapshot = null; // Para almacenar la función de cancelación de la escucha en tiempo real
-        let loggedInUser = null; // Para almacenar el nombre de usuario del usuario logueado por la app
-        let editingDocId = null; // Almacenará el ID del documento que se está editando
-
-        // --- Elementos del DOM ---
-        const mainPageTitle = document.getElementById('mainPageTitle'); 
-        const reportSubtitle = document.getElementById('reportSubtitle'); 
-        const loginView = document.getElementById('loginView');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
-        const logoutBtn = document.getElementById('logoutBtn'); 
-        const truckIcon = document.getElementById('truckIcon'); 
-        const argosLogo = document.getElementById('argosLogo'); 
-        const leftHeaderElements = document.getElementById('leftHeaderElements'); 
-        const rightHeaderElements = document.getElementById('rightHeaderElements'); 
-        const dataForm = document.getElementById('dataForm');
-        const equipoSelect = document.getElementById('equipo');
-        const conjuntoSelect = document.getElementById('conjunto');
-        const parteSelect = document.getElementById('parte'); 
-        const textoEstandarSelect = document.getElementById('textoEstandar'); 
-        const dataTableBody = document.getElementById('dataTableBody');
-        const downloadExcelContainer = document.getElementById('downloadExcelContainer'); // Contenedor del botón
-        const downloadExcelBtn = document.getElementById('downloadExcel');
-        const workshopSelectionView = document.getElementById('workshopSelectionView');
-        const formView = document.getElementById('formView');
-        const backToMenuBtn = document.getElementById('backToMenuBtn');
-        const allReportsView = document.getElementById('allReportsView'); // Nueva vista para todos los reportes
-        const allReportsTableBody = document.getElementById('allReportsTableBody'); // tbody para la tabla de todos los reportes
-        const saveUpdateBtn = document.getElementById('saveUpdateBtn'); // Botón de guardar/actualizar
-        
-        // Elementos del cuadro de mensaje personalizado
-        const messageBox = document.getElementById('messageBox');
-        const messageBoxText = document.getElementById('messageBoxText');
-        const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
-
-        messageBoxCloseBtn.addEventListener('click', () => {
-            messageBox.style.display = 'none';
-        });
-
-        function displayMessageBox(message) {
-            messageBoxText.textContent = message;
-            messageBox.style.display = 'flex';
-        }
-
-
-        // Popula los datos de equipos para KAEL
+        // Populate the allWorkshopsData for KAEL with the full structure
         const equiposKael = [
             "COLMX0361", "COLMX0362", "COLMX0383", "COLMX0390", "COLMX0399", "COLMX0402", "COLMX0406", "COLMX0419",
             "COLMX0420", "COLMX0424", "COLMX0426", "COLMX0432", "COLMX0437", "COLMX0445", "COLMX0448", "COLMX0451",
@@ -1276,220 +1263,47 @@
             "COLAB0059", "COLAB0060", "COLAB0068"
         ];
 
-        // Datos para EQUIPO, CONJUNTO, PARTE y TEXTO ESTANDAR de cada taller.
-        // Esta estructura se llenará con los datos proporcionados.
-        const allWorkshopsData = {
-            "KAEL": {},
-            "ABFREN": {},
-            "SOMEC": {}, 
-            "DRACSO": {}, 
-            "JS OUT": {}, 
-            "MG": {},     
-            "SIMIYP": {}, 
-            "SERVII": {}  
-        };
-
-        // Populate all workshops with the same data structure as KAEL
-        for (const workshopKey in allWorkshopsData) {
-            equiposKael.forEach(equipo => {
-                allWorkshopsData[workshopKey][equipo] = {};
-                for (const conjuntoName in conjuntoToParteMap) {
-                    if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
-                        allWorkshopsData[workshopKey][equipo][conjuntoName] = {};
-                        conjuntoToParteMap[conjuntoName].forEach(parteName => {
-                            allWorkshopsData[workshopKey][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
-                        });
-                    }
+        equiposKael.forEach(equipo => {
+            allWorkshopsData["KAEL"][equipo] = {};
+            // Populate Conjuntos for each Equipo
+            for (const conjuntoName in conjuntoToParteMap) {
+                if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
+                    allWorkshopsData["KAEL"][equipo][conjuntoName] = {};
+                    // Populate Partes for each Conjunto
+                    conjuntoToParteMap[conjuntoName].forEach(parteName => {
+                        // Assign Texto Estandar from the new map, or a default if not found
+                        allWorkshopsData["KAEL"][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
+                    });
                 }
-            });
-        }
-
-        // --- Funciones de Gestión de Vistas ---
-        function showLoginView() {
-            loginView.style.display = 'flex'; // Usa flex para centrar
-            workshopSelectionView.style.display = 'none';
-            formView.style.display = 'none';
-            allReportsView.style.display = 'none'; // Oculta la nueva vista
-            mainPageTitle.textContent = ''; // Título vacío para la vista de inicio de sesión
-            reportSubtitle.style.display = 'none'; // Oculta el subtítulo
-            leftHeaderElements.style.display = 'none'; // Oculta elementos izquierdos
-            rightHeaderElements.style.display = 'none'; // Oculta elementos derechos
-            loggedInUser = null; // Borra el usuario logueado al cerrar sesión
-        }
-
-        function showWorkshopSelectionView() {
-            loginView.style.display = 'none';
-            workshopSelectionView.style.display = 'grid'; // Usa grid para las tarjetas
-            formView.style.display = 'none';
-            allReportsView.style.display = 'none'; // Oculta la nueva vista
-            mainPageTitle.textContent = 'TALLER'; // Título para la selección de taller
-            reportSubtitle.style.display = 'none'; // Oculta el subtítulo
-            leftHeaderElements.style.display = 'none'; // Oculta elementos izquierdos
-            rightHeaderElements.style.display = 'flex'; // Muestra elementos derechos
-            logoutBtn.style.display = 'block'; // Asegura que el botón de cerrar sesión sea visible
-            argosLogo.style.display = 'none'; // Oculta el logo de Argos en esta vista
-            populateWorkshopCards(); // Asegura que las tarjetas se llenen según el usuario logueado
-        }
-
-        function showFormView() {
-            loginView.style.display = 'none';
-            workshopSelectionView.style.display = 'none';
-            formView.style.display = 'block';
-            allReportsView.style.display = 'none'; // Oculta la nueva vista
-            mainPageTitle.textContent = workshopDisplayNames[currentWorkshop]; // Título para la vista del formulario
-            reportSubtitle.style.display = 'block'; // Muestra el subtítulo "REPORTE"
-            leftHeaderElements.style.display = 'flex'; // Muestra elementos izquierdos
-            rightHeaderElements.style.display = 'flex'; // Muestra elementos derechos
-            backToMenuBtn.style.display = 'block'; // Asegura que el botón de retroceso sea visible
-            truckIcon.style.display = 'block'; // Asegura que el icono del camión sea visible
-            argosLogo.style.display = 'block'; // Asegura que el logo de Argos sea visible
-            logoutBtn.style.display = 'none'; // Oculta el botón de cerrar sesión en la vista del formulario
-
-            // Controla la visibilidad del botón de descarga de Excel
-            if (loggedInUser === "ARGOS") {
-                downloadExcelContainer.style.display = 'flex'; // Mostrar para ARGOS
-            } else {
-                downloadExcelContainer.style.display = 'none'; // Ocultar para otros talleres
-            }
-        }
-
-        function showAllReportsView() {
-            loginView.style.display = 'none';
-            workshopSelectionView.style.display = 'none';
-            formView.style.display = 'none';
-            allReportsView.style.display = 'block'; // Mostrar la nueva vista de todos los reportes
-            mainPageTitle.textContent = 'Todos los Reportes'; // Título para esta vista
-            reportSubtitle.style.display = 'block'; // Mantener el subtítulo "REPORTE"
-            leftHeaderElements.style.display = 'flex'; // Mostrar elementos izquierdos
-            rightHeaderElements.style.display = 'flex'; // Mostrar elementos derechos
-            backToMenuBtn.style.display = 'block'; // Mostrar botón de retroceso
-            truckIcon.style.display = 'block'; // Mostrar icono del camión
-            argosLogo.style.display = 'block'; // Mostrar logo de Argos
-            logoutBtn.style.display = 'none'; // Ocultar botón de cerrar sesión
-
-            // Ocultar el botón de descarga de Excel en esta vista si es necesario, o mantenerlo si ARGOS lo necesita aquí
-            downloadExcelContainer.style.display = 'none'; // No hay descarga directa desde aquí, se podría añadir si se requiere un excel consolidado
-
-            loadAllReportsData(); // Cargar todos los datos para esta vista
-        }
-
-        // --- Lógica de Inicio de Sesión ---
-        // Objeto con credenciales válidas
-        const validCredentials = {
-            "KAEL": "KAEL",
-            "ABFREN": "ABFREN",
-            "SOMEC": "SOMEC",
-            "DRACSO": "DRACSO",
-            "JS OUT": "JS OUT",
-            "MG": "MG",
-            "SIMIYP": "SIMIYP",
-            "SERVII": "SERVII",
-            "ARGOS": "ARGOS" // Nuevo usuario ARGOS
-        };
-
-        loginBtn.addEventListener('click', () => {
-            const username = usernameInput.value;
-            const password = passwordInput.value;
-
-            if (validCredentials[username] === password) {
-                loginError.style.display = 'none';
-                loggedInUser = username; // Almacena el nombre de usuario logueado
-                showWorkshopSelectionView(); // Va a la selección de taller después del inicio de sesión exitoso
-            } else {
-                loginError.textContent = 'Usuario o contraseña incorrectos.';
-                loginError.style.display = 'block';
             }
         });
 
-        // --- Lógica de Cierre de Sesión ---
-        logoutBtn.addEventListener('click', async () => {
-            if (auth) {
-                try {
-                    await auth.signOut();
-                    console.log('User signed out');
-                } catch (error) {
-                    console.error('Error signing out:', error);
-                }
-            }
-            showLoginView(); // Vuelve a la vista de inicio de sesión
-        });
 
-        // --- Datos para Talleres y Dropdowns Dependientes ---
-        const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
-        let currentWorkshop = ''; // Ningún taller seleccionado inicialmente
-        
-        // Nombres de visualización de talleres (para tarjetas)
-        const workshopDisplayNames = {
-            "KAEL": "KAEL",
-            "ABFREN": "ABFREN",
-            "SOMEC": "SOMEC",
-            "DRACSO": "DRACSO",
-            "JS OUT": "JS OUT",
-            "MG": "MG SOL", // Mostrar como MG SOL
-            "SIMIYP": "SIMIYP",
-            "SERVII": "SERVII"
-        };
-
-        // URLs de imágenes de talleres (marcadores de posición, reemplazar con tus imágenes reales)
-        const workshopImages = {
-            "KAEL": { src: "LOGOKAEL.jpg", alt: "Logo KAEL" }, 
-            "ABFREN": { src: "LOGOABFREN.png", alt: "Logo ABFREN" }, 
-            "SOMEC": { src: "LOGOSOMEC.png", alt: "Logo SOMEC" }, 
-            "DRACSO": { src: "LOGODRACSO.png", alt: "Logo DRACSO" }, // Corregido según la tabla
-            "JS OUT": { src: "LOGOJS.png", alt: "Logo JS OUT" }, 
-            "MG": { src: "LOGOMG.png", alt: "Logo MG SOL" }, 
-            "SIMIYP": { src: "LOGOSIMIYP.png", alt: "Logo SIMIYP" }, 
-            "SERVII": { src: "LOGOSERVICIO.png", alt: "Logo SERVII" } // Corregido según la tabla
-        };
-
-        // --- Inicializa la Aplicación basada en el Taller ---
+        // --- Initialize App based on Workshop ---
         function initApp(workshopName) {
             currentWorkshop = workshopName;
-            mainPageTitle.textContent = workshopDisplayNames[workshopName]; // Establece el H1 principal al nombre del taller
-            reportSubtitle.style.display = 'block'; // Muestra el subtítulo "REPORTE"
+            mainPageTitle.textContent = workshopDisplayNames[workshopName]; // Set main H1 to workshop name
+            reportSubtitle.style.display = 'block'; // Show "REPORTE" subtitle
             
-            // Actualiza la referencia de la colección de Firestore
-            if (db && userId) {
-                dataCollectionRef = collection(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`);
-                populateEquipoDropdown(); // Vuelve a poblar los dropdowns para el nuevo taller
-                loadData(); // Carga los datos específicos del nuevo taller
-            } else {
-                console.warn("Firebase DB o userId no están listos. No se puede inicializar la colección.");
-            }
+            // Update Firestore collection reference
+            dataCollectionRef = collection(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`);
+            
+            populateEquipoDropdown(); // Repopulate dropdowns for the new workshop
+            // No need to dispatch change here, as populateEquipoDropdown will handle initial state
+            loadData(); // Load data specific to the new workshop
 
-            showFormView(); // Muestra la vista del formulario
+            showFormView(); // Show form view
         }
 
-        // --- Popula las Tarjetas de Taller (Menú) ---
+        // --- Populate Workshop Cards (Menu) ---
         function populateWorkshopCards() {
-            workshopSelectionView.innerHTML = ''; // Limpia las tarjetas existentes
+            workshopSelectionView.innerHTML = ''; // Clear existing cards
             let workshopsToDisplay = [];
 
             if (loggedInUser === "ARGOS") {
-                workshopsToDisplay = allWorkshops;
-                // Añadir tarjeta "Todos los Reportes" para ARGOS
-                const allReportsCard = document.createElement('div');
-                allReportsCard.className = `
-                    bg-blue-100 rounded-lg shadow-md p-4 flex flex-col items-center justify-center
-                    cursor-pointer hover:bg-blue-200 hover:shadow-lg transition ease-in-out duration-150
-                    border border-blue-300
-                `;
-                allReportsCard.addEventListener('click', () => showAllReportsView());
-
-                const icon = document.createElement('span');
-                icon.className = 'text-4xl mb-3'; // Icono más grande
-                icon.innerHTML = '📊'; // Un icono emoji adecuado para informes
-
-                const name = document.createElement('p');
-                name.textContent = 'Todos los Reportes';
-                name.className = 'text-lg font-semibold text-blue-800 text-center';
-
-                allReportsCard.appendChild(icon);
-                allReportsCard.appendChild(name);
-                workshopSelectionView.appendChild(allReportsCard);
-
+                workshopsToDisplay = allWorkshops; // ARGOS sees all workshops
             } else {
-                // Otros usuarios solo ven su taller específico
+                // Other users only see their specific workshop
                 if (allWorkshops.includes(loggedInUser)) {
                     workshopsToDisplay = [loggedInUser];
                 }
@@ -1506,14 +1320,13 @@
                 card.addEventListener('click', () => initApp(workshop));
 
                 const img = document.createElement('img');
-                // IMPORTANTE: Asegúrate de que estos nombres de archivo coincidan exactamente (incluyendo mayúsculas/minúsculas y extensión)
-                // con los archivos en tu repositorio de GitHub.
+                // Use the image URL from the workshopImages map
                 img.src = workshopImages[workshop].src;
                 img.alt = workshopImages[workshop].alt;
-                img.className = 'w-24 h-24 object-contain mb-3 rounded-md'; 
+                img.className = 'w-24 h-24 object-contain mb-3 rounded-md'; // Adjusted size and added rounded-md
 
                 const name = document.createElement('p');
-                name.textContent = workshopDisplayNames[workshop]; // Usa el nombre de visualización
+                name.textContent = workshopDisplayNames[workshop]; // Use display name
                 name.className = 'text-lg font-semibold text-gray-800 text-center';
 
                 card.appendChild(img);
@@ -1522,9 +1335,9 @@
             });
         }
 
-        // --- Popula el Dropdown de Equipo ---
+        // --- Populate Equipo Dropdown ---
         function populateEquipoDropdown() {
-            equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>'; // Limpia opciones anteriores
+            equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>'; // Clear previous options
             const currentEquiposData = allWorkshopsData[currentWorkshop];
             if (currentEquiposData) {
                 for (const equipoName in currentEquiposData) {
@@ -1534,24 +1347,24 @@
                     equipoSelect.appendChild(option);
                 }
             }
-            // Reinicia los dropdowns dependientes
+            // Reset dependent dropdowns
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             conjuntoSelect.disabled = true;
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
-            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; 
-            textoEstandarSelect.disabled = true; 
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; // Clear textoEstandar options
+            textoEstandarSelect.disabled = true; // Disable textoEstandar dropdown
         }
 
-        // --- Maneja el Dropdown de Conjunto Dependiente (basado en Equipo) ---
+        // --- Handle Dependent Conjunto Dropdown (based on Equipo) ---
         equipoSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
-            conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>'; 
-            conjuntoSelect.disabled = true; 
-            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>'; 
-            parteSelect.disabled = true; 
-            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; 
-            textoEstandarSelect.disabled = true; 
+            conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>'; // Clear previous options
+            conjuntoSelect.disabled = true; // Disable until a valid equipo is selected
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>'; // Clear parte options
+            parteSelect.disabled = true; // Disable parte dropdown
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; // Clear textoEstandar options
+            textoEstandarSelect.disabled = true; // Disable textoEstandar dropdown
 
             const currentEquiposData = allWorkshopsData[currentWorkshop];
             if (selectedEquipo && currentEquiposData && currentEquiposData[selectedEquipo]) {
@@ -1561,40 +1374,40 @@
                     option.textContent = conjuntoName;
                     conjuntoSelect.appendChild(option);
                 }
-                conjuntoSelect.disabled = false; 
+                conjuntoSelect.disabled = false; // Enable conjunto dropdown
             }
         });
 
-        // --- Maneja el Dropdown de Parte Dependiente (basado en Conjunto) ---
+        // --- Handle Dependent Parte Dropdown (based on Conjunto) ---
         conjuntoSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
             const selectedConjunto = conjuntoSelect.value;
-            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>'; 
-            parteSelect.disabled = true; 
-            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; 
-            textoEstandarSelect.disabled = true; 
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>'; // Clear previous options
+            parteSelect.disabled = true; // Disable until a valid conjunto is selected
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; // Clear textoEstandar options
+            textoEstandarSelect.disabled = true; // Disable textoEstandar dropdown
 
             const currentEquiposData = allWorkshopsData[currentWorkshop];
             if (selectedEquipo && selectedConjunto && currentEquiposData && 
                 currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto]) {
-                // Itera sobre las claves (nombres de las partes) del objeto
+                // Iterate over the keys (parte names) of the object
                 for (const parteName in currentEquiposData[selectedEquipo][selectedConjunto]) {
                     const option = document.createElement('option');
                     option.value = parteName;
                     option.textContent = parteName;
                     parteSelect.appendChild(option);
                 }
-                parteSelect.disabled = false; 
+                parteSelect.disabled = false; // Enable parte dropdown
             }
         });
 
-        // --- Maneja el Dropdown de Texto Estandar (basado en Parte) ---
+        // --- Handle Texto Estandar Dropdown (based on Parte) ---
         parteSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
             const selectedConjunto = conjuntoSelect.value;
             const selectedParte = parteSelect.value;
-            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; 
-            textoEstandarSelect.disabled = true; 
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>'; // Clear previous options
+            textoEstandarSelect.disabled = true; // Disable until a valid parte is selected
 
             const currentEquiposData = allWorkshopsData[currentWorkshop];
             if (selectedEquipo && selectedConjunto && selectedParte && currentEquiposData && 
@@ -1608,64 +1421,25 @@
                     option.textContent = text;
                     textoEstandarSelect.appendChild(option);
                 });
-                textoEstandarSelect.disabled = false; 
+                textoEstandarSelect.disabled = false; // Enable textoEstandar dropdown
             }
         });
 
-        // --- Función para cargar datos en el formulario para edición ---
-        function editRecord(docId, data) {
-            editingDocId = docId;
-            // Populate form fields
-            document.getElementById('fecha').value = data.fecha || '';
-            document.getElementById('otOrigen').value = data.otOrigen || '0';
-            document.getElementById('descripcionDetallada').value = data.descripcionDetallada || '';
-            document.getElementById('prioridad').value = data.prioridad || '';
-            document.getElementById('tecnico').value = data.tecnico || '';
-            document.getElementById('telefono').value = data.telefono || '';
 
-            // Populate dependent dropdowns in order
-            // Equipo
-            equipoSelect.value = data.equipo || '';
-            // Manually trigger change to populate Conjunto
-            const event = new Event('change');
-            equipoSelect.dispatchEvent(event);
-
-            // Conjunto (needs a small delay to ensure equipo change event has completed)
-            setTimeout(() => {
-                conjuntoSelect.value = data.conjunto || '';
-                conjuntoSelect.dispatchEvent(event); // Trigger change for Parte
-            }, 50); // Small delay
-
-            setTimeout(() => {
-                parteSelect.value = data.parte || '';
-                parteSelect.dispatchEvent(event); // Trigger change for Texto Estandar
-            }, 100); // Small delay
-
-            setTimeout(() => {
-                textoEstandarSelect.value = data.textoEstandar || '';
-            }, 150); // Small delay
-
-            saveUpdateBtn.textContent = 'Actualizar Registro';
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page/form
-        }
-
-
-        // --- Carga de Datos desde Firestore (en tiempo real) ---
+        // --- Load Data from Firestore (Real-time) ---
         function loadData() {
             if (unsubscribeSnapshot) {
-                unsubscribeSnapshot(); // Cancela la escucha anterior si existe
+                unsubscribeSnapshot(); // Unsubscribe from previous listener if any
             }
+
+            // Ensure dataCollectionRef is set before subscribing
             if (!dataCollectionRef) {
-                console.warn("dataCollectionRef no está definido. Esperando autenticación y selección de taller.");
-                dataTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Esperando conexión a la base de datos y selección de taller...</td>
-                    </tr>
-                `;
+                console.warn("dataCollectionRef is not defined. Waiting for authentication.");
                 return;
             }
+
             unsubscribeSnapshot = onSnapshot(dataCollectionRef, (snapshot) => {
-                dataTableBody.innerHTML = '';
+                dataTableBody.innerHTML = ''; // Clear existing table rows
                 if (snapshot.empty) {
                     dataTableBody.innerHTML = `
                         <tr>
@@ -1674,10 +1448,12 @@
                     `;
                     return;
                 }
+
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50';
+                    row.className = 'hover:bg-gray-50'; // Add hover effect
+
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
@@ -1693,7 +1469,6 @@
                             ${data.fotoUrl ? `<a href="${data.fotoUrl}" target="_blank" class="text-blue-600 hover:underline">Ver Foto</a>` : (data.fotoName || 'N/A')}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button data-id="${doc.id}" class="edit-btn px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-2">Editar</button>
                             <button data-id="${doc.id}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
                         </td>
                     `;
@@ -1704,28 +1479,17 @@
                 document.querySelectorAll('.delete-btn').forEach(button => {
                     button.addEventListener('click', async (e) => {
                         const docId = e.target.dataset.id;
-                        console.log('Intento de eliminar registro con ID:', docId);
-                        try {
-                            await deleteDoc(doc(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`, docId));
-                            console.log('Documento eliminado con éxito:', docId);
-                            displayMessageBox('Registro eliminado con éxito.');
-                        } catch (error) {
-                            console.error('Error al eliminar documento:', error);
-                            displayMessageBox('Error al eliminar el registro. Inténtalo de nuevo.');
+                        // IMPORTANT: Do NOT use confirm() or alert() in production. Use a custom modal UI.
+                        if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+                            try {
+                                await deleteDoc(doc(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`, docId));
+                                console.log('Documento eliminado con éxito:', docId);
+                            } catch (error) {
+                                console.error('Error al eliminar documento:', error);
+                            }
                         }
                     });
                 });
-
-                // Add event listeners for edit buttons
-                document.querySelectorAll('.edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const docId = e.target.dataset.id;
-                        // Find the document data from the snapshot
-                        const data = snapshot.docs.find(d => d.id === docId).data();
-                        editRecord(docId, data);
-                    });
-                });
-
             }, (error) => {
                 console.error("Error al cargar datos de Firestore:", error);
                 dataTableBody.innerHTML = `
@@ -1736,86 +1500,7 @@
             });
         }
 
-        // --- Carga de TODOS los Datos desde Firestore (para la vista de ARGOS) ---
-        async function loadAllReportsData() {
-            allReportsTableBody.innerHTML = `
-                <tr>
-                    <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando todos los reportes...</td>
-                </tr>
-            `;
-
-            const allData = [];
-            const fetchPromises = allWorkshops.map(async (workshopName) => {
-                const workshopCollectionRef = collection(db, `/artifacts/${appId}/public/data/${workshopName.toLowerCase()}_registros`);
-                try {
-                    const querySnapshot = await getDocs(workshopCollectionRef);
-                    querySnapshot.forEach(doc => {
-                        allData.push({ id: doc.id, workshop: workshopName, ...doc.data() }); // Añadir el nombre del taller
-                    });
-                } catch (error) {
-                    console.error(`Error fetching data for ${workshopName}:`, error);
-                }
-            });
-
-            await Promise.all(fetchPromises);
-
-            allReportsTableBody.innerHTML = ''; // Limpiar mensaje de carga
-            if (allData.length === 0) {
-                allReportsTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="13" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay reportes disponibles.</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            allData.forEach((data) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.workshop || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${data.fotoUrl ? `<a href="${data.fotoUrl}" target="_blank" class="text-blue-600 hover:underline">Ver Foto</a>` : (data.fotoName || 'N/A')}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button data-id="${data.id}" data-workshop="${data.workshop}" class="delete-all-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
-                    </td>
-                `;
-                allReportsTableBody.appendChild(row);
-            });
-
-            // Añadir event listeners para los botones de eliminar en la tabla de todos los reportes
-            document.querySelectorAll('.delete-all-btn').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const docId = e.target.dataset.id;
-                    const workshopName = e.target.dataset.workshop; // Obtener el nombre del taller del atributo de datos
-                    console.log(`Intento de eliminar registro con ID: ${docId} del taller: ${workshopName}`);
-                    try {
-                        await deleteDoc(doc(db, `/artifacts/${appId}/public/data/${workshopName.toLowerCase()}_registros`, docId));
-                        console.log('Documento eliminado con éxito:', docId);
-                        displayMessageBox('Registro eliminado con éxito.');
-                        // Recargar todos los reportes después de la eliminación
-                        loadAllReportsData();
-                    } catch (error) {
-                        console.error('Error al eliminar documento:', error);
-                        displayMessageBox('Error al eliminar el registro. Inténtalo de nuevo.');
-                    }
-                });
-            });
-        }
-
-
-        // --- Manejador de Envío de Formulario ---
+        // --- Form Submission Handler ---
         dataForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -1825,109 +1510,101 @@
                 data[key] = value;
             }
 
+            // Handle file input separately
             const fotoInput = document.getElementById('foto');
             if (fotoInput.files.length > 0) {
-                const file = fotoInput.files[0];
-                const storageRef = ref(storage, `fotos/${currentWorkshop}/${file.name}_${new Date().getTime()}`);
-                try {
-                    const snapshot = await uploadBytes(storageRef, file);
-                    data.fotoUrl = await getDownloadURL(snapshot.ref);
-                    data.fotoName = file.name;
-                    console.log('Foto subida con éxito:', data.fotoUrl);
-                } catch (error) {
-                    console.error('Error al subir la foto:', error);
-                    displayMessageBox('Error al subir la foto. Inténtalo de nuevo.'); 
-                    return; 
-                }
+                // For simplicity, we'll just store the file name.
+                // For actual file uploads, you would use Firebase Storage here.
+                // Example: const file = fotoInput.files[0];
+                // Upload file to Firebase Storage and get a downloadable URL
+                // data.fotoUrl = 'URL_DEL_ARCHIVO_EN_STORAGE';
+                data.fotoName = fotoInput.files[0].name; // Store just the name
+                data.fotoUrl = ''; // Placeholder for actual URL if you implement Storage
             } else {
-                // If no new photo is selected during edit, retain existing photo data
-                if (editingDocId) {
-                    // Fetch the existing data to retain fotoUrl and fotoName if not changed
-                    const docRef = doc(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`, editingDocId);
-                    const existingDoc = await getDoc(docRef);
-                    if (existingDoc.exists()) {
-                        const existingData = existingDoc.data();
-                        data.fotoUrl = existingData.fotoUrl || '';
-                        data.fotoName = existingData.fotoName || '';
-                    }
-                } else {
-                    data.fotoName = '';
-                    data.fotoUrl = '';
-                }
+                data.fotoName = '';
+                data.fotoUrl = '';
             }
 
-            // Eliminar el objeto File original del objeto 'data' antes de enviarlo a Firestore
-            // Esto es crucial porque Firestore no puede almacenar objetos File directamente.
-            if (data.foto && typeof data.foto === 'object' && data.foto instanceof File) {
-                delete data.foto;
-            }
-
+            // Add timestamp
             data.timestamp = new Date().toISOString();
 
-            if (dataCollectionRef) {
-                try {
-                    if (editingDocId) {
-                        // Update existing document
-                        await setDoc(doc(db, `/artifacts/${appId}/public/data/${currentWorkshop.toLowerCase()}_registros`, editingDocId), data);
-                        console.log('Registro actualizado con éxito:', data);
-                        displayMessageBox('Registro actualizado con éxito.');
-                    } else {
-                        // Add new document
-                        await addDoc(dataCollectionRef, data);
-                        console.log('Registro guardado con éxito:', data);
-                        displayMessageBox('Registro guardado con éxito.');
-                    }
-                    dataForm.reset();
-                    populateEquipoDropdown(); // Reinicia los dropdowns del formulario
-                    editingDocId = null; // Reset editing state
-                    saveUpdateBtn.textContent = 'Guardar Registro'; // Reset button text
-                } catch (error) {
-                    console.error('Error al guardar/actualizar registro:', error);
-                    displayMessageBox('Error al guardar/actualizar el registro. Por favor, inténtalo de nuevo.'); 
-                }
-            } else {
-                console.error("dataCollectionRef no está definido. No se puede guardar el registro.");
-                displayMessageBox('No se pudo guardar el registro. La base de datos no está lista.'); 
+            try {
+                await addDoc(dataCollectionRef, data);
+                dataForm.reset(); // Clear the form
+                populateEquipoDropdown(); // Reset all dependent dropdowns
+                console.log('Datos guardados con éxito:', data);
+            } catch (error) {
+                console.error('Error al guardar datos:', error);
+                // IMPORTANT: Do NOT use alert() in production. Use a custom modal UI.
+                alert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
             }
         });
 
-        // --- Manejador de Descarga de Excel ---
+        // --- Excel Download Handler ---
         downloadExcelBtn.addEventListener('click', async () => {
-            if (!dataCollectionRef) {
-                console.warn("dataCollectionRef no está definido. No se puede descargar Excel.");
-                displayMessageBox('La base de datos no está lista para descargar el Excel.');
-                return;
-            }
             try {
+                // Fetch all data from the current workshop's collection for export
                 const querySnapshot = await getDocs(dataCollectionRef);
-                const dataToExport = [];
+                const allData = [];
                 querySnapshot.forEach((doc) => {
-                    dataToExport.push(doc.data());
+                    allData.push(doc.data());
                 });
 
-                if (dataToExport.length === 0) {
-                    displayMessageBox('No hay datos para exportar a Excel.');
+                if (allData.length === 0) {
+                    alert('No hay datos para descargar.');
                     return;
                 }
 
-                const ws = XLSX.utils.json_to_sheet(dataToExport);
+                const dataToExport = [];
+                // Define headers explicitly to ensure order and correctness
+                const headers = [
+                    "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
+                    "Texto Estandar", "Descripción Detallada", "Prioridad",
+                    "Técnico", "Teléfono", "Foto (URL/Nombre)"
+                ];
+                dataToExport.push(headers);
+
+                allData.forEach(item => {
+                    const rowData = [
+                        item.equipo || '',
+                        item.fecha || '',
+                        item.otOrigen || '',
+                        item.conjunto || '',
+                        item.parte || '',
+                        item.textoEstandar || '',
+                        item.descripcionDetallada || '',
+                        item.prioridad || '',
+                        item.tecnico || '',
+                        item.telefono || '',
+                        item.fotoUrl || item.fotoName || 'N/A' // Prefer URL if available
+                    ];
+                    dataToExport.push(rowData);
+                });
+
+                // Create a new workbook and worksheet
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Reporte");
-                XLSX.writeFile(wb, `${currentWorkshop}_Reporte.xlsx`);
-                console.log('Datos exportados a Excel con éxito.');
+                const ws = XLSX.utils.aoa_to_sheet(dataToExport);
+
+                // Add the worksheet to the workbook
+                XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
+
+                // Write the workbook and trigger download
+                XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
+                console.log('Excel descargado con éxito.');
+
             } catch (error) {
                 console.error('Error al descargar Excel:', error);
-                displayMessageBox('Error al descargar el archivo Excel. Por favor, inténtalo de nuevo.');
+                alert('Error al descargar el archivo Excel. Por favor, inténtalo de nuevo.');
             }
         });
 
-        // --- Manejador del Botón Volver al Menú ---
+        // --- Back to Menu Button Handler ---
         backToMenuBtn.addEventListener('click', () => {
-            showWorkshopSelectionView(); // Vuelve a la selección de taller
+            showWorkshopSelectionView(); // Go back to workshop selection
         });
 
-        // Configuración inicial cuando la página se carga
-        // showLoginView(); // Ya se llama en window.onload, manejado por onAuthStateChanged
+        // Initial setup when the page loads (after Firebase auth)
+        // populateWorkshopCards is now called inside onAuthStateChanged, which then calls showLoginView
     </script>
 </body>
 </html>
