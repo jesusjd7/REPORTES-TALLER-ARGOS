@@ -15,13 +15,29 @@
             background-size: cover; /* Cover the entire background */
             background-repeat: no-repeat; /* Do not repeat the image */
             background-position: center center; /* Center the image */
-            background-attachment: fixed; /* Keep background fixed when scrolling - Confirmed fixed */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
             background-color: #f3f4f6; /* Fallback color */
+            display: flex; /* Use flexbox for body to control content alignment */
+            align-items: center; /* Center content vertically by default */
+            justify-content: center; /* Center content horizontally */
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem; /* Responsive padding for smaller screens */
         }
+        /* Adjust padding for larger screens */
+        @media (min-width: 640px) { /* sm breakpoint */
+            body { padding: 1.5rem; }
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            body { padding: 2rem; }
+        }
+
         .container {
             max-width: 900px;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background for content */
+            /* Updated: More transparent white background for content */
+            background-color: rgba(255, 255, 255, 0.7); 
+            width: 100%; /* Ensure container takes full width up to max-width */
         }
+
         /* Custom scrollbar for table */
         ::-webkit-scrollbar {
             width: 8px;
@@ -38,6 +54,15 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        /* New class for aligning content to the top */
+        body.align-top-content {
+            align-items: flex-start; /* Align content to the top */
+        }
+        body.align-top-content .container {
+            margin-top: 2rem; /* Add some top margin when aligned to top */
+            margin-bottom: auto; /* Push content to top */
+        }
     </style>
     <script>
         // Custom Tailwind colors from the truck image
@@ -53,12 +78,11 @@
         }
     </script>
 </head>
-<body class="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-screen">
+<body>
     <div class="container mx-auto bg-white p-6 rounded-lg shadow-lg">
         <!-- Main header container for titles and icons -->
         <div class="relative flex items-center justify-center mb-8">
-            <!-- Container for left elements (ATRAS button and Truck Icon) -->
-            <!-- Truck Icon is now removed as per request -->
+            <!-- Container for left elements (ATRAS button) -->
             <div id="leftHeaderElements" class="absolute left-0 flex items-center space-x-2" style="display: none;">
                 <button id="backToMenuBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     ATRAS
@@ -68,8 +92,7 @@
             <!-- Main page title, dynamic (centered) -->
             <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center"></h1>
             
-            <!-- Container for right elements (Argos Logo and Logout Button) -->
-            <!-- Argos Logo is now removed as per request -->
+            <!-- Container for right elements (Logout Button) -->
             <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2" style="display: none;">
                 <button id="logoutBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                     Cerrar Sesión
@@ -81,25 +104,28 @@
 
         <!-- Login View (Initially visible) -->
         <div id="loginView" class="flex flex-col items-center justify-center p-8">
-            <!-- Updated Login Truck Image -->
-            <img src="uploaded:image_67975e.png-bb0e21fe-260b-42ca-8e50-e2cab112a9df" alt="Camión Argos" class="w-64 h-auto mb-8 rounded-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Iniciar Sesión</h2>
-            <div class="w-full max-w-sm">
-                <div class="mb-4">
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-                    <input type="text" id="username" name="username" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <!-- New wrapper for login box styling -->
+            <div class="border border-black rounded-lg p-6 shadow-xl bg-white max-w-sm w-full mx-auto">
+                <!-- Updated Login Truck Image -->
+                <img src="CAMION.png" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
+                <div class="w-full">
+                    <div class="mb-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+                        <input type="text" id="username" name="username" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                        <input type="password" id="password" name="password" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <button id="loginBtn"
+                            class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
+                        INGRESAR
+                    </button>
+                    <p id="loginError" class="text-red-600 text-center mt-4" style="display: none;"></p>
                 </div>
-                <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input type="password" id="password" name="password" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-                <button id="loginBtn"
-                        class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
-                    INGRESAR
-                </button>
-                <p id="loginError" class="text-red-600 text-center mt-4" style="display: none;"></p>
             </div>
         </div>
 
@@ -156,8 +182,34 @@
                     </select>
                 </div>
 
-                <!-- New Field: TEXTO ESTANDAR (Changed to select) -->
+                <!-- Field PRIORIDAD (Moved) -->
                 <div>
+                    <label for="prioridad" class="block text-sm font-medium text-gray-700 mb-1">PRIORIDAD *</label>
+                    <select id="prioridad" name="prioridad" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="">Seleccione una Prioridad</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>
+                </div>
+
+                <!-- Field TECNICO (Moved) -->
+                <div>
+                    <label for="tecnico" class="block text-sm font-medium text-gray-700 mb-1">TECNICO *</label>
+                    <input type="text" id="tecnico" name="tecnico" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+
+                <!-- Field TELEFONO (Moved) -->
+                <div>
+                    <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">TELEFONO *</label>
+                    <input type="text" id="telefono" name="telefono" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+
+                <!-- New Field: TEXTO ESTANDAR (Moved to be above DESCRIPCION DETALLADA) -->
+                <div class="md:col-span-2"> <!-- Spans two columns on medium screens and up -->
                     <label for="textoEstandar" class="block text-sm font-medium text-gray-700 mb-1">TEXTO ESTANDAR *</label>
                     <select id="textoEstandar" name="textoEstandar" required disabled
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -172,37 +224,16 @@
                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                 </div>
 
-                <!-- Field PRIORIDAD -->
-                <div>
-                    <label for="prioridad" class="block text-sm font-medium text-gray-700 mb-1">PRIORIDAD *</label>
-                    <select id="prioridad" name="prioridad" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        <option value="">Seleccione una Prioridad</option>
-                        <option value="Alta">Alta</option>
-                        <option value="Media">Media</option>
-                        <option value="Baja">Baja</option>
-                    </select>
-                </div>
-
-                <!-- Field TECNICO -->
-                <div>
-                    <label for="tecnico" class="block text-sm font-medium text-gray-700 mb-1">TECNICO *</label>
-                    <input type="text" id="tecnico" name="tecnico" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-
-                <!-- Field TELEFONO -->
-                <div>
-                    <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">TELEFONO *</label>
-                    <input type="text" id="telefono" name="telefono" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-
-                <!-- Field FOTO (Placeholder) -->
+                <!-- Field FOTO (Custom button style) -->
                 <div>
                     <label for="foto" class="block text-sm font-medium text-gray-700 mb-1">FOTO</label>
-                    <input type="file" id="foto" name="foto"
-                           class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <!-- Hidden file input -->
+                    <input type="file" id="foto" name="foto" class="hidden" accept="image/*">
+                    <!-- Custom styled label acting as a button -->
+                    <label for="foto"
+                           class="inline-flex items-center px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer">
+                        Añadir Foto
+                    </label>
                     <p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes requiere Firebase Storage.</p>
                 </div>
 
@@ -229,7 +260,8 @@
             </div>
 
             <!-- Data Table -->
-            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+            <!-- Added w-full to ensure it matches form width -->
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 w-full">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -265,7 +297,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // SheetJS (xlsx) CDN for Excel export
         // Note: This is a large library, consider loading it only when needed for production.
@@ -296,7 +328,6 @@
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn'); // Logout button
-        // Removed truckIcon and argosLogo as per request
         const leftHeaderElements = document.getElementById('leftHeaderElements'); // Container for left header elements
         const rightHeaderElements = document.getElementById('rightHeaderElements'); // Container for right header elements
         const dataForm = document.getElementById('dataForm');
@@ -344,6 +375,7 @@
             leftHeaderElements.style.display = 'none'; // Hide left elements
             rightHeaderElements.style.display = 'none'; // Hide right elements
             loggedInUser = null; // Clear logged in user on logout
+            document.body.classList.remove('align-top-content'); // Ensure content is centered
         }
 
         function showWorkshopSelectionView() {
@@ -355,8 +387,8 @@
             leftHeaderElements.style.display = 'none'; // Hide left elements
             rightHeaderElements.style.display = 'flex'; // Show right elements
             logoutBtn.style.display = 'block'; // Make sure logout button is visible
-            // Removed argosLogo.style.display = 'none'; as per request
             populateWorkshopCards(); // Ensure cards are populated based on loggedInUser
+            document.body.classList.add('align-top-content'); // Align content to top
         }
 
         function showFormView() {
@@ -368,9 +400,8 @@
             leftHeaderElements.style.display = 'flex'; // Show left elements
             rightHeaderElements.style.display = 'flex'; // Show right elements
             backToMenuBtn.style.display = 'block'; // Make sure back button is visible
-            // Removed truckIcon.style.display = 'block'; as per request
-            // Removed argosLogo.style.display = 'block'; as per request
             logoutBtn.style.display = 'none'; // Hide logout button in form view
+            document.body.classList.add('align-top-content'); // Align content to top
         }
 
         // --- Login Logic ---
@@ -390,14 +421,17 @@
         loginBtn.addEventListener('click', () => {
             const username = usernameInput.value;
             const password = passwordInput.value;
+            console.log(`Attempting login for: ${username} with password: ${password}`);
 
             if (validCredentials[username] === password) {
                 loginError.style.display = 'none';
                 loggedInUser = username; // Store the logged-in username
+                console.log(`Login successful for user: ${loggedInUser}`);
                 showWorkshopSelectionView(); // Go to workshop selection after successful login
             } else {
                 loginError.textContent = 'Usuario o contraseña incorrectos.';
                 loginError.style.display = 'block';
+                console.log('Login failed: Incorrect username or password.');
             }
         });
 
@@ -409,6 +443,7 @@
             // }).catch((error) => {
             //     console.error('Error signing out:', error);
             // });
+            console.log('User logged out.');
             showLoginView(); // Go back to login view
         });
 
