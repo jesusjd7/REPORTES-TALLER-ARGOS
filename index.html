@@ -11,7 +11,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-image: url('uploaded:image_c70201.png-b05c21ef-a29b-44f8-b2f0-be5ded1754a7'); /* Background image directly referenced */
+            /* Updated background image path to relative path */
+            background-image: url('FONDO.png'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
@@ -77,8 +78,8 @@
     <!-- Login View (Initially visible) -->
     <div id="loginView" class="flex flex-col items-center justify-center p-8 w-full">
         <div class="border border-black rounded-lg p-6 shadow-xl bg-white max-w-sm w-full mx-auto">
-            <!-- Truck Image -->
-            <img id="loginTruckImage" src="uploaded:image_a33d11.png-9df482c0-dc3d-4168-8feb-74b2d19ee436" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
+            <!-- Truck Image - Updated src to relative path -->
+            <img id="loginTruckImage" src="LOGOARGOS.jpg" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
             <div class="w-full">
                 <div class="mb-4">
@@ -308,21 +309,17 @@
             "SERVII": "SERVII"
         };
 
-        // Workshop image contentFetchIds
-        const workshopImageIds = {
-            "KAEL": "uploaded:image_d511bf.png-576df45a-cc7b-4ad5-875a-e2a795e0c0b1",
-            "ABFREN": "uploaded:image_e55c90.png-95852ca7-bd44-41cd-bf86-1870e98048d9",
-            "SOMEC": "uploaded:image_d42d7a.png-aac7793e-55de-4cee-b5b5-9ff05bf26570",
-            "DRACSO": "uploaded:image_d5f791.png-35f9f1e5-b8a8-4383-8768-cad9ce8bdc34",
-            "JS OUT": "uploaded:image_e2b8fb.png-ca9cc0ae-0944-4de7-8d12-eedfff29ccca",
-            "MG": "uploaded:image_3a9ec5.png-659f3790-0c33-40ca-b130-3a85291fee98",
-            "SIMIYP": "uploaded:image_d5eff2.png-83ab0ccf-0679-4d32-b268-78cc78794e83",
-            "SERVII": "uploaded:image_d43087.png-9c1ead57-30d1-48a7-a72f-60e2e97720b2"
+        // Workshop image paths - Updated to relative paths
+        const workshopImagePaths = {
+            "KAEL": "LOGOKAEL.jpg",
+            "ABFREN": "LOGOABFREN.png",
+            "SOMEC": "LOGOSOMEC.png",
+            "DRACSO": "LOGODRACSO.png",
+            "JS OUT": "LOGOJS.png",
+            "MG": "LOGOMG.png",
+            "SIMIYP": "LOGOSIMIYP.png",
+            "SERVII": "LOGOSERVICIO.png"
         };
-
-        // No longer needed as images are directly referenced in HTML/CSS
-        // const loginTruckImageId = "uploaded:image_a33d11.png-9df482c0-dc3d-4168-8feb-74b2d19ee436";
-        // const backgroundImageId = "uploaded:image_c70201.png-b05c21ef-a29b-44f8-b2f0-be5ded1754a7";
 
         // This map holds the relationship between PARTE and TEXTO ESTANDAR.
         const parteToTextoEstandarMap = {
@@ -1158,8 +1155,10 @@
             loginView.style.display = 'flex';
             appContainer.style.display = 'none';
             document.body.classList.remove('align-top-content');
-            // Directly set the background image
-            document.body.style.backgroundImage = `url('uploaded:image_c70201.png-b05c21ef-a29b-44f8-b2f0-be5ded1754a7')`;
+            // Directly set the background image using relative path
+            document.body.style.backgroundImage = `url('FONDO.png')`;
+            console.log("Login view shown. Background image set to FONDO.png");
+            console.log("Login truck image src:", loginTruckImage.src);
         }
 
         function showWorkshopSelectionView() {
@@ -1174,6 +1173,7 @@
             logoutBtn.style.display = 'block';
             populateWorkshopCards();
             document.body.classList.add('align-top-content');
+            console.log("Workshop selection view shown.");
         }
 
         function showFormView() {
@@ -1188,6 +1188,7 @@
             backToMenuBtn.style.display = 'block';
             logoutBtn.style.display = 'none';
             document.body.classList.add('align-top-content');
+            console.log("Form view shown for workshop:", currentWorkshop);
         }
 
         // --- Login Logic ---
@@ -1265,7 +1266,9 @@
                 const img = document.createElement('img');
                 img.alt = workshopDisplayNames[workshop];
                 img.className = 'w-24 h-24 object-contain mb-3 rounded-md';
-                img.src = workshopImageIds[workshop]; // Directly set the image source
+                // Updated src to relative path
+                img.src = workshopImagePaths[workshop]; 
+                console.log(`Workshop card for ${workshop}: image src set to ${img.src}`);
 
                 const name = document.createElement('p');
                 name.textContent = workshopDisplayNames[workshop];
@@ -1515,7 +1518,7 @@
 
         // Initial setup when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            showLoginView(); // This will now trigger image loading for login view and background
+            showLoginView(); 
         });
     </script>
 </body>
