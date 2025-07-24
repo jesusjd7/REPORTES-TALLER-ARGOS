@@ -314,14 +314,8 @@
         const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
         const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
 
-        // Search inputs (Removed as per user request)
-        // const equipoSearchInput = document.getElementById('equipoSearch');
-        // const conjuntoSearchInput = document.getElementById('conjuntoSearch');
-        // const parteSearchInput = document.getElementById('parteSearch');
-        // const textoEstandarSearchInput = document.getElementById('textoEstandarSearch');
-
         // --- Data for Workshops and Dependent Dropdowns ---
-        const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
+        const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII", "ARGOS"];
         
         const workshopDisplayNames = {
             "KAEL": "KAEL",
@@ -331,7 +325,8 @@
             "JS OUT": "JS OUT",
             "MG": "MG SOL",
             "SIMIYP": "SIMIYP",
-            "SERVII": "SERVII"
+            "SERVII": "SERVII",
+            "ARGOS": "ARGOS" // Added ARGOS display name
         };
 
         // Workshop image paths - Updated to relative paths
@@ -343,7 +338,8 @@
             "JS OUT": "LOGOJS.png",
             "MG": "LOGOMG.png",
             "SIMIYP": "LOGOSIMIYP.png",
-            "SERVII": "LOGOSERVICIO.png"
+            "SERVII": "LOGOSERVICIO.png",
+            "ARGOS": "LOGOARGOS.jpg" // Added ARGOS image path
         };
 
         // This map holds the relationship between PARTE and TEXTO ESTANDAR.
@@ -1137,7 +1133,8 @@
             "JS OUT": {},
             "MG": {},
             "SIMIYP": {},
-            "SERVII": {}
+            "SERVII": {},
+            "ARGOS": {} // Initialize ARGOS data structure
         };
 
         const equiposKael = [
@@ -1615,24 +1612,47 @@
 
             try {
                 let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                let argosRecords = loadDataFromLocalStorage("ARGOS"); // Load Argos data
+
                 if (editingRecordIndex > -1) {
                     // Update existing record
+                    const recordToUpdate = currentRecords[editingRecordIndex];
+                    // Preserve the original recordId if editing
+                    data.recordId = recordToUpdate.recordId;
+
+                    // Update in current workshop's data
                     currentRecords[editingRecordIndex] = data;
+
+                    // Update in ARGOS workshop's data
+                    const argosRecordIndex = argosRecords.findIndex(rec => rec.recordId === data.recordId);
+                    if (argosRecordIndex !== -1) {
+                        argosRecords[argosRecordIndex] = data;
+                    } else {
+                        // If for some reason the record isn't in Argos (e.g., old data before recordId was implemented), add it
+                        argosRecords.push(data);
+                    }
                     showCustomAlert('Registro actualizado con éxito.');
                     console.log('Registro actualizado con éxito:', data);
+
                 } else {
                     // Add new record
+                    // Generate a unique ID for the new record
+                    data.recordId = Date.now().toString() + Math.random().toString(36).substring(2, 9);
                     currentRecords.push(data);
+                    argosRecords.push(data); // Add to Argos as well
                     showCustomAlert('Datos guardados con éxito.');
                     console.log('Datos guardados con éxito:', data);
                 }
+
                 saveDataToLocalStorage(currentWorkshop, currentRecords);
+                saveDataToLocalStorage("ARGOS", argosRecords); // Save Argos data
+
                 dataForm.reset();
                 populateEquipoDropdown(); // Reset dropdowns
                 editingRecordIndex = -1; // Exit edit mode
                 saveRecordBtn.textContent = 'Guardar Registro'; // Reset button text
                 cancelEditBtn.style.display = 'none'; // Hide cancel button
-                loadData();
+                loadData(); // Reload data for current workshop
             } catch (error) {
                 console.error('Error al guardar datos:', error);
                 showCustomAlert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
