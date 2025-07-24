@@ -141,9 +141,6 @@
             <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="equipo" class="block text-sm font-medium text-gray-700 mb-1">EQUIPO *</label>
-                    <!-- Search input for Equipo -->
-                    <input type="text" id="equipoSearch" placeholder="Buscar Equipo..."
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2">
                     <select id="equipo" name="equipo" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Equipo</option>
@@ -165,9 +162,6 @@
 
                 <div>
                     <label for="conjunto" class="block text-sm font-medium text-gray-700 mb-1">CONJUNTO *</label>
-                    <!-- Search input for Conjunto -->
-                    <input type="text" id="conjuntoSearch" placeholder="Buscar Conjunto..."
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="conjunto" name="conjunto" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
@@ -177,9 +171,6 @@
 
                 <div>
                     <label for="parte" class="block text-sm font-medium text-gray-700 mb-1">PARTE *</label>
-                    <!-- Search input for Parte -->
-                    <input type="text" id="parteSearch" placeholder="Buscar Parte..."
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="parte" name="parte" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
@@ -200,9 +191,6 @@
 
                 <div class="md:col-span-2">
                     <label for="textoEstandar" class="block text-sm font-medium text-gray-700 mb-1">TEXTO ESTANDAR *</label>
-                    <!-- Search input for Texto Estandar -->
-                    <input type="text" id="textoEstandarSearch" placeholder="Buscar Texto Estandar..."
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="textoEstandar" name="textoEstandar" required disabled
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Texto Estandar</option>
@@ -326,11 +314,11 @@
         const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
         const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
 
-        // Search inputs
-        const equipoSearchInput = document.getElementById('equipoSearch');
-        const conjuntoSearchInput = document.getElementById('conjuntoSearch');
-        const parteSearchInput = document.getElementById('parteSearch');
-        const textoEstandarSearchInput = document.getElementById('textoEstandarSearch');
+        // Search inputs (Removed as per user request)
+        // const equipoSearchInput = document.getElementById('equipoSearch');
+        // const conjuntoSearchInput = document.getElementById('conjuntoSearch');
+        // const parteSearchInput = document.getElementById('parteSearch');
+        // const textoEstandarSearchInput = document.getElementById('textoEstandarSearch');
 
         // --- Data for Workshops and Dependent Dropdowns ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
@@ -761,17 +749,17 @@
                 "DESVARE EN OBRA Y/O VIA", "CAMBIAR RATCHET TRASERO", "CAMBIAR RODAJAS Y AJUSTAR FRENOS",
                 "CAMBIAR RATCHET DELANTERO POS 1", "CAMBIAR RATCHET DELANTERO POS 2", "CAMBIAR RATCHET DELANTERO POS 3",
                 "CAMBIAR RATCHET DELANTERO POS 4", "CAMBIAR RATCHET TRASERO 11-12", "CAMBIAR RATCHET TRASERO 3-4",
-                "CAMBIAR RATCHET TRASERO 5-6", "CAMBIAR RATCHET TRASERO 7-8", "CAMBIAR RATCHET TRASERO 9-10"
+                "CAMBIAR RATCHET TRASERO 5-6", "CAMBIAR RATCHET TRASERO 7-8", "CAMBIAR RATCHET TRASERO 9-10",
+                "RECTIFICAR CAMPANA DELANTERA POS 1", "RECTIFICAR CAMPANA DELANTERA POS 2", "RECTIFICAR CAMPANA DELANTERA POS 3",
+                "RECTIFICAR CAMPANA DELANTERA POS 4", "RECTIFICAR CAMPANA TRASERA 11-12", "RECTIFICAR CAMPANA TRASERA 3-4",
+                "RECTIFICAR CAMPANA TRASERA 5-6", "RECTIFICAR CAMPANA TRASERA 7-8", "RECTIFICAR CAMPANA TRASERA 9-10"
             ],
             "Campana": [
                 "RECTIFICAR CAMPANA DELANTERA", "RECTIFICAR CAMPANA TRASERA", "CAMBIAR CAMPANA TRASERA",
                 "CAMBIAR CAMPANA DELANTERA", "CAMBIAR CAMPANA DELANTERA POS 1", "CAMBIAR CAMPANA DELANTERA POS 2",
                 "CAMBIAR CAMPANA DELANTERA POS 3", "CAMBIAR CAMPANA DELANTERA POS4", "CAMBIAR CAMPANA TRASERA 11-12",
                 "CAMBIAR CAMPANA TRASERA 3-4", "CAMBIAR CAMPANA TRASERA 5-6", "CAMBIAR CAMPANA TRASERA 7-8",
-                "CAMBIAR CAMPANA TRASERA 9-10", "RECTIFICAR CAMPANA DELANTERA POS 1", "RECTIFICAR CAMPANA DELANTERA POS 2",
-                "RECTIFICAR CAMPANA DELANTERA POS 3", "RECTIFICAR CAMPANA DELANTERA POS 4", "RECTIFICAR CAMPANA TRASERA 11-12",
-                "RECTIFICAR CAMPANA TRASERA 3-4", "RECTIFICAR CAMPANA TRASERA 5-6", "RECTIFICAR CAMPANA TRASERA 7-8",
-                "RECTIFICAR CAMPANA TRASERA 9-10"
+                "CAMBIAR CAMPANA TRASERA 9-10"
             ],
             "Bomba_freno": [
                 "CAMBIAR INTERIORES BOMBA FRENOS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR BOMBA FRENOS"
@@ -1325,96 +1313,76 @@
         }
 
         // --- Populate Equipo Dropdown ---
-        function populateEquipoDropdown(filterText = '') {
+        function populateEquipoDropdown() {
             equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
-            const lowerCaseFilter = filterText.toLowerCase();
 
             if (currentEquiposData) {
                 for (const equipoName in currentEquiposData) {
-                    if (equipoName.toLowerCase().includes(lowerCaseFilter)) {
-                        const option = document.createElement('option');
-                        option.value = equipoName;
-                        option.textContent = equipoName;
-                        equipoSelect.appendChild(option);
-                    }
+                    const option = document.createElement('option');
+                    option.value = equipoName;
+                    option.textContent = equipoName;
+                    equipoSelect.appendChild(option);
                 }
             }
-            // Reset dependent dropdowns and search inputs
+            // Reset dependent dropdowns
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             conjuntoSelect.disabled = true;
-            conjuntoSearchInput.disabled = true;
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
-            parteSearchInput.disabled = true;
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
-            textoEstandarSearchInput.disabled = true;
         }
 
         // --- Populate Conjunto Dropdown ---
-        function populateConjuntoDropdown(selectedEquipo, filterText = '') {
+        function populateConjuntoDropdown(selectedEquipo) {
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
-            const lowerCaseFilter = filterText.toLowerCase();
 
             if (selectedEquipo && currentEquiposData && currentEquiposData[selectedEquipo]) {
                 for (const conjuntoName in currentEquiposData[selectedEquipo]) {
-                    if (conjuntoName.toLowerCase().includes(lowerCaseFilter)) {
-                        const option = document.createElement('option');
-                        option.value = conjuntoName;
-                        option.textContent = conjuntoName;
-                        conjuntoSelect.appendChild(option);
-                    }
+                    const option = document.createElement('option');
+                    option.value = conjuntoName;
+                    option.textContent = conjuntoName;
+                    conjuntoSelect.appendChild(option);
                 }
                 conjuntoSelect.disabled = false;
-                conjuntoSearchInput.disabled = false;
             } else {
                 conjuntoSelect.disabled = true;
-                conjuntoSearchInput.disabled = true;
             }
-            // Reset dependent dropdowns and search inputs
+            // Reset dependent dropdowns
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
-            parteSearchInput.disabled = true;
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
-            textoEstandarSearchInput.disabled = true;
         }
 
         // --- Populate Parte Dropdown ---
-        function populateParteDropdown(selectedEquipo, selectedConjunto, filterText = '') {
+        function populateParteDropdown(selectedEquipo, selectedConjunto) {
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
-            const lowerCaseFilter = filterText.toLowerCase();
 
             if (selectedEquipo && selectedConjunto && currentEquiposData && 
                 currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto]) {
                 for (const parteName in currentEquiposData[selectedEquipo][selectedConjunto]) {
-                    if (parteName.toLowerCase().includes(lowerCaseFilter)) {
-                        const option = document.createElement('option');
-                        option.value = parteName;
-                        option.textContent = parteName;
-                        parteSelect.appendChild(option);
-                    }
+                    const option = document.createElement('option');
+                    option.value = parteName;
+                    option.textContent = parteName;
+                    parteSelect.appendChild(option);
                 }
                 parteSelect.disabled = false;
-                parteSearchInput.disabled = false;
             } else {
                 parteSelect.disabled = true;
-                parteSearchInput.disabled = true;
             }
-            // Reset dependent dropdown and search input
+            // Reset dependent dropdown
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
-            textoEstandarSearchInput.disabled = true;
         }
 
         // --- Populate Texto Estandar Dropdown ---
-        function populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte, filterText = '') {
+        function populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte) {
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
-            const lowerCaseFilter = filterText.toLowerCase();
 
             if (selectedEquipo && selectedConjunto && selectedParte && currentEquiposData && 
                 currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto] &&
@@ -1422,36 +1390,27 @@
                 
                 const textoEstandarOptions = currentEquiposData[selectedEquipo][selectedConjunto][selectedParte];
                 textoEstandarOptions.forEach(text => {
-                    if (text.toLowerCase().includes(lowerCaseFilter)) {
-                        const option = document.createElement('option');
-                        option.value = text;
-                        option.textContent = text;
-                        textoEstandarSelect.appendChild(option);
-                    }
+                    const option = document.createElement('option');
+                    option.value = text;
+                    option.textContent = text;
+                    textoEstandarSelect.appendChild(option);
                 });
                 textoEstandarSelect.disabled = false;
-                textoEstandarSearchInput.disabled = false;
             } else {
                 textoEstandarSelect.disabled = true;
-                textoEstandarSearchInput.disabled = true;
             }
         }
 
-        // --- Handle Dependent Dropdowns and Search ---
+        // --- Handle Dependent Dropdowns ---
         equipoSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
             populateConjuntoDropdown(selectedEquipo);
-            conjuntoSearchInput.value = ''; // Clear search
-            parteSearchInput.value = ''; // Clear search
-            textoEstandarSearchInput.value = ''; // Clear search
         });
 
         conjuntoSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
             const selectedConjunto = conjuntoSelect.value;
             populateParteDropdown(selectedEquipo, selectedConjunto);
-            parteSearchInput.value = ''; // Clear search
-            textoEstandarSearchInput.value = ''; // Clear search
         });
 
         parteSelect.addEventListener('change', () => {
@@ -1459,36 +1418,7 @@
             const selectedConjunto = conjuntoSelect.value;
             const selectedParte = parteSelect.value;
             populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte);
-            textoEstandarSearchInput.value = ''; // Clear search
         });
-
-        // Search input event listeners
-        equipoSearchInput.addEventListener('input', (e) => {
-            populateEquipoDropdown(e.target.value);
-            equipoSelect.value = ''; // Clear selected value when searching
-        });
-
-        conjuntoSearchInput.addEventListener('input', (e) => {
-            const selectedEquipo = equipoSelect.value;
-            populateConjuntoDropdown(selectedEquipo, e.target.value);
-            conjuntoSelect.value = ''; // Clear selected value when searching
-        });
-
-        parteSearchInput.addEventListener('input', (e) => {
-            const selectedEquipo = equipoSelect.value;
-            const selectedConjunto = conjuntoSelect.value;
-            populateParteDropdown(selectedEquipo, selectedConjunto, e.target.value);
-            parteSelect.value = ''; // Clear selected value when searching
-        });
-
-        textoEstandarSearchInput.addEventListener('input', (e) => {
-            const selectedEquipo = equipoSelect.value;
-            const selectedConjunto = conjuntoSelect.value;
-            const selectedParte = parteSelect.value;
-            populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte, e.target.value);
-            textoEstandarSelect.value = ''; // Clear selected value when searching
-        });
-
 
         // --- Local Storage Functions ---
         function getLocalStorageKey(workshop) {
