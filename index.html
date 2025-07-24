@@ -118,7 +118,9 @@
                 </button>
             </div>
 
-            <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center"></h1>
+            <!-- Adjusted mainPageTitle for transparent background on mobile -->
+            <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center
+                bg-white bg-opacity-70 rounded-md px-4 py-2"></h1>
             
             <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2" style="display: none;">
                 <button id="logoutBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
@@ -129,7 +131,8 @@
         <h2 id="reportSubtitle" class="text-xl font-semibold text-center text-gray-600 mb-8" style="display: none;">REPORTE</h2>
 
         <!-- Workshop Selection View (Card Menu - Initially hidden) -->
-        <div id="workshopSelectionView" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" style="display: none;">
+        <!-- Changed grid-cols-1 to grid-cols-2 for mobile view -->
+        <div id="workshopSelectionView" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" style="display: none;">
             <!-- Workshop cards will be dynamically generated here -->
         </div>
 
@@ -138,6 +141,9 @@
             <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="equipo" class="block text-sm font-medium text-gray-700 mb-1">EQUIPO *</label>
+                    <!-- Search input for Equipo -->
+                    <input type="text" id="equipoSearch" placeholder="Buscar Equipo..."
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2">
                     <select id="equipo" name="equipo" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Equipo</option>
@@ -159,6 +165,9 @@
 
                 <div>
                     <label for="conjunto" class="block text-sm font-medium text-gray-700 mb-1">CONJUNTO *</label>
+                    <!-- Search input for Conjunto -->
+                    <input type="text" id="conjuntoSearch" placeholder="Buscar Conjunto..."
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="conjunto" name="conjunto" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
@@ -168,6 +177,9 @@
 
                 <div>
                     <label for="parte" class="block text-sm font-medium text-gray-700 mb-1">PARTE *</label>
+                    <!-- Search input for Parte -->
+                    <input type="text" id="parteSearch" placeholder="Buscar Parte..."
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="parte" name="parte" required
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             disabled>
@@ -188,6 +200,9 @@
 
                 <div class="md:col-span-2">
                     <label for="textoEstandar" class="block text-sm font-medium text-gray-700 mb-1">TEXTO ESTANDAR *</label>
+                    <!-- Search input for Texto Estandar -->
+                    <input type="text" id="textoEstandarSearch" placeholder="Buscar Texto Estandar..."
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" disabled>
                     <select id="textoEstandar" name="textoEstandar" required disabled
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">Seleccione un Texto Estandar</option>
@@ -223,10 +238,14 @@
                     <p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes no es compatible con el almacenamiento local.</p>
                 </div>
 
-                <div class="md:col-span-2 flex justify-center">
-                    <button type="submit"
+                <div class="md:col-span-2 flex justify-center space-x-4">
+                    <button type="submit" id="saveRecordBtn"
                             class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
                         Guardar Registro
+                    </button>
+                    <button type="button" id="cancelEditBtn" style="display:none;"
+                            class="px-6 py-3 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        Cancelar Edición
                     </button>
                 </div>
             </form>
@@ -279,7 +298,8 @@
 
         let loggedInUser = null;
         let currentWorkshop = '';
-        
+        let editingRecordIndex = -1; // -1 means no record is being edited
+
         // --- DOM Elements ---
         const appContainer = document.getElementById('appContainer');
         const mainPageTitle = document.getElementById('mainPageTitle');
@@ -303,6 +323,14 @@
         const formView = document.getElementById('formView');
         const backToMenuBtn = document.getElementById('backToMenuBtn');
         const loginTruckImage = document.getElementById('loginTruckImage'); // Reference to the truck image
+        const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
+        const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
+
+        // Search inputs
+        const equipoSearchInput = document.getElementById('equipoSearch');
+        const conjuntoSearchInput = document.getElementById('conjuntoSearch');
+        const parteSearchInput = document.getElementById('parteSearch');
+        const textoEstandarSearchInput = document.getElementById('textoEstandarSearch');
 
         // --- Data for Workshops and Dependent Dropdowns ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII"];
@@ -1270,10 +1298,11 @@
 
             workshopsToDisplay.forEach(workshop => {
                 const card = document.createElement('div');
+                // Adjusted card class for better mobile appearance (wider, less padding inside)
                 card.className = `
-                    bg-gray-50 rounded-lg shadow-md p-4 flex flex-col items-center justify-center
+                    bg-gray-50 rounded-lg shadow-md p-2 flex flex-col items-center justify-center
                     cursor-pointer hover:bg-blue-50 hover:shadow-lg transition ease-in-out duration-150
-                    border border-gray-200
+                    border border-gray-200 w-full sm:w-auto
                 `;
                 card.dataset.workshop = workshop;
                 card.addEventListener('click', () => initApp(workshop));
@@ -1296,90 +1325,170 @@
         }
 
         // --- Populate Equipo Dropdown ---
-        function populateEquipoDropdown() {
+        function populateEquipoDropdown(filterText = '') {
             equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
+            const lowerCaseFilter = filterText.toLowerCase();
+
             if (currentEquiposData) {
                 for (const equipoName in currentEquiposData) {
-                    const option = document.createElement('option');
-                    option.value = equipoName;
-                    option.textContent = equipoName;
-                    equipoSelect.appendChild(option);
+                    if (equipoName.toLowerCase().includes(lowerCaseFilter)) {
+                        const option = document.createElement('option');
+                        option.value = equipoName;
+                        option.textContent = equipoName;
+                        equipoSelect.appendChild(option);
+                    }
                 }
             }
+            // Reset dependent dropdowns and search inputs
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             conjuntoSelect.disabled = true;
+            conjuntoSearchInput.disabled = true;
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
+            parteSearchInput.disabled = true;
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
+            textoEstandarSearchInput.disabled = true;
         }
 
-        // --- Handle Dependent Dropdowns ---
-        equipoSelect.addEventListener('change', () => {
-            const selectedEquipo = equipoSelect.value;
+        // --- Populate Conjunto Dropdown ---
+        function populateConjuntoDropdown(selectedEquipo, filterText = '') {
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
-            conjuntoSelect.disabled = true;
-            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
-            parteSelect.disabled = true;
-            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
-            textoEstandarSelect.disabled = true;
-
             const currentEquiposData = allWorkshopsData[currentWorkshop];
+            const lowerCaseFilter = filterText.toLowerCase();
+
             if (selectedEquipo && currentEquiposData && currentEquiposData[selectedEquipo]) {
                 for (const conjuntoName in currentEquiposData[selectedEquipo]) {
-                    const option = document.createElement('option');
-                    option.value = conjuntoName;
-                    option.textContent = conjuntoName;
-                    conjuntoSelect.appendChild(option);
+                    if (conjuntoName.toLowerCase().includes(lowerCaseFilter)) {
+                        const option = document.createElement('option');
+                        option.value = conjuntoName;
+                        option.textContent = conjuntoName;
+                        conjuntoSelect.appendChild(option);
+                    }
                 }
                 conjuntoSelect.disabled = false;
+                conjuntoSearchInput.disabled = false;
+            } else {
+                conjuntoSelect.disabled = true;
+                conjuntoSearchInput.disabled = true;
             }
-        });
-
-        conjuntoSelect.addEventListener('change', () => {
-            const selectedEquipo = equipoSelect.value;
-            const selectedConjunto = conjuntoSelect.value;
+            // Reset dependent dropdowns and search inputs
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
+            parteSearchInput.disabled = true;
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
+            textoEstandarSearchInput.disabled = true;
+        }
 
+        // --- Populate Parte Dropdown ---
+        function populateParteDropdown(selectedEquipo, selectedConjunto, filterText = '') {
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
+            const lowerCaseFilter = filterText.toLowerCase();
+
             if (selectedEquipo && selectedConjunto && currentEquiposData && 
                 currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto]) {
                 for (const parteName in currentEquiposData[selectedEquipo][selectedConjunto]) {
-                    const option = document.createElement('option');
-                    option.value = parteName;
-                    option.textContent = parteName;
-                    parteSelect.appendChild(option);
+                    if (parteName.toLowerCase().includes(lowerCaseFilter)) {
+                        const option = document.createElement('option');
+                        option.value = parteName;
+                        option.textContent = parteName;
+                        parteSelect.appendChild(option);
+                    }
                 }
                 parteSelect.disabled = false;
+                parteSearchInput.disabled = false;
+            } else {
+                parteSelect.disabled = true;
+                parteSearchInput.disabled = true;
             }
-        });
-
-        parteSelect.addEventListener('change', () => {
-            const selectedEquipo = equipoSelect.value;
-            const selectedConjunto = conjuntoSelect.value;
-            const selectedParte = parteSelect.value;
+            // Reset dependent dropdown and search input
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
+            textoEstandarSearchInput.disabled = true;
+        }
 
+        // --- Populate Texto Estandar Dropdown ---
+        function populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte, filterText = '') {
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
+            const lowerCaseFilter = filterText.toLowerCase();
+
             if (selectedEquipo && selectedConjunto && selectedParte && currentEquiposData && 
                 currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto] &&
                 currentEquiposData[selectedEquipo][selectedConjunto][selectedParte]) {
                 
                 const textoEstandarOptions = currentEquiposData[selectedEquipo][selectedConjunto][selectedParte];
                 textoEstandarOptions.forEach(text => {
-                    const option = document.createElement('option');
-                    option.value = text;
-                    option.textContent = text;
-                    textoEstandarSelect.appendChild(option);
+                    if (text.toLowerCase().includes(lowerCaseFilter)) {
+                        const option = document.createElement('option');
+                        option.value = text;
+                        option.textContent = text;
+                        textoEstandarSelect.appendChild(option);
+                    }
                 });
                 textoEstandarSelect.disabled = false;
+                textoEstandarSearchInput.disabled = false;
+            } else {
+                textoEstandarSelect.disabled = true;
+                textoEstandarSearchInput.disabled = true;
             }
+        }
+
+        // --- Handle Dependent Dropdowns and Search ---
+        equipoSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            populateConjuntoDropdown(selectedEquipo);
+            conjuntoSearchInput.value = ''; // Clear search
+            parteSearchInput.value = ''; // Clear search
+            textoEstandarSearchInput.value = ''; // Clear search
         });
+
+        conjuntoSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            populateParteDropdown(selectedEquipo, selectedConjunto);
+            parteSearchInput.value = ''; // Clear search
+            textoEstandarSearchInput.value = ''; // Clear search
+        });
+
+        parteSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            const selectedParte = parteSelect.value;
+            populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte);
+            textoEstandarSearchInput.value = ''; // Clear search
+        });
+
+        // Search input event listeners
+        equipoSearchInput.addEventListener('input', (e) => {
+            populateEquipoDropdown(e.target.value);
+            equipoSelect.value = ''; // Clear selected value when searching
+        });
+
+        conjuntoSearchInput.addEventListener('input', (e) => {
+            const selectedEquipo = equipoSelect.value;
+            populateConjuntoDropdown(selectedEquipo, e.target.value);
+            conjuntoSelect.value = ''; // Clear selected value when searching
+        });
+
+        parteSearchInput.addEventListener('input', (e) => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            populateParteDropdown(selectedEquipo, selectedConjunto, e.target.value);
+            parteSelect.value = ''; // Clear selected value when searching
+        });
+
+        textoEstandarSearchInput.addEventListener('input', (e) => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            const selectedParte = parteSelect.value;
+            populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte, e.target.value);
+            textoEstandarSelect.value = ''; // Clear selected value when searching
+        });
+
 
         // --- Local Storage Functions ---
         function getLocalStorageKey(workshop) {
@@ -1429,7 +1538,8 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         ${data.fotoName || 'N/A'}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
+                        <button data-index="${index}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
                         <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
                     </td>
                 `;
@@ -1439,15 +1549,119 @@
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const indexToDelete = parseInt(e.target.dataset.index);
-                    if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+                    showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
                         let currentRecords = loadDataFromLocalStorage(currentWorkshop);
                         currentRecords.splice(indexToDelete, 1);
                         saveDataToLocalStorage(currentWorkshop, currentRecords);
                         loadData();
                         console.log('Registro eliminado con éxito.');
-                    }
+                    });
                 });
             });
+
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const indexToEdit = parseInt(e.target.dataset.index);
+                    editRecord(indexToEdit);
+                });
+            });
+        }
+
+        // --- Edit Record Functionality ---
+        function editRecord(index) {
+            const records = loadDataFromLocalStorage(currentWorkshop);
+            const recordToEdit = records[index];
+
+            if (recordToEdit) {
+                // Populate form fields
+                document.getElementById('fecha').value = recordToEdit.fecha || '';
+                document.getElementById('otOrigen').value = recordToEdit.otOrigen || '0';
+                document.getElementById('descripcionDetallada').value = recordToEdit.descripcionDetallada || '';
+                document.getElementById('prioridad').value = recordToEdit.prioridad || '';
+                document.getElementById('tecnico').value = recordToEdit.tecnico || '';
+                document.getElementById('telefono').value = recordToEdit.telefono || '';
+
+                // Populate dependent dropdowns
+                equipoSelect.value = recordToEdit.equipo || '';
+                populateConjuntoDropdown(recordToEdit.equipo);
+                conjuntoSelect.value = recordToEdit.conjunto || '';
+                populateParteDropdown(recordToEdit.equipo, recordToEdit.conjunto);
+                parteSelect.value = recordToEdit.parte || '';
+                populateTextoEstandarDropdown(recordToEdit.equipo, recordToEdit.conjunto, recordToEdit.parte);
+                textoEstandarSelect.value = recordToEdit.textoEstandar || '';
+
+                editingRecordIndex = index;
+                saveRecordBtn.textContent = 'Actualizar Registro';
+                cancelEditBtn.style.display = 'inline-block'; // Show cancel button
+                console.log('Cargando registro para edición:', recordToEdit);
+            }
+        }
+
+        // --- Cancel Edit Functionality ---
+        cancelEditBtn.addEventListener('click', () => {
+            dataForm.reset();
+            populateEquipoDropdown(); // Reset dropdowns
+            editingRecordIndex = -1; // Exit edit mode
+            saveRecordBtn.textContent = 'Guardar Registro';
+            cancelEditBtn.style.display = 'none'; // Hide cancel button
+            console.log('Edición cancelada. Formulario restablecido.');
+        });
+
+        // --- Custom Alert/Confirm Modals ---
+        function showCustomAlert(message, callback = () => {}) {
+            const modalId = 'customAlertModal';
+            let modal = document.getElementById(modalId);
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = modalId;
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="p-8 border w-96 shadow-lg rounded-md bg-white">
+                        <p class="text-center text-lg mb-4" id="customAlertMessage"></p>
+                        <div class="flex justify-center">
+                            <button id="customAlertOkBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">OK</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('customAlertMessage').textContent = message;
+            modal.style.display = 'flex';
+            document.getElementById('customAlertOkBtn').onclick = () => {
+                modal.style.display = 'none';
+                callback();
+            };
+        }
+
+        function showCustomConfirm(message, onConfirm, onCancel = () => {}) {
+            const modalId = 'customConfirmModal';
+            let modal = document.getElementById(modalId);
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = modalId;
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="p-8 border w-96 shadow-lg rounded-md bg-white">
+                        <p class="text-center text-lg mb-4" id="customConfirmMessage"></p>
+                        <div class="flex justify-center space-x-4">
+                            <button id="customConfirmYesBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Sí</button>
+                            <button id="customConfirmNoBtn" class="px-4 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">No</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('customConfirmMessage').textContent = message;
+            modal.style.display = 'flex';
+
+            document.getElementById('customConfirmYesBtn').onclick = () => {
+                modal.style.display = 'none';
+                onConfirm();
+            };
+            document.getElementById('customConfirmNoBtn').onclick = () => {
+                modal.style.display = 'none';
+                onCancel();
+            };
         }
 
         // --- Form Submission Handler ---
@@ -1471,15 +1685,27 @@
 
             try {
                 let currentRecords = loadDataFromLocalStorage(currentWorkshop);
-                currentRecords.push(data);
+                if (editingRecordIndex > -1) {
+                    // Update existing record
+                    currentRecords[editingRecordIndex] = data;
+                    showCustomAlert('Registro actualizado con éxito.');
+                    console.log('Registro actualizado con éxito:', data);
+                } else {
+                    // Add new record
+                    currentRecords.push(data);
+                    showCustomAlert('Datos guardados con éxito.');
+                    console.log('Datos guardados con éxito:', data);
+                }
                 saveDataToLocalStorage(currentWorkshop, currentRecords);
                 dataForm.reset();
-                populateEquipoDropdown();
+                populateEquipoDropdown(); // Reset dropdowns
+                editingRecordIndex = -1; // Exit edit mode
+                saveRecordBtn.textContent = 'Guardar Registro'; // Reset button text
+                cancelEditBtn.style.display = 'none'; // Hide cancel button
                 loadData();
-                console.log('Datos guardados con éxito:', data);
             } catch (error) {
                 console.error('Error al guardar datos:', error);
-                alert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
+                showCustomAlert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
             }
         });
 
@@ -1488,7 +1714,7 @@
             const allData = loadDataFromLocalStorage(currentWorkshop);
 
             if (allData.length === 0) {
-                alert('No hay datos para descargar.');
+                showCustomAlert('No hay datos para descargar.'); // Using custom alert
                 return;
             }
 
