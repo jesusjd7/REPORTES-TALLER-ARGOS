@@ -45,21 +45,6 @@
             border: none; /* Remove border for transparent background */
         }
 
-        /* Custom style for workshop cards to remove background and reduce image size */
-        .workshop-card {
-            background-color: transparent; /* Remove background */
-            box-shadow: none; /* Remove shadow */
-            border: 1px solid rgba(0, 0, 0, 0.2); /* Light border for definition */
-            padding: 0.5rem; /* Reduced padding */
-        }
-
-        .workshop-card img {
-            width: 80px; /* Smaller image size */
-            height: 80px; /* Smaller image size */
-            background-color: transparent; /* Ensure image background is transparent */
-            border-radius: 0; /* Remove rounded corners if not desired for logos */
-        }
-
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -279,7 +264,6 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (Nombre)</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" id="workshopOriginHeader" style="display: none;">Taller Origen</th>
                             <th scope="col" class="relative px-6 py-3">
                                 <span class="sr-only">Acciones</span>
                             </th>
@@ -329,7 +313,6 @@
         const loginTruckImage = document.getElementById('loginTruckImage'); // Reference to the truck image
         const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
         const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
-        const workshopOriginHeader = document.getElementById('workshopOriginHeader'); // New header for Argos
 
         // --- Data for Workshops and Dependent Dropdowns ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII", "ARGOS"];
@@ -1135,6 +1118,18 @@
             ]
         };
 
+        const allWorkshopsData = {
+            "KAEL": {},
+            "ABFREN": {},
+            "SOMEC": {},
+            "DRACSO": {},
+            "JS OUT": {},
+            "MG": {},
+            "SIMIYP": {},
+            "SERVII": {},
+            "ARGOS": {}
+        };
+
         const equiposKael = [
             "COLMX0361", "COLMX0362", "COLMX0383", "COLMX0390", "COLMX0399", "COLMX0402", "COLMX0406", "COLMX0419",
             "COLMX0420", "COLMX0424", "COLMX0426", "COLMX0432", "COLMX0437", "COLMX0445", "COLMX0448", "COLMX0451",
@@ -1158,36 +1153,27 @@
             "COLAB0059", "COLAB0060", "COLAB0068"
         ];
 
-        // Centralized data structure for all workshops based on KAEL's comprehensive data
-        const allWorkshopsData = {};
-        allWorkshops.forEach(workshop => {
-            allWorkshopsData[workshop] = {};
-            // Special handling for ABFREN if it needs to retain its unique structure
-            if (workshop === "ABFREN") {
-                 allWorkshopsData["ABFREN"] = {
-                    "Maquinaria A": {
-                        "Motor A1": {
-                            "Cilindro A1": ["Revisar presión", "Cambiar sello"],
-                            "Biela A2": ["Ajustar", "Lubricar"]
-                        }
-                    }
-                };
-            } else {
-                // Populate all other workshops (including ARGOS) with KAEL's structure
-                equiposKael.forEach(equipo => {
-                    allWorkshopsData[workshop][equipo] = {};
-                    for (const conjuntoName in conjuntoToParteMap) {
-                        if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
-                            allWorkshopsData[workshop][equipo][conjuntoName] = {};
-                            conjuntoToParteMap[conjuntoName].forEach(parteName => {
-                                allWorkshopsData[workshop][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
-                            });
-                        }
-                    }
-                });
+        // 1. Populate KAEL data first
+        equiposKael.forEach(equipo => {
+            allWorkshopsData["KAEL"][equipo] = {};
+            for (const conjuntoName in conjuntoToParteMap) {
+                if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
+                    allWorkshopsData["KAEL"][equipo][conjuntoName] = {};
+                    conjuntoToParteMap[conjuntoName].forEach(parteName => {
+                        allWorkshopsData["KAEL"][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
+                    });
+                }
             }
         });
 
+        // 2. Deep copy KAEL's data to all other workshops
+        const kaelData = JSON.parse(JSON.stringify(allWorkshopsData["KAEL"])); // Create a deep copy of KAEL's data
+
+        for (const workshopName of allWorkshops) {
+            if (workshopName !== "KAEL") {
+                allWorkshopsData[workshopName] = JSON.parse(JSON.stringify(kaelData)); // Assign the deep copy
+            }
+        }
 
         // --- View Management Functions ---
         function showLoginView() {
@@ -1234,19 +1220,6 @@
             // Remove transparent-bg class from appContainer for form view
             appContainer.classList.remove('transparent-bg');
             console.log("Form view shown for workshop:", currentWorkshop);
-
-            // Show/hide "Taller Origen" column based on currentWorkshop
-            if (currentWorkshop === "ARGOS") {
-                workshopOriginHeader.style.display = 'table-cell'; // Show header
-                document.querySelectorAll('.workshop-origin-cell').forEach(cell => {
-                    cell.style.display = 'table-cell'; // Show cells
-                });
-            } else {
-                workshopOriginHeader.style.display = 'none'; // Hide header
-                document.querySelectorAll('.workshop-origin-cell').forEach(cell => {
-                    cell.style.display = 'none'; // Hide cells
-                });
-            }
         }
 
         // --- Login Logic ---
@@ -1313,19 +1286,19 @@
 
             workshopsToDisplay.forEach(workshop => {
                 const card = document.createElement('div');
-                // Apply custom workshop-card class for styling
+                // Adjusted card class for better mobile appearance (wider, less padding inside)
                 card.className = `
                     bg-gray-50 rounded-lg shadow-md p-2 flex flex-col items-center justify-center
                     cursor-pointer hover:bg-blue-50 hover:shadow-lg transition ease-in-out duration-150
-                    border border-gray-200 w-full sm:w-auto workshop-card
+                    border border-gray-200 w-full sm:w-auto
                 `;
                 card.dataset.workshop = workshop;
                 card.addEventListener('click', () => initApp(workshop));
 
                 const img = document.createElement('img');
                 img.alt = workshopDisplayNames[workshop];
-                // Apply smaller size and ensure transparent background for image
-                img.className = 'w-20 h-20 object-contain mb-3'; // Adjusted size
+                img.className = 'w-24 h-24 object-contain mb-3 rounded-md';
+                // Updated src to relative path
                 img.src = workshopImagePaths[workshop]; 
                 console.log(`Workshop card for ${workshop}: image src set to ${img.src}`);
 
@@ -1468,17 +1441,10 @@
             dataTableBody.innerHTML = '';
             const records = loadDataFromLocalStorage(currentWorkshop);
 
-            // Adjust table header visibility for ARGOS workshop
-            if (currentWorkshop === "ARGOS") {
-                workshopOriginHeader.style.display = 'table-cell';
-            } else {
-                workshopOriginHeader.style.display = 'none';
-            }
-
             if (records.length === 0) {
                 dataTableBody.innerHTML = `
                     <tr>
-                        <td colspan="${currentWorkshop === 'ARGOS' ? 13 : 12}" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
                     </tr>
                 `;
                 return;
@@ -1487,11 +1453,6 @@
             records.forEach((data, index) => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50';
-
-                let workshopOriginCell = '';
-                if (currentWorkshop === "ARGOS") {
-                    workshopOriginCell = `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 workshop-origin-cell">${data.workshopOrigin || 'N/A'}</td>`;
-                }
 
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
@@ -1507,7 +1468,6 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         ${data.fotoName || 'N/A'}
                     </td>
-                    ${workshopOriginCell}
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
                         <button data-index="${index}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
                         <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
@@ -1521,22 +1481,15 @@
                     const indexToDelete = parseInt(e.target.dataset.index);
                     showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
                         let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                        // Also remove from ARGOS data if it exists
+                        let argosRecords = loadDataFromLocalStorage("ARGOS");
                         const recordToDelete = currentRecords[indexToDelete];
-
-                        // Remove from current workshop's data
+                        if (recordToDelete && recordToDelete.recordId) {
+                            argosRecords = argosRecords.filter(rec => rec.recordId !== recordToDelete.recordId);
+                            saveDataToLocalStorage("ARGOS", argosRecords);
+                        }
                         currentRecords.splice(indexToDelete, 1);
                         saveDataToLocalStorage(currentWorkshop, currentRecords);
-
-                        // If not ARGOS, also remove from ARGOS data
-                        if (currentWorkshop !== "ARGOS") {
-                            let argosRecords = loadDataFromLocalStorage("ARGOS");
-                            const argosRecordIndex = argosRecords.findIndex(rec => rec.recordId === recordToDelete.recordId);
-                            if (argosRecordIndex !== -1) {
-                                argosRecords.splice(argosRecordIndex, 1);
-                                saveDataToLocalStorage("ARGOS", argosRecords);
-                            }
-                        }
-                        
                         loadData();
                         console.log('Registro eliminado con éxito.');
                     });
@@ -1666,7 +1619,6 @@
             }
 
             data.timestamp = new Date().toISOString();
-            data.workshopOrigin = currentWorkshop; // Add workshop origin to the record
 
             try {
                 let currentRecords = loadDataFromLocalStorage(currentWorkshop);
@@ -1732,10 +1684,6 @@
                 "Texto Estandar", "Descripción Detallada", "Prioridad",
                 "Técnico", "Teléfono", "Foto (Nombre)"
             ];
-            // Add "Taller Origen" header if current workshop is ARGOS
-            if (currentWorkshop === "ARGOS") {
-                headers.push("Taller Origen");
-            }
             dataToExport.push(headers);
 
             allData.forEach(item => {
@@ -1752,10 +1700,6 @@
                     item.telefono || '',
                     item.fotoName || 'N/A'
                 ];
-                // Add workshopOrigin to rowData if current workshop is ARGOS
-                if (currentWorkshop === "ARGOS") {
-                    rowData.push(item.workshopOrigin || 'N/A');
-                }
                 dataToExport.push(rowData);
             });
 
@@ -1780,3 +1724,4 @@
     </script>
 </body>
 </html>
+
