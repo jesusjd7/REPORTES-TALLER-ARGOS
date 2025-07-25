@@ -1,18 +1,270 @@
-// --- INICIALIZACIÓN DE SUPABASE (YA CON TUS CLAVES) ---
-        // Esta es la URL de tu proyecto Supabase
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPORTE por Taller</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Supabase CDN: La biblioteca para conectar tu app con Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Updated background image path to relative path */
+            background-image: url('FONDO.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-color: #f3f4f6; /* Fallback color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        @media (min-width: 640px) {
+            body { padding: 1.5rem; }
+        }
+        @media (min-width: 768px) {
+            body { padding: 2rem; }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Ligeramente transparente */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            padding: 2rem; /* p-8 */
+            width: 100%;
+            max-width: 28rem; /* max-w-sm (448px) */
+            text-align: center;
+        }
+
+        /* Responsive adjustments for workshop cards */
+        .workshop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust card size */
+            gap: 1rem;
+        }
+
+        .workshop-card {
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .workshop-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+            border-color: #3b82f6; /* blue-500 */
+        }
+
+        .workshop-card img {
+            max-width: 80px; /* Adjust logo size */
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .workshop-card.selected {
+            border-color: #1d4ed8; /* blue-700 */
+            background-color: #e0f2fe; /* blue-50 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Ensure content scrolls if too long for small screens */
+        .form-container, .table-container {
+            max-height: calc(100vh - 4rem); /* Adjust as needed */
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login View -->
+    <div id="loginView" class="container">
+        <!-- Imagen de Argos. Usamos una URL pública de Wikimedia para que funcione sin un archivo local. -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Argos_logo.svg" alt="Argos Logo" class="mx-auto h-20 w-auto mb-6">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Iniciar Sesión</h2>
+        <input type="email" id="usernameInput" placeholder="Correo electrónico" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="password" id="passwordInput" placeholder="Contraseña" class="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button id="loginBtn" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">Entrar</button>
+        <p id="loginMessage" class="mt-4 text-red-500 text-sm"></p>
+    </div>
+
+    <!-- Workshop Selection View -->
+    <div id="workshopSelectionView" class="container hidden">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Seleccione el Taller</h2>
+        <div class="workshop-grid">
+            <div class="workshop-card" data-workshop="kael">
+                <!-- Usamos URLs de imágenes públicas para los logos de los talleres -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/KAEL_Logo.png/640px-KAEL_Logo.png" alt="KAEL Logo">
+                <span class="font-semibold text-gray-700">KAEL</span>
+            </div>
+            <div class="workshop-card" data-workshop="abfren">
+                <img src="https://abfren.com/wp-content/uploads/2021/08/logo-abfren-nuevo-slogan.png" alt="ABFREN Logo">
+                <span class="font-semibold text-gray-700">ABFREN</span>
+            </div>
+            <div class="workshop-card" data-workshop="somec">
+                <img src="https://grupocrespo.com.co/wp-content/uploads/2019/08/LOGO-SOMEC-BLANCO.png" alt="SOMEC Logo">
+                <span class="font-semibold text-gray-700">SOMEC</span>
+            </div>
+            <div class="workshop-card" data-workshop="dracso">
+                <img src="https://media.licdn.com/dms/image/C4E0BAQHkR6m2y-u_4g/company-logo_200_200/0/1630653697926?e=2147483647&v=beta&t=Ue8f85f-Y9xYV3J_g2VqS3-l2oJ-b4b6Xw2y3C4J7QY" alt="DRACSO Logo">
+                <span class="font-semibold text-gray-700">DRACSO</span>
+            </div>
+            <div class="workshop-card" data-workshop="mecanicos">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOj04yQeS1w1hDk0Lh-wJ9L7F5w0R6sD6j1Q&s" alt="Mecánicos Logo">
+                <span class="font-semibold text-gray-700">Mecánicos</span>
+            </div>
+            <div class="workshop-card" data-workshop="latoneria">
+                <img src="https://www.latoneriaautomotriz.com/wp-content/uploads/2019/08/logo-latoneria-automotriz.png" alt="Latonería Logo">
+                <span class="font-semibold text-gray-700">Latonería</span>
+            </div>
+        </div>
+        <button id="logoutBtn" class="w-full bg-red-600 text-white p-3 rounded-lg font-semibold hover:bg-red-700 transition duration-200 mt-6">Cerrar Sesión</button>
+    </div>
+
+    <!-- Form View -->
+    <div id="formView" class="container hidden">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Reporte para Taller <span id="currentWorkshopName" class="text-blue-600"></span></h2>
+        <form id="reportForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="equipo" class="block text-left text-sm font-medium text-gray-700">Equipo</label>
+                <input type="text" id="equipo" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="fecha" class="block text-left text-sm font-medium text-gray-700">Fecha</label>
+                <input type="date" id="fecha" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="otOrigen" class="block text-left text-sm font-medium text-gray-700">OT Origen</label>
+                <input type="text" id="otOrigen" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="conjunto" class="block text-left text-sm font-medium text-gray-700">Conjunto</label>
+                <select id="conjunto" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Seleccione Conjunto</option>
+                    <option value="SISTEMA HIDRAULICO">SISTEMA HIDRAULICO</option>
+                    <option value="MOTOR">MOTOR</option>
+                    <option value="SISTEMA FRENOS">SISTEMA FRENOS</option>
+                    <option value="ESTRUCTURA CHASIS">ESTRUCTURA CHASIS</option>
+                    <option value="TRANSMISION">TRANSMISION</option>
+                    <option value="DIRECCION">DIRECCION</option>
+                    <option value="SISTEMA ELECTRICO">SISTEMA ELECTRICO</option>
+                    <option value="AIRE ACONDICIONADO">AIRE ACONDICIONADO</option>
+                    <option value="COMPONENTE DE DESGASTE">COMPONENTE DE DESGASTE</option>
+                    <option value="OTROS">OTROS</option>
+                </select>
+            </div>
+            <div>
+                <label for="parte" class="block text-left text-sm font-medium text-gray-700">Parte</label>
+                <select id="parte" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
+                    <option value="">Seleccione Parte</option>
+                </select>
+            </div>
+            <div>
+                <label for="textoEstandar" class="block text-left text-sm font-medium text-gray-700">Texto Estandar</label>
+                <select id="textoEstandar" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
+                    <option value="">Seleccione Texto Estandar</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label for="descripcionDetallada" class="block text-left text-sm font-medium text-gray-700">Descripción Detallada</label>
+                <textarea id="descripcionDetallada" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+            <div>
+                <label for="prioridad" class="block text-left text-sm font-medium text-gray-700">Prioridad</label>
+                <select id="prioridad" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+            <div>
+                <label for="tecnico" class="block text-left text-sm font-medium text-gray-700">Técnico</label>
+                <input type="text" id="tecnico" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="telefono" class="block text-left text-sm font-medium text-gray-700">Teléfono</label>
+                <input type="tel" id="telefono" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="foto" class="block text-left text-sm font-medium text-gray-700">Añadir Foto</label>
+                <input type="file" id="foto" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <p class="mt-1 text-xs text-gray-500">La foto se subirá a Supabase Storage.</p>
+            </div>
+
+            <div class="md:col-span-2 flex justify-between mt-6">
+                <button type="submit" class="bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition duration-200 w-full md:w-auto flex-grow mr-2">Guardar Reporte</button>
+                <button type="button" id="viewReportsBtn" class="bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 w-full md:w-auto flex-grow ml-2">Ver Reportes</button>
+            </div>
+            <button type="button" id="backToWorkshopsBtnFromForm" class="w-full bg-gray-500 text-white p-3 rounded-lg font-semibold hover:bg-gray-600 transition duration-200 mt-4">Volver a Talleres</button>
+        </form>
+    </div>
+
+    <!-- Reports Table View -->
+    <div id="reportsView" class="container hidden">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Reportes de Taller <span id="reportsWorkshopName" class="text-blue-600"></span></h2>
+        <div class="table-container overflow-x-auto mb-4 border border-gray-200 rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Origen</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conjunto</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parte</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estandar</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Report rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-between mt-4">
+            <button id="downloadExcelBtn" class="bg-green-600 text-white p-3 rounded-lg font-semibold hover:bg-green-700 transition duration-200 flex-grow mr-2">Descargar Excel</button>
+            <button id="backToMenuBtn" class="bg-gray-500 text-white p-3 rounded-lg font-semibold hover:bg-gray-600 transition duration-200 flex-grow ml-2">Volver al Menú Principal</button>
+        </div>
+    </div>
+
+    <!-- Script para XLSX (exportar a Excel) y la lógica principal de la aplicación -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        // --- INICIALIZACIÓN DE SUPABASE (CON TUS CLAVES REALES) ---
+        // URL de tu proyecto Supabase.
         const SUPABASE_URL = 'https://cyvxxmjmkiktwizgpzqj.supabase.co';
+        // Clave 'anon' public de tu proyecto Supabase.
+        // ¡IMPORTANTE! Si sigues recibiendo "Invalid API key", por favor,
+        // ve a tu panel de Supabase (Project Settings > API) y genera una NUEVA clave 'anon' pública,
+        // luego reemplázala aquí. Asegúrate de copiarla EXACTAMENTE.
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5dnh4bWpta2lrdHdpZ3BwcnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MDg4ODcsImV4cCI6MjA2ODk4NDg4N30.5k9rwN4-FVJEHFE6xWvn5J3j3iUvwcF9kZjAQXEjACg';
 
-        // Esta es la clave anon public de tu proyecto Supabase
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5dnh4bWpta2lrdHdpZ3BwcnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MDg4ODcsImV4cCI6MjA2ODk4NDg4N30.5k9rwN4-FVJEHFE6xWvn5J3j3iUvwcF9kZjAQXEjACQ';
-
-        // Conecta tu aplicación con Supabase
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Crea una instancia del cliente Supabase para interactuar con tu proyecto.
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // --- FIN DE LA INICIALIZACIÓN DE SUPABASE ---
 
 
-        // --- Elementos del DOM ---
+        // --- Referencias a elementos del DOM (la interfaz de usuario) ---
         const loginView = document.getElementById('loginView');
-        const usernameInput = document.getElementById('usernameInput');
+        const usernameInput = document.getElementById('usernameInput'); // Ahora es para el email
         const passwordInput = document.getElementById('passwordInput');
         const loginBtn = document.getElementById('loginBtn');
         const loginMessage = document.getElementById('loginMessage');
@@ -44,9 +296,9 @@
         const downloadExcelBtn = document.getElementById('downloadExcelBtn');
         const backToMenuBtn = document.getElementById('backToMenuBtn');
 
-        // --- Variables Globales ---
-        let currentWorkshop = ''; // Stores the currently selected workshop's key (e.g., 'kael')
-        const workshopDisplayNames = { // Map for displaying full names
+        // --- Variables Globales y Datos de la Aplicación ---
+        let currentWorkshop = ''; // Guarda la clave del taller seleccionado (ej., 'kael')
+        const workshopDisplayNames = { // Mapa para mostrar nombres completos de talleres
             'kael': 'KAEL',
             'abfren': 'ABFREN',
             'somec': 'SOMEC',
@@ -55,7 +307,7 @@
             'latoneria': 'Latonería'
         };
 
-        // Data for dynamic dropdowns
+        // Datos para los desplegables dinámicos (Conjunto -> Parte -> Texto Estandar)
         const conjuntoToParteMap = {
             "SISTEMA HIDRAULICO": ["BOMBA HIDRAULICA", "CILINDRO HIDRAULICO", "VALVULA HIDRAULICA", "MANGUERA HIDRAULICA", "FILTRO HIDRAULICO"],
             "MOTOR": ["CULATA", "BLOQUE", "CIGUEÑAL", "BIELA", "PISTON", "VALVULA DE ADMISION", "VALVULA DE ESCAPE", "ARBOL DE LEVAS", "CARTER", "BOMBA DE ACEITE", "INYECTOR", "TURBOCARGADOR", "RADIADOR"],
@@ -144,6 +396,7 @@
 
 
         // --- Funciones para mostrar/ocultar vistas ---
+        // Estas funciones se definen primero para que estén disponibles cuando se las llame.
         function showView(viewId) {
             const views = [loginView, workshopSelectionView, formView, reportsView];
             views.forEach(view => {
@@ -155,8 +408,40 @@
             });
         }
 
+        function showLoginView() {
+            showView('loginView');
+            loginMessage.textContent = ''; // Limpia mensajes anteriores
+        }
+
+        function showWorkshopSelectionView() {
+            showView('workshopSelectionView');
+        }
+
+        function showFormView(workshopKey) {
+            currentWorkshop = workshopKey;
+            currentWorkshopName.textContent = workshopDisplayNames[currentWorkshop];
+            showView('formView');
+            reportForm.reset(); // Limpia el formulario
+            // Resetea y deshabilita los desplegables dependientes
+            parteSelect.innerHTML = '<option value="">Seleccione Parte</option>';
+            parteSelect.disabled = true;
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione Texto Estandar</option>';
+            textoEstandarSelect.disabled = true;
+
+            // Establece la fecha actual como valor por defecto para el input de fecha
+            fechaInput.valueAsDate = new Date();
+        }
+
+        async function showReportsView(workshopKey) {
+            currentWorkshop = workshopKey;
+            reportsWorkshopName.textContent = workshopDisplayNames[currentWorkshop];
+            showView('reportsView');
+            await displayReports(); // Llama a la función para mostrar los reportes
+        }
+
+
         // --- Manejo del Login con Supabase Auth ---
-        // Funciòn para manejar el estado de la sesión
+        // Función para verificar si hay una sesión de usuario activa al cargar la página
         async function checkUserSession() {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
@@ -168,11 +453,12 @@
             }
         }
 
+        // Evento para el botón de login
         loginBtn.addEventListener('click', async () => {
-            const email = usernameInput.value; // Supabase Auth usa email
+            const email = usernameInput.value; // Supabase Auth usa email para iniciar sesión
             const password = passwordInput.value;
 
-            // Intenta iniciar sesión con email y contraseña
+            // Llama a la función de inicio de sesión de Supabase
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
@@ -186,29 +472,14 @@
                 console.log('Usuario logueado:', data.user);
                 showWorkshopSelectionView();
             } else {
-                loginMessage.textContent = 'Usuario o contraseña incorrectos.'; // Fallback si no hay error pero tampoco user
+                // Esto podría ocurrir si las credenciales son incorrectas pero Supabase no devuelve un error específico.
+                loginMessage.textContent = 'Usuario o contraseña incorrectos.';
             }
         });
 
-        // --- Manejo del Registro de Usuarios (Opcional, pero útil para crear usuarios) ---
-        // Si quieres permitir que los usuarios se registren, puedes añadir un botón y esta función
-        // async function signUpUser(email, password) {
-        //     const { data, error } = await supabase.auth.signUp({
-        //         email: email,
-        //         password: password,
-        //     });
-        //     if (error) {
-        //         console.error('Error al registrar:', error.message);
-        //         alert(`Error al registrar: ${error.message}`);
-        //     } else {
-        //         alert('¡Registro exitoso! Por favor, revisa tu correo para verificar tu cuenta.');
-        //         console.log('Usuario registrado:', data.user);
-        //     }
-        // }
-
-
         // --- Manejo del Logout con Supabase Auth ---
         logoutBtn.addEventListener('click', async () => {
+            // Llama a la función de cierre de sesión de Supabase
             const { error } = await supabase.auth.signOut();
             if (error) {
                 console.error('Error al cerrar sesión:', error.message);
@@ -221,8 +492,11 @@
         // --- Manejo de la selección de Taller ---
         workshopCards.forEach(card => {
             card.addEventListener('click', () => {
+                // Quita la clase 'selected' de todas las tarjetas
                 workshopCards.forEach(c => c.classList.remove('selected'));
+                // Añade la clase 'selected' a la tarjeta clickeada
                 card.classList.add('selected');
+
                 const workshopKey = card.dataset.workshop;
                 showFormView(workshopKey);
             });
@@ -231,11 +505,13 @@
         // --- Lógica de los Dropdowns Dependientes ---
         conjuntoSelect.addEventListener('change', () => {
             const selectedConjunto = conjuntoSelect.value;
+            // Limpia y deshabilita los desplegables dependientes
             parteSelect.innerHTML = '<option value="">Seleccione Parte</option>';
             textoEstandarSelect.innerHTML = '<option value="">Seleccione Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
 
             if (selectedConjunto && conjuntoToParteMap[selectedConjunto]) {
+                // Rellena el desplegable de Parte basado en el Conjunto seleccionado
                 conjuntoToParteMap[selectedConjunto].forEach(parte => {
                     const option = document.createElement('option');
                     option.value = parte;
@@ -250,9 +526,11 @@
 
         parteSelect.addEventListener('change', () => {
             const selectedParte = parteSelect.value;
+            // Limpia el desplegable de Texto Estandar
             textoEstandarSelect.innerHTML = '<option value="">Seleccione Texto Estandar</option>';
 
             if (selectedParte && parteToTextoEstandarMap[selectedParte]) {
+                // Rellena el desplegable de Texto Estandar basado en la Parte seleccionada
                 parteToTextoEstandarMap[selectedParte].forEach(texto => {
                     const option = document.createElement('option');
                     option.value = texto;
@@ -270,7 +548,7 @@
         reportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Validación básica
+            // Validación básica de campos obligatorios
             if (!equipoInput.value || !fechaInput.value || !otOrigenInput.value || !descripcionDetalladaInput.value) {
                 alert('Por favor, complete al menos los campos obligatorios: Equipo, Fecha, OT Origen y Descripción Detallada.');
                 return;
@@ -279,24 +557,29 @@
             let fotoName = null;
             let fotoURL = null;
 
+            // Si se seleccionó un archivo de foto
             if (fotoInput.files.length > 0) {
                 const fotoFile = fotoInput.files[0];
                 const fileExtension = fotoFile.name.split('.').pop();
-                // Generar un nombre único para la foto
+                // Genera un nombre único para la foto usando la fecha y un número aleatorio
                 fotoName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-                const filePath = `${currentWorkshop}/${fotoName}`; // Guardar en una carpeta por taller
+                // Define la ruta donde se guardará en Supabase Storage (ej. 'kael/nombre_foto.jpg')
+                const filePath = `${currentWorkshop}/${fotoName}`;
 
-                // Subir la foto a Supabase Storage
+                // Sube la foto al bucket 'fotos_reportes' en Supabase Storage
                 const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('fotos_reportes') // Asegúrate de que este bucket exista en Supabase Storage
-                    .upload(filePath, fotoFile);
+                    .from('fotos_reportes') // Nombre del bucket que creaste
+                    .upload(filePath, fotoFile, {
+                        cacheControl: '3600', // Control de caché para la foto
+                        upsert: false // No sobrescribir si ya existe
+                    });
 
                 if (uploadError) {
                     console.error('Error al subir la foto:', uploadError.message);
                     alert(`Error al subir la foto: ${uploadError.message}. El reporte se guardará sin foto.`);
                 } else {
                     console.log('Foto subida con éxito:', uploadData.path);
-                    // Obtener la URL pública de la foto
+                    // Obtiene la URL pública de la foto subida
                     const { data: publicURLData } = supabase.storage
                         .from('fotos_reportes')
                         .getPublicUrl(filePath);
@@ -304,25 +587,27 @@
                 }
             }
 
+            // Prepara los datos del reporte para insertar en la base de datos
+            // Usamos snake_case (ej. ot_origen) para los nombres de las columnas en la base de datos
             const newReport = {
-                taller: currentWorkshop, // Añadimos el taller al que pertenece el reporte
+                taller: currentWorkshop, // El taller al que pertenece el reporte
                 equipo: equipoInput.value,
                 fecha: fechaInput.value,
-                ot_origen: otOrigenInput.value, // Usar snake_case para la base de datos
+                ot_origen: otOrigenInput.value,
                 conjunto: conjuntoSelect.value,
                 parte: parteSelect.value,
-                texto_estandar: textoEstandarSelect.value, // Usar snake_case
-                descripcion_detallada: descripcionDetalladaInput.value, // Usar snake_case
+                texto_estandar: textoEstandarSelect.value,
+                descripcion_detallada: descripcionDetalladaInput.value,
                 prioridad: prioridadSelect.value,
                 tecnico: tecnicoInput.value,
                 telefono: telefonoInput.value,
-                foto_nombre: fotoName, // Usar snake_case
-                foto_url: fotoURL // Usar snake_case
+                foto_nombre: fotoName,
+                foto_url: fotoURL
             };
 
-            // Insertar el reporte en la tabla 'reportes' de Supabase
+            // Inserta el nuevo reporte en la tabla 'reportes' de Supabase
             const { error: dbError } = await supabase
-                .from('reportes') // Reemplaza 'reportes' con el nombre de tu tabla
+                .from('reportes') // Nombre de la tabla que creaste
                 .insert([newReport]);
 
             if (dbError) {
@@ -330,8 +615,9 @@
                 alert(`Error al guardar el reporte: ${dbError.message}`);
             } else {
                 alert('Reporte guardado con éxito en Supabase.');
-                reportForm.reset();
-                fechaInput.valueAsDate = new Date(); // Resetear la fecha al día actual después de guardar
+                reportForm.reset(); // Limpia el formulario
+                fechaInput.valueAsDate = new Date(); // Restablece la fecha al día actual
+                // Deshabilita y limpia los selects dependientes
                 parteSelect.innerHTML = '<option value="">Seleccione Parte</option>';
                 parteSelect.disabled = true;
                 textoEstandarSelect.innerHTML = '<option value="">Seleccione Texto Estandar</option>';
@@ -347,12 +633,12 @@
         async function displayReports() {
             reportsTableBody.innerHTML = '<tr><td colspan="11" class="px-6 py-4 text-center text-gray-500">Cargando reportes...</td></tr>';
 
-            // Consultar los reportes de Supabase para el taller actual
+            // Consulta los reportes de Supabase para el taller actual
             const { data: reports, error } = await supabase
                 .from('reportes')
                 .select('*') // Selecciona todas las columnas
-                .eq('taller', currentWorkshop) // Filtra por el taller actual
-                .order('fecha', { ascending: false }); // Ordena por fecha descendente
+                .eq('taller', currentWorkshop) // Filtra por el taller actualmente seleccionado
+                .order('created_at', { ascending: false }); // Ordena por la fecha de creación (más recientes primero)
 
             if (error) {
                 console.error('Error al cargar reportes:', error.message);
@@ -360,12 +646,13 @@
                 return;
             }
 
-            reportsTableBody.innerHTML = ''; // Clear existing rows
+            reportsTableBody.innerHTML = ''; // Limpia las filas existentes
             if (reports.length === 0) {
                 reportsTableBody.innerHTML = '<tr><td colspan="11" class="px-6 py-4 text-center text-gray-500">No hay reportes para este taller.</td></tr>';
                 return;
             }
 
+            // Muestra cada reporte en la tabla
             reports.forEach(report => {
                 const row = document.createElement('tr');
                 row.classList.add('hover:bg-gray-100');
@@ -388,13 +675,14 @@
             });
         }
 
-        // --- Descargar Excel (Ahora leerá de Supabase Database) ---
+        // --- Descargar Excel (Ahora lee de Supabase Database) ---
         downloadExcelBtn.addEventListener('click', async () => {
+            // Obtiene todos los reportes del taller actual desde Supabase
             const { data: allData, error } = await supabase
                 .from('reportes')
                 .select('*')
                 .eq('taller', currentWorkshop) // Filtra por el taller actual
-                .order('fecha', { ascending: false });
+                .order('created_at', { ascending: false });
 
             if (error) {
                 console.error('Error al obtener datos para Excel:', error.message);
@@ -411,13 +699,14 @@
             const headers = [
                 "Taller", "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte", "Texto Estandar",
                 "Descripción Detallada", "Prioridad",
-                "Técnico", "Teléfono", "Foto (URL)" // Cambiado a Foto (URL)
+                "Técnico", "Teléfono", "Foto (URL)" // Cambiado a Foto (URL) para reflejar la URL de Supabase
             ];
             dataToExport.push(headers);
 
+            // Prepara los datos para la exportación a Excel
             allData.forEach(item => {
                 const rowData = [
-                    workshopDisplayNames[item.taller] || '', // Usar el nombre legible del taller
+                    workshopDisplayNames[item.taller] || '', // Usa el nombre legible del taller
                     item.equipo || '',
                     item.fecha || '',
                     item.ot_origen || '',
@@ -428,11 +717,12 @@
                     item.prioridad || '',
                     item.tecnico || '',
                     item.telefono || '',
-                    item.foto_url || 'N/A' // Exportar la URL de la foto
+                    item.foto_url || 'N/A' // Exporta la URL de la foto
                 ];
                 dataToExport.push(rowData);
             });
 
+            // Crea y descarga el archivo Excel
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(dataToExport);
 
@@ -454,5 +744,6 @@
 
         // --- Configuración Inicial al cargar la página ---
         document.addEventListener('DOMContentLoaded', () => {
-            checkUserSession(); // Verificar si hay una sesión activa al cargar la página
+            checkUserSession(); // Verifica si hay una sesión activa al cargar la página
         });
+    </script>
