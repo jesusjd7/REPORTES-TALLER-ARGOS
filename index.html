@@ -8,11 +8,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Carga la librería Supabase desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             /* Updated background image path to relative path */
-            background-image: url('FONDO.png'); 
+            background-image: url('FONDO.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
@@ -36,6 +38,8 @@
             max-width: 900px;
             background-color: rgba(255, 255, 255, 0.4); /* More transparent */
             width: 100%;
+            border-radius: 0.5rem; /* rounded-lg equivalent */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg equivalent */
         }
 
         /* New class for transparent background in workshop view */
@@ -91,8 +95,8 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
             <div class="w-full">
                 <div class="mb-4">
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-                    <input type="text" id="username" name="username" required
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
                 <div class="mb-6">
@@ -100,17 +104,18 @@
                     <input type="password" id="password" name="password" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
-                <button id="loginBtn"
-                        class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
+                <button id="signinBtn"
+                        class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150 mb-4">
                     INGRESAR
                 </button>
+                <!-- Botón de REGISTRARSE eliminado -->
                 <p id="loginError" class="text-red-600 text-center mt-4" style="display: none;"></p>
             </div>
         </div>
     </div>
 
     <!-- Main application container (hidden initially) -->
-    <div id="appContainer" class="container mx-auto bg-white p-6 rounded-lg shadow-lg" style="display: none;">
+    <div id="appContainer" class="container mx-auto p-6" style="display: none;">
         <div class="relative flex items-center justify-center mb-8">
             <div id="leftHeaderElements" class="absolute left-0 flex items-center space-x-2" style="display: none;">
                 <button id="backToMenuBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
@@ -123,7 +128,7 @@
                 bg-white bg-opacity-70 rounded-md px-4 py-2"></h1>
             
             <div id="rightHeaderElements" class="absolute right-0 flex items-center space-x-2" style="display: none;">
-                <button id="logoutBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">
+                <button id="logoutBtn" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Cerrar Sesión
                 </button>
             </div>
@@ -217,13 +222,10 @@
                 </div>
 
                 <div>
-                    <label for="foto" class="block text-sm font-medium text-gray-700 mb-1">FOTO</label>
-                    <input type="file" id="foto" name="foto" class="hidden" accept="image/*">
-                    <label for="foto"
-                           class="inline-flex items-center px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer">
-                        Añadir Foto
-                    </label>
-                    <p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes no es compatible con el almacenamiento local.</p>
+                    <label for="fotoUrl" class="block text-sm font-medium text-gray-700 mb-1">URL de la Foto</label>
+                    <input type="url" id="fotoUrl" name="fotoUrl"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <p class="mt-1 text-xs text-gray-500">Introduce la URL de una imagen (ej. de Imgur, Google Photos).</p>
                 </div>
 
                 <div class="md:col-span-2 flex justify-center space-x-4">
@@ -263,7 +265,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto (Nombre)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
                             <th scope="col" class="relative px-6 py-3">
                                 <span class="sr-only">Acciones</span>
                             </th>
@@ -284,18 +286,26 @@
         import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
         window.XLSX = XLSX;
 
-        let loggedInUser = null;
+        // Configuración de Supabase
+        const SUPABASE_URL = 'https://fyyyjfdqmeqqrldyjwhm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5eXlqZmRxbWVxcXJsZHlqd2htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2OTk4NTksImV4cCI6MjA2OTI3NTg1OX0.a2KTnNyzXTODxd65IvcV0PbHGnHUCkWWSMqwXRI4Mss';
+
+        // Inicializa el cliente Supabase
+        const supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUserId = null; // Variable para almacenar el ID del usuario autenticado
         let currentWorkshop = '';
-        let editingRecordIndex = -1; // -1 means no record is being edited
+        let editingRecordId = null; // Usaremos el ID de Supabase para la edición
 
         // --- DOM Elements ---
         const appContainer = document.getElementById('appContainer');
         const mainPageTitle = document.getElementById('mainPageTitle');
         const reportSubtitle = document.getElementById('reportSubtitle');
         const loginView = document.getElementById('loginView');
-        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email'); // Cambiado de username a email
         const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
+        const signinBtn = document.getElementById('signinBtn'); // Cambiado de loginBtn a signinBtn
+        // const signupBtn = document.getElementById('signupBtn'); // Eliminado el botón de registro
         const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn');
         const leftHeaderElements = document.getElementById('leftHeaderElements');
@@ -310,9 +320,9 @@
         const workshopSelectionView = document.getElementById('workshopSelectionView');
         const formView = document.getElementById('formView');
         const backToMenuBtn = document.getElementById('backToMenuBtn');
-        const loginTruckImage = document.getElementById('loginTruckImage'); // Reference to the truck image
-        const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
-        const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
+        const loginTruckImage = document.getElementById('loginTruckImage');
+        const saveRecordBtn = document.getElementById('saveRecordBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
 
         // --- Data for Workshops and Dependent Dropdowns ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII", "ARGOS"];
@@ -326,7 +336,7 @@
             "MG": "MG SOL",
             "SIMIYP": "SIMIYP",
             "SERVII": "SERVII",
-            "ARGOS": "ARGOS" // Added ARGOS display name
+            "ARGOS": "ARGOS"
         };
 
         // Workshop image paths - Updated to relative paths
@@ -339,7 +349,7 @@
             "MG": "LOGOMG.png",
             "SIMIYP": "LOGOSIMIYP.png",
             "SERVII": "LOGOSERVICIO.png",
-            "ARGOS": "LOGOARGOS.jpg" // Added ARGOS image path
+            "ARGOS": "LOGOARGOS.jpg"
         };
 
         // This map holds the relationship between PARTE and TEXTO ESTANDAR.
@@ -434,7 +444,7 @@
                 "CAMBIAR COJIN SILLA", "CAMBIAR VALVULA O INTERRUPTOR SILLA", "REPARAR BASE SILLA",
                 "CAMBIAR AMORTIGUADOR SILLA", "CAMBIAR TORNILLERIA BASE SILLA", "CAMBIAR VEJIGA ESPALDAR SILLA",
                 "CAMBIAR BOMBONA SILLA", "REPARAR RIEL ASIENTO SILLA", "REPARAR TAPICERIA SILLA",
-                "REPARAR ESPALDAR SILLA", "REPARAR SILLA", "CAMBIAR SILLA",
+                "REPARAR ESPALDAR SILLA", "CAMBIAR SILLA",
                 "CAMBIAR AMORTIGUADOR SILLA DER", "CAMBIAR AMORTIGUADOR SILLA IZQ", "CAMBIAR BOMBONA SILLA DER",
                 "CAMBIAR BOMBONA SILLA IZQ", "CAMBIAR COJÍN SILLA DER", "CAMBIAR COJÍN SILLA IZQ",
                 "CAMBIAR TORNILLERIA BASE SILLA DER", "CAMBIAR TORNILLERIA BASE SILLA IZQ", "REPARAR BASE SILLA DER",
@@ -1118,17 +1128,7 @@
             ]
         };
 
-        const allWorkshopsData = {
-            "KAEL": {},
-            "ABFREN": {},
-            "SOMEC": {},
-            "DRACSO": {},
-            "JS OUT": {},
-            "MG": {},
-            "SIMIYP": {},
-            "SERVII": {},
-            "ARGOS": {}
-        };
+        const allWorkshopsData = {}; // This will be populated dynamically based on the current user's workshop
 
         const equiposKael = [
             "COLMX0361", "COLMX0362", "COLMX0383", "COLMX0390", "COLMX0399", "COLMX0402", "COLMX0406", "COLMX0419",
@@ -1153,39 +1153,56 @@
             "COLAB0059", "COLAB0060", "COLAB0068"
         ];
 
-        // 1. Populate KAEL data first
-        equiposKael.forEach(equipo => {
-            allWorkshopsData["KAEL"][equipo] = {};
-            for (const conjuntoName in conjuntoToParteMap) {
-                if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
-                    allWorkshopsData["KAEL"][equipo][conjuntoName] = {};
-                    conjuntoToParteMap[conjuntoName].forEach(parteName => {
-                        allWorkshopsData["KAEL"][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
-                    });
+        // Populate allWorkshopsData based on the provided maps
+        allWorkshops.forEach(workshopName => {
+            allWorkshopsData[workshopName] = {};
+            equiposKael.forEach(equipo => { // Assuming all workshops have the same equipos as KAEL
+                allWorkshopsData[workshopName][equipo] = {};
+                for (const conjuntoName in conjuntoToParteMap) {
+                    if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
+                        allWorkshopsData[workshopName][equipo][conjuntoName] = {};
+                        conjuntoToParteMap[conjuntoName].forEach(parteName => {
+                            allWorkshopsData[workshopName][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
+                        });
+                    }
                 }
-            }
+            });
         });
 
-        // 2. Deep copy KAEL's data to all other workshops
-        const kaelData = JSON.parse(JSON.stringify(allWorkshopsData["KAEL"])); // Create a deep copy of KAEL's data
-
-        for (const workshopName of allWorkshops) {
-            if (workshopName !== "KAEL") {
-                allWorkshopsData[workshopName] = JSON.parse(JSON.stringify(kaelData)); // Assign the deep copy
+        // --- View Management Functions ---
+        async function updateUI(session) {
+            if (session) {
+                currentUserId = session.user.id;
+                loginView.style.display = 'none';
+                appContainer.style.display = 'block';
+                document.body.classList.add('align-top-content');
+                // Ensure appContainer has transparent-bg class when workshop selection is shown
+                appContainer.classList.add('transparent-bg');
+                populateWorkshopCards(); // Populate cards after login
+                showWorkshopSelectionView(); // Show workshop selection after login
+            } else {
+                currentUserId = null;
+                loginView.style.display = 'flex';
+                appContainer.style.display = 'none';
+                document.body.classList.remove('align-top-content');
+                // Ensure appContainer does not have transparent-bg class when login is shown
+                appContainer.classList.remove('transparent-bg');
+                // Directly set the background image using relative path
+                document.body.style.backgroundImage = `url('FONDO.png')`;
+                console.log("Login view shown. Background image set to FONDO.png");
+                console.log("Login truck image src:", loginTruckImage.src);
             }
         }
 
-        // --- View Management Functions ---
         function showLoginView() {
             loginView.style.display = 'flex';
             appContainer.style.display = 'none';
             document.body.classList.remove('align-top-content');
-            // Ensure appContainer does not have transparent-bg class when login is shown
             appContainer.classList.remove('transparent-bg');
-            // Directly set the background image using relative path
             document.body.style.backgroundImage = `url('FONDO.png')`;
-            console.log("Login view shown. Background image set to FONDO.png");
-            console.log("Login truck image src:", loginTruckImage.src);
+            emailInput.value = '';
+            passwordInput.value = '';
+            loginError.style.display = 'none';
         }
 
         function showWorkshopSelectionView() {
@@ -1200,9 +1217,7 @@
             logoutBtn.style.display = 'block';
             populateWorkshopCards();
             document.body.classList.add('align-top-content');
-            // Add transparent-bg class to appContainer for workshop view
             appContainer.classList.add('transparent-bg');
-            console.log("Workshop selection view shown.");
         }
 
         function showFormView() {
@@ -1215,48 +1230,79 @@
             leftHeaderElements.style.display = 'flex';
             rightHeaderElements.style.display = 'flex';
             backToMenuBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
+            logoutBtn.style.display = 'block'; // Keep logout button visible in form view
             document.body.classList.add('align-top-content');
-            // Remove transparent-bg class from appContainer for form view
             appContainer.classList.remove('transparent-bg');
-            console.log("Form view shown for workshop:", currentWorkshop);
         }
 
-        // --- Login Logic ---
-        const validCredentials = {
-            "KAEL": "KAEL",
-            "ABFREN": "ABFREN",
-            "SOMEC": "SOMEC",
-            "DRACSO": "DRACSO",
-            "JS OUT": "JS OUT",
-            "MG": "MG",
-            "SIMIYP": "SIMIYP",
-            "SERVII": "SERVII",
-            "ARGOS": "ARGOS"
-        };
+        // --- Supabase Authentication Logic ---
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth event:', event, 'Session:', session);
+            updateUI(session);
+        });
 
-        loginBtn.addEventListener('click', () => {
-            const username = usernameInput.value;
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            updateUI(session);
+        });
+
+        signinBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
             const password = passwordInput.value;
-            console.log(`Attempting login for: ${username} with password: ${password}`);
+            loginError.style.display = 'none';
 
-            if (validCredentials[username] === password) {
-                loginError.style.display = 'none';
-                loggedInUser = username;
-                console.log(`Login successful for user: ${loggedInUser}`);
-                showWorkshopSelectionView();
-            } else {
-                loginError.textContent = 'Usuario o contraseña incorrectos.';
+            if (!email || !password) {
+                loginError.textContent = 'Por favor, ingresa tu correo electrónico y contraseña.';
                 loginError.style.display = 'block';
-                console.log('Login failed: Incorrect username or password.');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                showCustomAlert('¡Inicio de sesión exitoso!');
+            } catch (error) {
+                loginError.textContent = 'Error al iniciar sesión: ' + error.message;
+                loginError.style.display = 'block';
+                console.error('Error de inicio de sesión:', error);
             }
         });
 
-        // --- Logout Logic ---
-        logoutBtn.addEventListener('click', () => {
-            console.log('User logged out.');
-            loggedInUser = null;
-            showLoginView();
+        // El botón de registro y su lógica han sido eliminados.
+        /*
+        signupBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            loginError.style.display = 'none';
+
+            if (!email || !password) {
+                loginError.textContent = 'Por favor, ingresa un correo electrónico y una contraseña.';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+                showCustomAlert('¡Registro exitoso! Por favor, revisa tu correo para confirmar la cuenta.');
+            } catch (error) {
+                loginError.textContent = 'Error al registrarse: ' + error.message;
+                loginError.style.display = 'block';
+                console.error('Error de registro:', error);
+            }
+        });
+        */
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                showCustomAlert('Sesión cerrada correctamente.');
+                showLoginView(); // Go back to login view after logout
+            } catch (error) {
+                showCustomAlert('Error al cerrar sesión: ' + error.message);
+                console.error('Error al cerrar sesión:', error);
+            }
         });
 
         // --- Initialize App based on Workshop ---
@@ -1266,7 +1312,7 @@
             reportSubtitle.style.display = 'block';
             
             populateEquipoDropdown();
-            loadData();
+            loadData(); // Load data from Supabase for the selected workshop
 
             showFormView();
         }
@@ -1276,17 +1322,35 @@
             workshopSelectionView.innerHTML = '';
             let workshopsToDisplay = [];
 
-            if (loggedInUser === "ARGOS") {
+            // If user is 'ARGOS', show all workshops. Otherwise, show only their specific workshop.
+            if (currentUserId && currentUserId === "ARGOS_USER_ID_PLACEHOLDER") { // Replace with actual ARGOS user ID if applicable
                 workshopsToDisplay = allWorkshops;
             } else {
-                if (allWorkshops.includes(loggedInUser)) {
-                    workshopsToDisplay = [loggedInUser];
+                // For simplicity, we'll assume the workshop name matches a part of the user's email or a metadata field.
+                // You might need a more robust way to determine which workshop a user belongs to in a real app.
+                // For now, let's assume the user's email prefix (before @) determines their workshop.
+                const userEmail = supabase.auth.currentUser?.email;
+                if (userEmail) {
+                    const emailPrefix = userEmail.split('@')[0].toUpperCase();
+                    if (allWorkshops.includes(emailPrefix)) {
+                        workshopsToDisplay = [emailPrefix];
+                    } else if (emailPrefix === "ARGOS") { // If a user named "ARGOS" logs in, they see all.
+                         workshopsToDisplay = allWorkshops;
+                    } else {
+                        // Fallback if no specific workshop match, perhaps show a default or an error.
+                        workshopsToDisplay = []; // Or handle as needed
+                        console.warn("No workshop found for this user based on email prefix:", emailPrefix);
+                    }
                 }
+            }
+            
+            if (workshopsToDisplay.length === 0) {
+                workshopSelectionView.innerHTML = `<p class="col-span-full text-center text-gray-500">No hay talleres asignados a tu cuenta o no estás logueado.</p>`;
+                return;
             }
 
             workshopsToDisplay.forEach(workshop => {
                 const card = document.createElement('div');
-                // Adjusted card class for better mobile appearance (wider, less padding inside)
                 card.className = `
                     bg-gray-50 rounded-lg shadow-md p-2 flex flex-col items-center justify-center
                     cursor-pointer hover:bg-blue-50 hover:shadow-lg transition ease-in-out duration-150
@@ -1298,9 +1362,7 @@
                 const img = document.createElement('img');
                 img.alt = workshopDisplayNames[workshop];
                 img.className = 'w-24 h-24 object-contain mb-3 rounded-md';
-                // Updated src to relative path
                 img.src = workshopImagePaths[workshop]; 
-                console.log(`Workshop card for ${workshop}: image src set to ${img.src}`);
 
                 const name = document.createElement('p');
                 name.textContent = workshopDisplayNames[workshop];
@@ -1420,117 +1482,128 @@
             populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte);
         });
 
-        // --- Local Storage Functions ---
-        function getLocalStorageKey(workshop) {
-            return `workshop_data_${workshop.toLowerCase()}`;
-        }
-
-        function loadDataFromLocalStorage(workshop) {
-            const key = getLocalStorageKey(workshop);
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : [];
-        }
-
-        function saveDataToLocalStorage(workshop, data) {
-            const key = getLocalStorageKey(workshop);
-            localStorage.setItem(key, JSON.stringify(data));
-        }
-
-        // --- Load Data from Local Storage and Render Table ---
-        function loadData() {
-            dataTableBody.innerHTML = '';
-            const records = loadDataFromLocalStorage(currentWorkshop);
-
-            if (records.length === 0) {
+        // --- Load Data from Supabase and Render Table ---
+        async function loadData() {
+            dataTableBody.innerHTML = ''; // Clear existing data
+            if (!currentUserId) {
                 dataTableBody.innerHTML = `
                     <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Inicia sesión para ver los reportes.</td>
                     </tr>
                 `;
                 return;
             }
 
-            records.forEach((data, index) => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
+            try {
+                const { data: records, error } = await supabase
+                    .from('REPORTE')
+                    .select('*')
+                    .eq('user_id', currentUserId) // Filter by current authenticated user
+                    .eq('workshop', currentWorkshop) // Filter by selected workshop
+                    .order('created_at', { ascending: false }); // Order by creation date
 
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${data.fotoName || 'N/A'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
-                        <button data-index="${index}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
-                        <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
-                    </td>
-                `;
-                dataTableBody.appendChild(row);
-            });
+                if (error) throw error;
 
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const indexToDelete = parseInt(e.target.dataset.index);
-                    showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
-                        let currentRecords = loadDataFromLocalStorage(currentWorkshop);
-                        // Also remove from ARGOS data if it exists
-                        let argosRecords = loadDataFromLocalStorage("ARGOS");
-                        const recordToDelete = currentRecords[indexToDelete];
-                        if (recordToDelete && recordToDelete.recordId) {
-                            argosRecords = argosRecords.filter(rec => rec.recordId !== recordToDelete.recordId);
-                            saveDataToLocalStorage("ARGOS", argosRecords);
-                        }
-                        currentRecords.splice(indexToDelete, 1);
-                        saveDataToLocalStorage(currentWorkshop, currentRecords);
-                        loadData();
-                        console.log('Registro eliminado con éxito.');
+                if (records.length === 0) {
+                    dataTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                records.forEach((data) => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50';
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${data.fotoUrl ? `<img src="${data.fotoUrl}" alt="Foto" class="w-16 h-16 object-cover rounded-md">` : 'N/A'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
+                            <button data-id="${data.ID}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
+                            <button data-id="${data.ID}" class="delete-btn px-4 py-2 bg-red-600 text-white font-semibold rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
+                        </td>
+                    `;
+                    dataTableBody.appendChild(row);
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const idToDelete = e.target.dataset.id;
+                        showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
+                            deleteRecord(idToDelete);
+                        });
                     });
                 });
-            });
 
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const indexToEdit = parseInt(e.target.dataset.index);
-                    editRecord(indexToEdit);
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const idToEdit = e.target.dataset.id;
+                        editRecord(idToEdit);
+                    });
                 });
-            });
+
+            } catch (error) {
+                console.error('Error al cargar datos de Supabase:', error);
+                dataTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-600">Error al cargar datos: ${error.message}</td>
+                    </tr>
+                `;
+            }
         }
 
         // --- Edit Record Functionality ---
-        function editRecord(index) {
-            const records = loadDataFromLocalStorage(currentWorkshop);
-            const recordToEdit = records[index];
+        async function editRecord(recordId) {
+            try {
+                const { data: recordToEdit, error } = await supabase
+                    .from('REPORTE')
+                    .select('*')
+                    .eq('ID', recordId)
+                    .eq('user_id', currentUserId) // Ensure only owner can edit
+                    .single();
 
-            if (recordToEdit) {
-                // Populate form fields
-                document.getElementById('fecha').value = recordToEdit.fecha || '';
-                document.getElementById('otOrigen').value = recordToEdit.otOrigen || '0';
-                document.getElementById('descripcionDetallada').value = recordToEdit.descripcionDetallada || '';
-                document.getElementById('prioridad').value = recordToEdit.prioridad || '';
-                document.getElementById('tecnico').value = recordToEdit.tecnico || '';
-                document.getElementById('telefono').value = recordToEdit.telefono || '';
+                if (error) throw error;
 
-                // Populate dependent dropdowns
-                equipoSelect.value = recordToEdit.equipo || '';
-                populateConjuntoDropdown(recordToEdit.equipo);
-                conjuntoSelect.value = recordToEdit.conjunto || '';
-                populateParteDropdown(recordToEdit.equipo, recordToEdit.conjunto);
-                parteSelect.value = recordToEdit.parte || '';
-                populateTextoEstandarDropdown(recordToEdit.equipo, recordToEdit.conjunto, recordToEdit.parte);
-                textoEstandarSelect.value = recordToEdit.textoEstandar || '';
+                if (recordToEdit) {
+                    // Populate form fields
+                    document.getElementById('fecha').value = recordToEdit.fecha || '';
+                    document.getElementById('otOrigen').value = recordToEdit.otOrigen || '0';
+                    document.getElementById('descripcionDetallada').value = recordToEdit.descripcionDetallada || '';
+                    document.getElementById('prioridad').value = recordToEdit.prioridad || '';
+                    document.getElementById('tecnico').value = recordToEdit.tecnico || '';
+                    document.getElementById('telefono').value = recordToEdit.telefono || '';
+                    document.getElementById('fotoUrl').value = recordToEdit.fotoUrl || '';
 
-                editingRecordIndex = index;
-                saveRecordBtn.textContent = 'Actualizar Registro';
-                cancelEditBtn.style.display = 'inline-block'; // Show cancel button
-                console.log('Cargando registro para edición:', recordToEdit);
+                    // Populate dependent dropdowns
+                    equipoSelect.value = recordToEdit.equipo || '';
+                    populateConjuntoDropdown(recordToEdit.equipo);
+                    conjuntoSelect.value = recordToEdit.conjunto || '';
+                    populateParteDropdown(recordToEdit.equipo, recordToEdit.conjunto);
+                    parteSelect.value = recordToEdit.parte || '';
+                    populateTextoEstandarDropdown(recordToEdit.equipo, recordToEdit.conjunto, recordToEdit.parte);
+                    textoEstandarSelect.value = recordToEdit.textoEstandar || '';
+
+                    editingRecordId = recordId; // Set the ID of the record being edited
+                    saveRecordBtn.textContent = 'Actualizar Registro';
+                    cancelEditBtn.style.display = 'inline-block'; // Show cancel button
+                    showCustomAlert('Datos del registro cargados para edición.');
+                }
+            } catch (error) {
+                showCustomAlert('Error al cargar el registro para edición: ' + error.message);
+                console.error('Error al cargar registro para edición:', error);
             }
         }
 
@@ -1538,7 +1611,7 @@
         cancelEditBtn.addEventListener('click', () => {
             dataForm.reset();
             populateEquipoDropdown(); // Reset dropdowns
-            editingRecordIndex = -1; // Exit edit mode
+            editingRecordId = null; // Exit edit mode
             saveRecordBtn.textContent = 'Guardar Registro';
             cancelEditBtn.style.display = 'none'; // Hide cancel button
             console.log('Edición cancelada. Formulario restablecido.');
@@ -1601,115 +1674,140 @@
             };
         }
 
-        // --- Form Submission Handler ---
+        // --- Form Submission Handler (Save/Update to Supabase) ---
         dataForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const formData = new FormData(dataForm);
-            const data = {};
-            for (const [key, value] of formData.entries()) {
-                data[key] = value;
+            if (!currentUserId) {
+                showCustomAlert('Debes iniciar sesión para guardar un registro.');
+                return;
             }
 
-            const fotoInput = document.getElementById('foto');
-            if (fotoInput.files.length > 0) {
-                data.fotoName = fotoInput.files[0].name;
-            } else {
-                data.fotoName = '';
-            }
-
-            data.timestamp = new Date().toISOString();
+            const newRecord = {
+                equipo: equipoSelect.value,
+                fecha: document.getElementById('fecha').value,
+                otOrigen: parseInt(document.getElementById('otOrigen').value),
+                conjunto: conjuntoSelect.value,
+                parte: parteSelect.value,
+                textoEstandar: textoEstandarSelect.value,
+                descripcionDetallada: document.getElementById('descripcionDetallada').value,
+                prioridad: document.getElementById('prioridad').value,
+                tecnico: document.getElementById('tecnico').value,
+                telefono: document.getElementById('telefono').value,
+                fotoUrl: document.getElementById('fotoUrl').value,
+                user_id: currentUserId, // Assign current user's ID
+                workshop: currentWorkshop // Assign the current workshop
+            };
 
             try {
-                let currentRecords = loadDataFromLocalStorage(currentWorkshop);
-                let argosRecords = loadDataFromLocalStorage("ARGOS"); // Load Argos data
-
-                if (editingRecordIndex > -1) {
+                let response;
+                if (editingRecordId) {
                     // Update existing record
-                    const recordToUpdate = currentRecords[editingRecordIndex];
-                    // Preserve the original recordId if editing
-                    data.recordId = recordToUpdate.recordId;
-
-                    // Update in current workshop's data
-                    currentRecords[editingRecordIndex] = data;
-
-                    // Update in ARGOS workshop's data
-                    const argosRecordIndex = argosRecords.findIndex(rec => rec.recordId === data.recordId);
-                    if (argosRecordIndex !== -1) {
-                        argosRecords[argosRecordIndex] = data;
-                    } else {
-                        // If for some reason the record isn't in Argos (e.g., old data before recordId was implemented), add it
-                        argosRecords.push(data);
-                    }
+                    response = await supabase
+                        .from('REPORTE')
+                        .update(newRecord)
+                        .eq('ID', editingRecordId)
+                        .eq('user_id', currentUserId); // Ensure only owner can update
                     showCustomAlert('Registro actualizado con éxito.');
-                    console.log('Registro actualizado con éxito:', data);
-
                 } else {
-                    // Add new record
-                    // Generate a unique ID for the new record
-                    data.recordId = Date.now().toString() + Math.random().toString(36).substring(2, 9);
-                    currentRecords.push(data);
-                    argosRecords.push(data); // Add to Argos as well
+                    // Insert new record
+                    response = await supabase
+                        .from('REPORTE')
+                        .insert([newRecord]);
                     showCustomAlert('Datos guardados con éxito.');
-                    console.log('Datos guardados con éxito:', data);
                 }
 
-                saveDataToLocalStorage(currentWorkshop, currentRecords);
-                saveDataToLocalStorage("ARGOS", argosRecords); // Save Argos data
+                if (response.error) throw response.error;
 
                 dataForm.reset();
                 populateEquipoDropdown(); // Reset dropdowns
-                editingRecordIndex = -1; // Exit edit mode
+                editingRecordId = null; // Exit edit mode
                 saveRecordBtn.textContent = 'Guardar Registro'; // Reset button text
                 cancelEditBtn.style.display = 'none'; // Hide cancel button
                 loadData(); // Reload data for current workshop
             } catch (error) {
-                console.error('Error al guardar datos:', error);
-                showCustomAlert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
+                console.error('Error al guardar datos en Supabase:', error);
+                showCustomAlert('Error al guardar los datos: ' + error.message);
+            }
+        });
+
+        // --- Delete Record Functionality ---
+        async function deleteRecord(recordId) {
+            try {
+                const { error } = await supabase
+                    .from('REPORTE')
+                    .delete()
+                    .eq('ID', recordId)
+                    .eq('user_id', currentUserId); // Ensure only owner can delete
+
+                if (error) throw error;
+
+                showCustomAlert('Registro eliminado con éxito.');
+                loadData(); // Reload data after deletion
+            } catch (error) {
+                showCustomAlert('Error al eliminar el registro: ' + error.message);
+                console.error('Error al eliminar registro:', error);
             }
         });
 
         // --- Excel Download Handler ---
-        downloadExcelBtn.addEventListener('click', () => {
-            const allData = loadDataFromLocalStorage(currentWorkshop);
-
-            if (allData.length === 0) {
-                showCustomAlert('No hay datos para descargar.'); // Using custom alert
+        downloadExcelBtn.addEventListener('click', async () => {
+            if (!currentUserId) {
+                showCustomAlert('Debes iniciar sesión para descargar datos.');
                 return;
             }
 
-            const dataToExport = [];
-            const headers = [
-                "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
-                "Texto Estandar", "Descripción Detallada", "Prioridad",
-                "Técnico", "Teléfono", "Foto (Nombre)"
-            ];
-            dataToExport.push(headers);
+            try {
+                const { data: allData, error } = await supabase
+                    .from('REPORTE')
+                    .select('*')
+                    .eq('user_id', currentUserId)
+                    .eq('workshop', currentWorkshop)
+                    .order('created_at', { ascending: false });
 
-            allData.forEach(item => {
-                const rowData = [
-                    item.equipo || '',
-                    item.fecha || '',
-                    item.otOrigen || '',
-                    item.conjunto || '',
-                    item.parte || '',
-                    item.textoEstandar || '',
-                    item.descripcionDetallada || '',
-                    item.prioridad || '',
-                    item.tecnico || '',
-                    item.telefono || '',
-                    item.fotoName || 'N/A'
+                if (error) throw error;
+
+                if (allData.length === 0) {
+                    showCustomAlert('No hay datos para descargar.');
+                    return;
+                }
+
+                const dataToExport = [];
+                const headers = [
+                    "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
+                    "Texto Estandar", "Descripción Detallada", "Prioridad",
+                    "Técnico", "Teléfono", "Foto (URL)" // Changed to Foto (URL)
                 ];
-                dataToExport.push(rowData);
-            });
+                dataToExport.push(headers);
 
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(dataToExport);
+                allData.forEach(item => {
+                    const rowData = [
+                        item.equipo || '',
+                        item.fecha || '',
+                        item.otOrigen || '',
+                        item.conjunto || '',
+                        item.parte || '',
+                        item.textoEstandar || '',
+                        item.descripcionDetallada || '',
+                        item.prioridad || '',
+                        item.tecnico || '',
+                        item.telefono || '',
+                        item.fotoUrl || 'N/A' // Changed to fotoUrl
+                    ];
+                    dataToExport.push(rowData);
+                });
 
-            XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(dataToExport);
 
-            XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
-            console.log('Excel descargado con éxito.');
+                XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
+
+                XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
+                console.log('Excel descargado con éxito.');
+            } catch (error) {
+                showCustomAlert('Error al descargar Excel: ' + error.message);
+                console.error('Error al descargar Excel:', error);
+            }
         });
 
         // --- Back to Menu Button Handler ---
@@ -1719,7 +1817,8 @@
 
         // Initial setup when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            showLoginView(); 
+            // This will be handled by supabase.auth.onAuthStateChange
+            // which is triggered by getSession() on page load.
         });
     </script>
 </body>
