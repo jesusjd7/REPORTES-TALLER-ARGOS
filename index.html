@@ -292,15 +292,15 @@
 
         client
             .setEndpoint('https://nyc.cloud.appwrite.io/v1') // Your Appwrite API Endpoint
-            .setProject('688ad84f003a3839fa47'); // !!! REPLACE WITH YOUR ACTUAL APPWRITE PROJECT ID !!!
+            .setProject('688ad84f003a3839fa47'); // Your Appwrite Project ID
 
         const account = new Account(client);
         const databases = new Databases(client);
         const storage = new Storage(client);
 
         // Appwrite IDs
-        const DATABASE_ID = '688adb12001efea14883'; // Corrected Database ID
-        const COLLECTION_REPORTE_ID = '688adb44001081de77a4'; // Collection ID for reports
+        const DATABASE_ID = '688adb12001efea14883'; // Corrected Database ID based on your latest input
+        const COLLECTION_REPORTE_ID = '688adb44001081de77a4'; // Collection ID for reports (matches your latest input)
         const BUCKET_REPORTE_ID = '688addbc0035ca4b4d89'; // Bucket ID for photos
 
         let loggedInUser = null; // Stores the Appwrite User object
