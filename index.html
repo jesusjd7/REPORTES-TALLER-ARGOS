@@ -11,13 +11,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Updated background image path to relative path */
+            /* Ruta de imagen de fondo actualizada a ruta relativa */
             background-image: url('FONDO.png'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
             background-attachment: fixed;
-            background-color: #f3f4f6; /* Fallback color */
+            background-color: #f3f4f6; /* Color de respaldo */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -31,18 +31,18 @@
             body { padding: 2rem; }
         }
 
-        /* Adjusted container for more transparency in form view */
+        /* Contenedor ajustado para más transparencia en la vista del formulario */
         .container {
             max-width: 900px;
-            background-color: rgba(255, 255, 255, 0.4); /* More transparent */
+            background-color: rgba(255, 255, 255, 0.4); /* Más transparente */
             width: 100%;
         }
 
-        /* New class for transparent background in workshop view */
+        /* Nueva clase para fondo transparente en la vista de talleres */
         .container.transparent-bg {
             background-color: transparent;
-            box-shadow: none; /* Remove shadow for transparent background */
-            border: none; /* Remove border for transparent background */
+            box-shadow: none; /* Eliminar sombra para fondo transparente */
+            border: none; /* Eliminar borde para fondo transparente */
         }
 
         ::-webkit-scrollbar {
@@ -83,10 +83,10 @@
     </script>
 </head>
 <body>
-    <!-- Login View (Initially visible) -->
+    <!-- Vista de Inicio de Sesión (Inicialmente visible) -->
     <div id="loginView" class="flex flex-col items-center justify-center p-8 w-full">
         <div class="border border-black rounded-lg p-6 shadow-xl bg-white max-w-sm w-full mx-auto">
-            <!-- Truck Image - Updated src to CAMION.png -->
+            <!-- Imagen de Camión - src actualizado a CAMION.png -->
             <img id="loginTruckImage" src="CAMION.png" alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
             <div class="w-full">
@@ -109,7 +109,7 @@
         </div>
     </div>
 
-    <!-- Main application container (hidden initially) -->
+    <!-- Contenedor principal de la aplicación (oculto inicialmente) -->
     <div id="appContainer" class="container mx-auto bg-white p-6 rounded-lg shadow-lg" style="display: none;">
         <div class="relative flex items-center justify-center mb-8">
             <div id="leftHeaderElements" class="absolute left-0 flex items-center space-x-2" style="display: none;">
@@ -118,7 +118,7 @@
                 </button>
             </div>
 
-            <!-- Adjusted mainPageTitle for transparent background on mobile -->
+            <!-- mainPageTitle ajustado para fondo transparente en móvil -->
             <h1 id="mainPageTitle" class="text-3xl font-bold text-gray-800 text-center
                 bg-white bg-opacity-70 rounded-md px-4 py-2"></h1>
             
@@ -130,13 +130,13 @@
         </div>
         <h2 id="reportSubtitle" class="text-xl font-semibold text-center text-gray-600 mb-8" style="display: none;">REPORTE</h2>
 
-        <!-- Workshop Selection View (Card Menu - Initially hidden) -->
-        <!-- Changed grid-cols-1 to grid-cols-2 for mobile view -->
+        <!-- Vista de Selección de Taller (Menú de Tarjetas - Inicialmente oculto) -->
+        <!-- grid-cols-1 cambiado a grid-cols-2 para vista móvil -->
         <div id="workshopSelectionView" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" style="display: none;">
-            <!-- Workshop cards will be dynamically generated here -->
+            <!-- Las tarjetas de taller se generarán dinámicamente aquí -->
         </div>
 
-        <!-- Registration Form View (Initially hidden) -->
+        <!-- Vista del Formulario de Registro (Inicialmente oculto) -->
         <div id="formView" style="display: none;">
             <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
@@ -203,7 +203,7 @@
                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                 </div>
 
-                <!-- Moved TECNICO and TELEFONO here -->
+                <!-- TECNICO y TELEFONO movidos aquí -->
                 <div>
                     <label for="tecnico" class="block text-sm font-medium text-gray-700 mb-1">TECNICO *</label>
                     <input type="text" id="tecnico" name="tecnico" required
@@ -279,36 +279,47 @@
         </div>
     </div>
 
-    <!-- SheetJS (xlsx) CDN for Excel export -->
-    <script src="https://unpkg.com/appwrite@11.0.0/dist/sdk.js"></script>
+    <!-- SheetJS (xlsx) CDN para exportación a Excel -->
     <script type="module">
         import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
-        import { Client, Account, Databases, Storage, ID, Query } from 'https://unpkg.com/appwrite@11.0.0/dist/sdk.js';
-
         window.XLSX = XLSX;
 
-        // --- Appwrite Initialization ---
+        // Importar las clases necesarias del SDK de Appwrite
+        // Cambiado de @11.0.0 a @latest para asegurar la última versión y posible corrección de CORS
+        import { Client, Account, Databases, Storage, ID, Query } from 'https://cdn.jsdelivr.net/npm/appwrite@latest/dist/esm/sdk.mjs';
+
+        // Crear una nueva instancia del cliente de Appwrite
         const client = new Client();
 
+        // Configurar el endpoint de la API y el ID del proyecto de Appwrite
         client
-            .setEndpoint('https://nyc.cloud.appwrite.io/v1') // Your Appwrite API Endpoint
-            .setProject('688ad84f003a3839fa47'); // Your Appwrite Project ID
+            .setEndpoint('https://nyc.cloud.appwrite.io/v1') // Tu API Endpoint
+            .setProject('688ad84f003a3839fa47'); // Reemplaza con el ID real de tu proyecto de Appwrite
 
+        // Inicializar los servicios de Appwrite
         const account = new Account(client);
         const databases = new Databases(client);
         const storage = new Storage(client);
 
-        // Appwrite IDs
-        const DATABASE_ID = '688adb12001efea14883'; // Corrected Database ID based on your latest input
-        const COLLECTION_REPORTE_ID = '688adb44001081de77a4'; // Collection ID for reports (matches your latest input)
-        const BUCKET_REPORTE_ID = '688addbc0035ca4b4d89'; // Bucket ID for photos
+        // Hacer estas instancias disponibles globalmente
+        window.appwrite = {
+            client,
+            account,
+            databases,
+            storage,
+            databaseId: '688adb44001081de77a4', // Tu ID de Base de Datos
+            collectionId: '688adb44001081de77a4', // Tu ID de Colección
+            bucketId: '688addbc0035ca4b4d89', // Tu ID de Bucket de Almacenamiento
+            ID, // Exportar ID para usar ID.unique()
+            Query // Exportar Query para usar Appwrite.Query
+        };
 
-        let loggedInUser = null; // Stores the Appwrite User object
+        let loggedInUser = null;
         let currentWorkshop = '';
-        let editingRecordIndex = -1; // -1 means no record is being edited
-        let loadedRecords = []; // Stores records fetched from Appwrite for editing/deleting
+        let editingRecordIndex = -1; // -1 significa que no se está editando ningún registro
+        let currentEditingDocumentId = null; // Para almacenar el ID del documento de Appwrite que se está editando
 
-        // --- DOM Elements ---
+        // --- Elementos del DOM ---
         const appContainer = document.getElementById('appContainer');
         const mainPageTitle = document.getElementById('mainPageTitle');
         const reportSubtitle = document.getElementById('reportSubtitle');
@@ -330,11 +341,11 @@
         const workshopSelectionView = document.getElementById('workshopSelectionView');
         const formView = document.getElementById('formView');
         const backToMenuBtn = document.getElementById('backToMenuBtn');
-        const loginTruckImage = document.getElementById('loginTruckImage'); // Reference to the truck image
-        const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
-        const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
+        const loginTruckImage = document.getElementById('loginTruckImage'); // Referencia a la imagen del camión
+        const saveRecordBtn = document.getElementById('saveRecordBtn'); // Referencia al botón Guardar/Actualizar
+        const cancelEditBtn = document.getElementById('cancelEditBtn'); // Referencia al botón Cancelar Edición
 
-        // --- Data for Workshops and Dependent Dropdowns ---
+        // --- Datos para Talleres y Desplegables Dependientes ---
         const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII", "ARGOS"];
         
         const workshopDisplayNames = {
@@ -346,10 +357,10 @@
             "MG": "MG SOL",
             "SIMIYP": "SIMIYP",
             "SERVII": "SERVII",
-            "ARGOS": "ARGOS" // Added ARGOS display name
+            "ARGOS": "ARGOS" // Nombre de visualización añadido para ARGOS
         };
 
-        // Workshop image paths - Updated to relative paths
+        // Rutas de imágenes de talleres - Actualizadas a rutas relativas
         const workshopImagePaths = {
             "KAEL": "LOGOKAEL.jpg",
             "ABFREN": "LOGOABFREN.png",
@@ -359,10 +370,10 @@
             "MG": "LOGOMG.png",
             "SIMIYP": "LOGOSIMIYP.png",
             "SERVII": "LOGOSERVICIO.png",
-            "ARGOS": "LOGOARGOS.jpg" // Added ARGOS image path
+            "ARGOS": "LOGOARGOS.jpg" // Ruta de imagen añadida para ARGOS
         };
 
-        // This map holds the relationship between PARTE and TEXTO ESTANDAR.
+        // Este mapa contiene la relación entre PARTE y TEXTO ESTANDAR.
         const parteToTextoEstandarMap = {
             "Accesorios": [
                 "CAMBIAR TAPETES CABINA", "REPARAR TOMA ELEC 12V CABINA", "CAMBIAR CINTA DE TIMON",
@@ -1173,7 +1184,7 @@
             "COLAB0059", "COLAB0060", "COLAB0068"
         ];
 
-        // 1. Populate KAEL data first
+        // 1. Poblar los datos de KAEL primero
         equiposKael.forEach(equipo => {
             allWorkshopsData["KAEL"][equipo] = {};
             for (const conjuntoName in conjuntoToParteMap) {
@@ -1186,26 +1197,26 @@
             }
         });
 
-        // 2. Deep copy KAEL's data to all other workshops
-        const kaelData = JSON.parse(JSON.stringify(allWorkshopsData["KAEL"])); // Create a deep copy of KAEL's data
+        // 2. Copiar profundamente los datos de KAEL a todos los demás talleres
+        const kaelData = JSON.parse(JSON.stringify(allWorkshopsData["KAEL"])); // Crear una copia profunda de los datos de KAEL
 
         for (const workshopName of allWorkshops) {
             if (workshopName !== "KAEL") {
-                allWorkshopsData[workshopName] = JSON.parse(JSON.stringify(kaelData)); // Assign the deep copy
+                allWorkshopsData[workshopName] = JSON.parse(JSON.stringify(kaelData)); // Asignar la copia profunda
             }
         }
 
-        // --- View Management Functions ---
+        // --- Funciones de Gestión de Vistas ---
         function showLoginView() {
             loginView.style.display = 'flex';
             appContainer.style.display = 'none';
             document.body.classList.remove('align-top-content');
-            // Ensure appContainer does not have transparent-bg class when login is shown
+            // Asegurarse de que appContainer no tenga la clase transparent-bg cuando se muestra el login
             appContainer.classList.remove('transparent-bg');
-            // Directly set the background image using relative path
+            // Establecer directamente la imagen de fondo usando una ruta relativa
             document.body.style.backgroundImage = `url('FONDO.png')`;
-            console.log("Login view shown. Background image set to FONDO.png");
-            console.log("Login truck image src:", loginTruckImage.src);
+            console.log("Vista de inicio de sesión mostrada. Imagen de fondo establecida en FONDO.png");
+            console.log("Src de la imagen del camión de inicio de sesión:", loginTruckImage.src);
         }
 
         function showWorkshopSelectionView() {
@@ -1220,9 +1231,9 @@
             logoutBtn.style.display = 'block';
             populateWorkshopCards();
             document.body.classList.add('align-top-content');
-            // Add transparent-bg class to appContainer for workshop view
+            // Añadir la clase transparent-bg a appContainer para la vista de talleres
             appContainer.classList.add('transparent-bg');
-            console.log("Workshop selection view shown.");
+            console.log("Vista de selección de taller mostrada.");
         }
 
         function showFormView() {
@@ -1237,81 +1248,86 @@
             backToMenuBtn.style.display = 'block';
             logoutBtn.style.display = 'none';
             document.body.classList.add('align-top-content');
-            // Remove transparent-bg class from appContainer for form view
+            // Eliminar la clase transparent-bg de appContainer para la vista del formulario
             appContainer.classList.remove('transparent-bg');
-            console.log("Form view shown for workshop:", currentWorkshop);
+            console.log("Vista de formulario mostrada para el taller:", currentWorkshop);
         }
 
-        // --- Login Logic (Appwrite) ---
+        // --- Lógica de Inicio de Sesión ---
+        // Las credenciales ahora se gestionan a través de Appwrite.
+        // Los usuarios deben ser creados en la consola de Appwrite.
         loginBtn.addEventListener('click', async () => {
-            const username = usernameInput.value;
+            const username = usernameInput.value; // En Appwrite, esto suele ser un email
             const password = passwordInput.value;
-            console.log(`Attempting login for: ${username}`);
+            loginError.style.display = 'none';
 
             try {
-                // Create an email/password session with Appwrite
-                await account.createEmailPasswordSession(username, password);
-                loggedInUser = await account.get(); // Get the authenticated user object
-                console.log(`Login successful for user: ${loggedInUser.email}`);
-                loginError.style.display = 'none';
-                showWorkshopSelectionView();
+                // Intentar crear una sesión con email y contraseña en Appwrite
+                const session = await appwrite.account.createEmailPasswordSession(username, password);
+                loggedInUser = username; // Almacenar el nombre de usuario logueado (puedes usar session.userId si lo prefieres)
+                console.log(`Inicio de sesión exitoso para el usuario: ${loggedInUser}`);
+                showWorkshopSelectionView(); // Mostrar la vista de selección de taller
             } catch (error) {
-                console.error('Login failed:', error);
+                console.error('Error de inicio de sesión:', error);
                 loginError.textContent = 'Usuario o contraseña incorrectos.';
                 loginError.style.display = 'block';
+                console.log('Fallo de inicio de sesión: Usuario o contraseña incorrectos.');
             }
         });
 
-        // --- Logout Logic (Appwrite) ---
+        // --- Lógica de Cierre de Sesión ---
         logoutBtn.addEventListener('click', async () => {
             try {
-                await account.deleteSession('current'); // Delete the current session
+                // Eliminar la sesión actual en Appwrite
+                await appwrite.account.deleteSession('current');
+                console.log('Sesión de usuario cerrada.');
                 loggedInUser = null;
-                currentWorkshop = '';
-                console.log('User logged out.');
-                showLoginView();
-                // Reset form and table on logout
-                dataForm.reset();
-                populateEquipoDropdown(); // Reset dropdowns
+                showLoginView(); // Mostrar la vista de inicio de sesión
+                // Limpiar cualquier dato mostrado en la tabla
                 dataTableBody.innerHTML = '<tr><td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando datos...</td></tr>';
             } catch (error) {
-                console.error('Error during logout:', error);
-                showCustomAlert('Hubo un error al cerrar sesión. Inténtalo de nuevo.');
+                console.error('Error al cerrar sesión:', error);
+                showCustomAlert('Error al cerrar sesión. Por favor, inténtalo de nuevo.');
             }
         });
 
-        // --- Initialize App based on Workshop ---
+        // --- Inicializar la Aplicación basada en el Taller ---
         function initApp(workshopName) {
             currentWorkshop = workshopName;
             mainPageTitle.textContent = workshopDisplayNames[workshopName];
             reportSubtitle.style.display = 'block';
             
             populateEquipoDropdown();
-            loadReportData(currentWorkshop); // Load data from Appwrite for the selected workshop
+            loadData(); // Cargar datos desde Appwrite
 
             showFormView();
         }
 
-        // --- Populate Workshop Cards (Menu) ---
+        // --- Poblar Tarjetas de Taller (Menú) ---
         function populateWorkshopCards() {
             workshopSelectionView.innerHTML = '';
             let workshopsToDisplay = [];
 
-            // If the logged-in user is 'ARGOS', show all workshops. Otherwise, show only their workshop.
-            if (loggedInUser && loggedInUser.email.split('@')[0].toUpperCase() === "ARGOS") { // Assuming email is like 'argos@example.com'
+            if (loggedInUser === "ARGOS") { // Asumiendo que "ARGOS" es el email o ID del usuario administrador
                 workshopsToDisplay = allWorkshops;
-            } else if (loggedInUser && allWorkshops.includes(loggedInUser.email.split('@')[0].toUpperCase())) {
-                workshopsToDisplay = [loggedInUser.email.split('@')[0].toUpperCase()];
             } else {
-                // Fallback or error if user's workshop is not recognized
-                console.warn("Logged in user's workshop not recognized or user not logged in.");
-                showLoginView(); // Redirect to login if something is off
-                return;
+                // Si el usuario logueado es un taller específico, solo muestra ese taller
+                if (allWorkshops.includes(loggedInUser)) { // Esto asume que el nombre de usuario es el nombre del taller
+                    workshopsToDisplay = [loggedInUser];
+                } else {
+                    // Si el usuario no es "ARGOS" ni un taller específico, no muestra nada o un mensaje de error
+                    workshopSelectionView.innerHTML = `
+                        <p class="col-span-full text-center text-red-600">
+                            No tienes acceso a ningún taller o tu usuario no está configurado correctamente.
+                        </p>
+                    `;
+                    return;
+                }
             }
 
             workshopsToDisplay.forEach(workshop => {
                 const card = document.createElement('div');
-                // Adjusted card class for better mobile appearance (wider, less padding inside)
+                // Clase de tarjeta ajustada para una mejor apariencia móvil (más ancha, menos relleno interno)
                 card.className = `
                     bg-gray-50 rounded-lg shadow-md p-2 flex flex-col items-center justify-center
                     cursor-pointer hover:bg-blue-50 hover:shadow-lg transition ease-in-out duration-150
@@ -1323,9 +1339,9 @@
                 const img = document.createElement('img');
                 img.alt = workshopDisplayNames[workshop];
                 img.className = 'w-24 h-24 object-contain mb-3 rounded-md';
-                // Updated src to relative path
+                // src actualizado a ruta relativa
                 img.src = workshopImagePaths[workshop]; 
-                console.log(`Workshop card for ${workshop}: image src set to ${img.src}`);
+                console.log(`Tarjeta de taller para ${workshop}: src de imagen establecido en ${img.src}`);
 
                 const name = document.createElement('p');
                 name.textContent = workshopDisplayNames[workshop];
@@ -1337,7 +1353,7 @@
             });
         }
 
-        // --- Populate Equipo Dropdown ---
+        // --- Poblar Desplegable de Equipo ---
         function populateEquipoDropdown() {
             equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
@@ -1350,7 +1366,7 @@
                     equipoSelect.appendChild(option);
                 }
             }
-            // Reset dependent dropdowns
+            // Restablecer desplegables dependientes
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             conjuntoSelect.disabled = true;
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
@@ -1359,7 +1375,7 @@
             textoEstandarSelect.disabled = true;
         }
 
-        // --- Populate Conjunto Dropdown ---
+        // --- Poblar Desplegable de Conjunto ---
         function populateConjuntoDropdown(selectedEquipo) {
             conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
@@ -1375,14 +1391,14 @@
             } else {
                 conjuntoSelect.disabled = true;
             }
-            // Reset dependent dropdowns
+            // Restablecer desplegables dependientes
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             parteSelect.disabled = true;
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
         }
 
-        // --- Populate Parte Dropdown ---
+        // --- Poblar Desplegable de Parte ---
         function populateParteDropdown(selectedEquipo, selectedConjunto) {
             parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
@@ -1399,12 +1415,12 @@
             } else {
                 parteSelect.disabled = true;
             }
-            // Reset dependent dropdown
+            // Restablecer desplegable dependiente
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             textoEstandarSelect.disabled = true;
         }
 
-        // --- Populate Texto Estandar Dropdown ---
+        // --- Poblar Desplegable de Texto Estandar ---
         function populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte) {
             textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
             const currentEquiposData = allWorkshopsData[currentWorkshop];
@@ -1426,7 +1442,7 @@
             }
         }
 
-        // --- Handle Dependent Dropdowns ---
+        // --- Manejar Desplegables Dependientes ---
         equipoSelect.addEventListener('change', () => {
             const selectedEquipo = equipoSelect.value;
             populateConjuntoDropdown(selectedEquipo);
@@ -1445,25 +1461,22 @@
             populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte);
         });
 
-        // --- Load Data from Appwrite and Render Table ---
-        async function loadReportData(workshop) {
+        // --- Cargar Datos desde Appwrite y Renderizar Tabla ---
+        async function loadData() {
             dataTableBody.innerHTML = '<tr><td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cargando datos...</td></tr>';
-
             try {
-                // Fetch documents from Appwrite
-                const response = await databases.listDocuments(
-                    DATABASE_ID,
-                    COLLECTION_REPORTE_ID,
+                // Listar documentos de la colección para el taller actual
+                const response = await appwrite.databases.listDocuments(
+                    appwrite.databaseId,
+                    appwrite.collectionId,
                     [
-                        Query.equal('workshop', workshop), // Filter by the current workshop
-                        Query.orderDesc('$createdAt') // Order by creation date descending
+                        appwrite.Query.equal('workshop', currentWorkshop), // Filtrar por el taller actual
+                        appwrite.Query.orderDesc('$createdAt') // Ordenar por fecha de creación descendente
                     ]
                 );
-                loadedRecords = response.documents; // Store fetched records for editing/deleting
-
-                dataTableBody.innerHTML = ''; // Clear the table
-
-                if (loadedRecords.length === 0) {
+                const records = response.documents;
+                
+                if (records.length === 0) {
                     dataTableBody.innerHTML = `
                         <tr>
                             <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
@@ -1472,11 +1485,10 @@
                     return;
                 }
 
-                loadedRecords.forEach((data, index) => {
+                dataTableBody.innerHTML = ''; // Limpiar filas existentes
+                records.forEach((data, index) => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50';
-                    row.dataset.documentId = data.$id; // Store Appwrite document ID
-                    row.dataset.recordIndex = index; // Store local index for convenience
 
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
@@ -1490,84 +1502,95 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${data.fotoUrl ? `<a href="${data.fotoUrl}" target="_blank" class="text-blue-600 hover:underline">Ver Foto</a>` : 'N/A'}
+                            ${data.fotoName || 'N/A'}
+                            ${data.fotoId ? `<a href="${appwrite.storage.getFileDownload(appwrite.bucketId, data.fotoId)}" target="_blank" class="text-blue-600 hover:underline ml-2">Ver Foto</a>` : ''}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
-                            <button data-index="${index}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
-                            <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
+                            <button data-id="${data.$id}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
+                            <button data-id="${data.$id}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
                         </td>
                     `;
                     dataTableBody.appendChild(row);
                 });
 
+                // Añadir event listeners para los botones de eliminar y editar
                 document.querySelectorAll('.delete-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const indexToDelete = parseInt(e.target.dataset.index);
-                        deleteRecord(indexToDelete);
+                        const recordIdToDelete = e.target.dataset.id;
+                        showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
+                            deleteRecord(recordIdToDelete);
+                        });
                     });
                 });
 
                 document.querySelectorAll('.edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const indexToEdit = parseInt(e.target.dataset.index);
-                        editRecord(indexToEdit);
+                        const recordIdToEdit = e.target.dataset.id;
+                        editRecord(recordIdToEdit);
                     });
                 });
 
             } catch (error) {
-                console.error('Error loading data from Appwrite:', error);
-                dataTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-600">Error al cargar datos. Por favor, inténtalo de nuevo.</td>
-                    </tr>
-                `;
+                console.error('Error al cargar los datos:', error);
+                dataTableBody.innerHTML = '<tr><td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-500">Error al cargar los datos.</td></tr>';
             }
         }
 
-        // --- Edit Record Functionality ---
-        function editRecord(index) {
-            editingRecordIndex = index; // Set the global editing index
-            const recordToEdit = loadedRecords[index];
+        // --- Funcionalidad de Edición de Registro ---
+        async function editRecord(recordId) {
+            try {
+                // Obtener el documento específico de Appwrite
+                const record = await appwrite.databases.getDocument(
+                    appwrite.databaseId,
+                    appwrite.collectionId,
+                    recordId
+                );
 
-            if (recordToEdit) {
-                // Populate form fields
-                document.getElementById('fecha').value = recordToEdit.fecha || '';
-                document.getElementById('otOrigen').value = recordToEdit.otOrigen || '0';
-                document.getElementById('descripcionDetallada').value = recordToEdit.descripcionDetallada || '';
-                document.getElementById('prioridad').value = recordToEdit.prioridad || '';
-                document.getElementById('tecnico').value = recordToEdit.tecnico || '';
-                document.getElementById('telefono').value = recordToEdit.telefono || '';
+                // Rellenar los campos del formulario con los datos del registro
+                document.getElementById('fecha').value = record.fecha || '';
+                document.getElementById('otOrigen').value = record.otOrigen || '0';
+                document.getElementById('descripcionDetallada').value = record.descripcionDetallada || '';
+                document.getElementById('prioridad').value = record.prioridad || '';
+                document.getElementById('tecnico').value = record.tecnico || '';
+                document.getElementById('telefono').value = record.telefono || '';
 
-                // Populate dependent dropdowns
-                equipoSelect.value = recordToEdit.equipo || '';
-                populateConjuntoDropdown(recordToEdit.equipo);
-                conjuntoSelect.value = recordToEdit.conjunto || '';
-                populateParteDropdown(recordToEdit.equipo, recordToEdit.conjunto);
-                parteSelect.value = recordToEdit.parte || '';
-                populateTextoEstandarDropdown(recordToEdit.equipo, recordToEdit.conjunto, recordToEdit.parte);
-                textoEstandarSelect.value = recordToEdit.textoEstandar || '';
+                // Rellenar los desplegables dependientes
+                // Primero, asegurar que el desplegable de equipo esté poblado
+                populateEquipoDropdown();
+                document.getElementById('equipo').value = record.equipo || '';
 
+                // Luego, poblar y seleccionar los siguientes desplegables en secuencia
+                populateConjuntoDropdown(record.equipo);
+                conjuntoSelect.value = record.conjunto || '';
+
+                populateParteDropdown(record.equipo, record.conjunto);
+                parteSelect.value = record.parte || '';
+
+                populateTextoEstandarDropdown(record.equipo, record.conjunto, record.parte);
+                textoEstandarSelect.value = record.textoEstandar || '';
+
+                currentEditingDocumentId = record.$id; // Almacenar el ID del documento que se está editando
                 saveRecordBtn.textContent = 'Actualizar Registro';
-                cancelEditBtn.style.display = 'inline-block'; // Show cancel button
-                console.log('Cargando registro para edición:', recordToEdit);
-
-                // Scroll to form
-                dataForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                cancelEditBtn.style.display = 'inline-block'; // Mostrar el botón de cancelar
+                console.log('Cargando registro para edición:', record);
+            } catch (error) {
+                console.error('Error al obtener el registro para edición:', error);
+                showCustomAlert('Error al cargar el registro para edición.');
             }
         }
 
-        // --- Cancel Edit Functionality ---
+        // --- Funcionalidad de Cancelar Edición ---
         cancelEditBtn.addEventListener('click', () => {
             dataForm.reset();
-            document.getElementById('foto').value = ''; // Clear file input
-            populateEquipoDropdown(); // Reset dropdowns
-            editingRecordIndex = -1; // Exit edit mode
+            populateEquipoDropdown(); // Restablecer los desplegables
+            editingRecordIndex = -1; // Salir del modo de edición
+            currentEditingDocumentId = null; // Limpiar el ID del documento en edición
             saveRecordBtn.textContent = 'Guardar Registro';
-            cancelEditBtn.style.display = 'none'; // Hide cancel button
+            cancelEditBtn.style.display = 'none'; // Ocultar el botón de cancelar
             console.log('Edición cancelada. Formulario restablecido.');
         });
 
-        // --- Custom Alert/Confirm Modals ---
+        // --- Modales de Alerta/Confirmación Personalizados ---
         function showCustomAlert(message, callback = () => {}) {
             const modalId = 'customAlertModal';
             let modal = document.getElementById(modalId);
@@ -1624,143 +1647,107 @@
             };
         }
 
-        // --- Form Submission Handler (Appwrite) ---
+        // --- Manejador de Envío de Formulario ---
         dataForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const formData = new FormData(dataForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Basic validation
-            if (!data.equipo || !data.fecha || !data.otOrigen || !data.conjunto || !data.parte ||
-                !data.prioridad || !data.textoEstandar || !data.descripcionDetallada ||
-                !data.tecnico || !data.telefono) {
-                showCustomAlert('Por favor, completa todos los campos obligatorios.');
-                return;
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
             }
 
-            let fileId = null;
-            let fileUrl = '';
+            const fotoInput = document.getElementById('foto');
+            let fileId = ''; // Variable para almacenar el ID del archivo subido
 
-            // Handle photo upload to Appwrite Storage
-            const photoInput = document.getElementById('foto');
-            const photoFile = photoInput.files[0];
-
-            if (photoFile) {
+            if (fotoInput.files.length > 0) {
+                const fotoFile = fotoInput.files[0];
                 try {
-                    const uploadedFile = await storage.createFile(
-                        BUCKET_REPORTE_ID,
-                        ID.unique(), // Generate a unique ID for the file
-                        photoFile
+                    // Subir el archivo a Appwrite Storage
+                    const uploadedFile = await appwrite.storage.createFile(
+                        appwrite.bucketId,
+                        appwrite.ID.unique(), // Usar un ID único para el nombre del archivo
+                        fotoFile
                     );
                     fileId = uploadedFile.$id;
-                    // Construct the file URL for display
-                    fileUrl = `${client.config.endpoint}/storage/buckets/${BUCKET_REPORTE_ID}/files/${fileId}/view?project=${client.config.project}`;
-                    console.log('Foto subida:', fileUrl);
+                    data.fotoId = fileId; // Almacenar el ID del archivo en tu documento
+                    data.fotoName = fotoFile.name; // Almacenar el nombre original del archivo
+                    console.log('Foto subida con éxito:', uploadedFile);
                 } catch (error) {
                     console.error('Error al subir la foto:', error);
-                    showCustomAlert('No se pudo subir la foto. Inténtalo de nuevo.');
-                    return;
+                    showCustomAlert('Error al subir la foto. Por favor, inténtalo de nuevo.');
+                    return; // Detener la ejecución si la subida de la foto falla
                 }
-            } else if (editingRecordIndex !== -1 && loadedRecords[editingRecordIndex]) {
-                // If editing and no new photo is uploaded, retain the existing photo URL and ID
-                fileUrl = loadedRecords[editingRecordIndex].fotoUrl || '';
-                fileId = loadedRecords[editingRecordIndex].fotoFileId || null;
+            } else {
+                data.fotoName = ''; // Asegurarse de que fotoName esté vacío si no hay foto
+                data.fotoId = ''; // Asegurarse de que fotoId esté vacío si no hay foto
             }
 
-            const recordData = {
-                equipo: data.equipo,
-                fecha: data.fecha,
-                otOrigen: parseInt(data.otOrigen),
-                conjunto: data.conjunto,
-                parte: data.parte,
-                prioridad: data.prioridad,
-                textoEstandar: data.textoEstandar,
-                descripcionDetallada: data.descripcionDetallada,
-                tecnico: data.tecnico,
-                telefono: data.telefono,
-                fotoUrl: fileUrl,
-                fotoFileId: fileId,
-                workshop: currentWorkshop // Store the workshop name for filtering
-            };
+            // Añadir el taller actual al objeto de datos
+            data.workshop = currentWorkshop;
+            // Añadir el ID del usuario logueado al objeto de datos
+            // Esto asume que loggedInUser contiene el email o ID del usuario de Appwrite
+            data.userId = loggedInUser; 
 
             try {
-                if (editingRecordIndex > -1) {
-                    // Update existing record in Appwrite
-                    const documentId = loadedRecords[editingRecordIndex].$id;
-                    await databases.updateDocument(
-                        DATABASE_ID,
-                        COLLECTION_REPORTE_ID,
-                        documentId,
-                        recordData
+                if (currentEditingDocumentId) {
+                    // Actualizar un registro existente
+                    await appwrite.databases.updateDocument(
+                        appwrite.databaseId,
+                        appwrite.collectionId,
+                        currentEditingDocumentId, // Usar el ID del documento de Appwrite
+                        data
                     );
-                    showCustomAlert('Registro actualizado con éxito en Appwrite.');
-                    console.log('Registro actualizado:', recordData);
+                    showCustomAlert('Registro actualizado con éxito.');
+                    console.log('Registro actualizado con éxito:', data);
+
                 } else {
-                    // Create new record in Appwrite
-                    await databases.createDocument(
-                        DATABASE_ID,
-                        COLLECTION_REPORTE_ID,
-                        ID.unique(), // Generate a unique document ID
-                        recordData
+                    // Añadir un nuevo registro
+                    await appwrite.databases.createDocument(
+                        appwrite.databaseId,
+                        appwrite.collectionId,
+                        appwrite.ID.unique(), // Usar un ID único para el documento
+                        data
                     );
-                    showCustomAlert('Datos guardados con éxito en Appwrite.');
-                    console.log('Datos guardados:', recordData);
+                    showCustomAlert('Datos guardados con éxito.');
+                    console.log('Datos guardados con éxito:', data);
                 }
 
                 dataForm.reset();
-                document.getElementById('foto').value = ''; // Clear file input
-                populateEquipoDropdown(); // Reset dropdowns
-                editingRecordIndex = -1; // Exit edit mode
-                saveRecordBtn.textContent = 'Guardar Registro'; // Reset button text
-                cancelEditBtn.style.display = 'none'; // Hide cancel button
-                loadReportData(currentWorkshop); // Reload data for current workshop from Appwrite
-
+                populateEquipoDropdown(); // Restablecer los desplegables
+                editingRecordIndex = -1; // Salir del modo de edición
+                currentEditingDocumentId = null; // Limpiar el ID del documento en edición
+                saveRecordBtn.textContent = 'Guardar Registro'; // Restablecer el texto del botón
+                cancelEditBtn.style.display = 'none'; // Ocultar el botón de cancelar
+                loadData(); // Recargar los datos para el taller actual
             } catch (error) {
-                console.error('Error al guardar/actualizar datos en Appwrite:', error);
+                console.error('Error al guardar datos:', error);
                 showCustomAlert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
             }
         });
 
-        // --- Delete Record Functionality (Appwrite) ---
-        async function deleteRecord(index) {
-            const recordToDelete = loadedRecords[index];
-
-            showCustomConfirm(`¿Estás seguro de que quieres eliminar el registro de ${recordToDelete.equipo} - ${recordToDelete.fecha}?`, async () => {
-                try {
-                    // Delete document from Appwrite Database
-                    await databases.deleteDocument(
-                        DATABASE_ID,
-                        COLLECTION_REPORTE_ID,
-                        recordToDelete.$id
-                    );
-
-                    // If there's an associated photo, delete it from Appwrite Storage
-                    if (recordToDelete.fotoFileId) {
-                        try {
-                            await storage.deleteFile(BUCKET_REPORTE_ID, recordToDelete.fotoFileId);
-                            console.log('Foto eliminada del almacenamiento:', recordToDelete.fotoFileId);
-                        } catch (fileError) {
-                            console.warn('No se pudo eliminar la foto del almacenamiento (puede que ya no exista):', fileError);
-                        }
-                    }
-
-                    showCustomAlert('Registro eliminado con éxito.');
-                    loadReportData(currentWorkshop); // Reload data from Appwrite
-                } catch (error) {
-                    console.error('Error al eliminar registro de Appwrite:', error);
-                    showCustomAlert('Hubo un error al eliminar el registro. Por favor, inténtalo de nuevo.');
-                }
-            });
-        }
-
-        // --- Excel Download Handler ---
-        downloadExcelBtn.addEventListener('click', () => {
-            // Use the currently loaded records for Excel export
-            const allData = loadedRecords;
+        // --- Manejador de Descarga de Excel ---
+        downloadExcelBtn.addEventListener('click', async () => {
+            let allData = [];
+            try {
+                // Obtener todos los documentos del taller actual para exportar
+                const response = await appwrite.databases.listDocuments(
+                    appwrite.databaseId,
+                    appwrite.collectionId,
+                    [
+                        appwrite.Query.equal('workshop', currentWorkshop),
+                        appwrite.Query.limit(10000) // Ajusta el límite si esperas muchos registros
+                    ]
+                );
+                allData = response.documents;
+            } catch (error) {
+                console.error('Error al obtener datos para Excel:', error);
+                showCustomAlert('Error al cargar los datos para descargar. Por favor, inténtalo de nuevo.');
+                return;
+            }
 
             if (allData.length === 0) {
-                showCustomAlert('No hay datos para descargar.');
+                showCustomAlert('No hay datos para descargar.'); // Usando alerta personalizada
                 return;
             }
 
@@ -1768,7 +1755,7 @@
             const headers = [
                 "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
                 "Texto Estandar", "Descripción Detallada", "Prioridad",
-                "Técnico", "Teléfono", "Foto (URL)" // Changed to Foto (URL) as we store URL
+                "Técnico", "Teléfono", "Foto (Nombre)"
             ];
             dataToExport.push(headers);
 
@@ -1784,7 +1771,7 @@
                     item.prioridad || '',
                     item.tecnico || '',
                     item.telefono || '',
-                    item.fotoUrl || 'N/A' // Use fotoUrl for export
+                    item.fotoName || 'N/A'
                 ];
                 dataToExport.push(rowData);
             });
@@ -1798,28 +1785,30 @@
             console.log('Excel descargado con éxito.');
         });
 
-        // --- Back to Menu Button Handler ---
+        // --- Manejador del Botón Volver al Menú ---
         backToMenuBtn.addEventListener('click', () => {
             showWorkshopSelectionView();
         });
 
-        // Initial setup when the page loads (Check for existing Appwrite session)
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                loggedInUser = await account.get(); // Try to get current session
-                if (loggedInUser) {
-                    console.log("Existing session found for:", loggedInUser.email);
-                    showWorkshopSelectionView();
-                } else {
-                    console.log("No existing session, showing login view.");
-                    showLoginView();
-                }
-            } catch (error) {
-                console.log("Error checking session or no session found:", error);
-                showLoginView();
-            }
+        // Configuración inicial al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar la sesión actual de Appwrite al cargar la página
+            checkCurrentSession(); 
         });
+
+        // Función para verificar la sesión actual al cargar la página
+        async function checkCurrentSession() {
+            try {
+                // Obtener la cuenta del usuario actual
+                const user = await appwrite.account.get();
+                loggedInUser = user.email; // O user.$id, dependiendo de cómo quieras identificar al usuario
+                console.log(`Sesión activa para el usuario: ${loggedInUser}`);
+                showWorkshopSelectionView(); // Mostrar la vista de selección de taller si hay sesión activa
+            } catch (error) {
+                console.log('No hay sesión activa, mostrando inicio de sesión.', error);
+                showLoginView(); // Mostrar la vista de inicio de sesión si no hay sesión activa
+            }
+        }
     </script>
 </body>
 </html>
-
