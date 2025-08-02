@@ -707,31 +707,14 @@
             }
         }
         
+        // Event Listeners
         loginBtn.addEventListener('click', handleLogin);
         logoutBtn.addEventListener('click', handleLogout);
         dataForm.addEventListener('submit', saveFormData);
         cancelEditBtn.addEventListener('click', resetForm);
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            supabase.auth.onAuthStateChange((event, session) => {
-                if (session) {
-                    showApp(session.user);
-                } else {
-                    showLogin();
-                }
-            });
-
-            equipos.forEach(equipo => {
-                const option = document.createElement('option');
-                option.value = equipo;
-                option.textContent = equipo;
-                equipoSelect.appendChild(option);
-            });
-        
-            equipoSelect.addEventListener('change', (e) => populateConjuntoSelect(e.target.value));
-            conjuntoSelect.addEventListener('change', (e) => populateParteSelect(e.target.value));
-            parteSelect.addEventListener('change', (e) => populateTextoEstandarSelect(e.target.value));
-        });
+        equipoSelect.addEventListener('change', (e) => populateConjuntoSelect(e.target.value));
+        conjuntoSelect.addEventListener('change', (e) => populateParteSelect(e.target.value));
+        parteSelect.addEventListener('change', (e) => populateTextoEstandarSelect(e.target.value));
 
         downloadExcelBtn.addEventListener('click', async () => {
             let query = supabase.from('reports').select('*');
@@ -763,7 +746,26 @@
                 alert("No hay datos para descargar.");
             }
         });
+
+        // Este es el nuevo y principal bloque de lógica.
+        // Se ejecuta una vez y el oyente de estado de autenticación
+        // se encarga de mostrar la vista correcta en todo momento.
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                showApp(session.user);
+            } else {
+                showLogin();
+            }
+        });
+
+        // También he movido la carga inicial de los selectores aquí para que
+        // se ejecute solo cuando el usuario vea la aplicación.
+        equipos.forEach(equipo => {
+            const option = document.createElement('option');
+            option.value = equipo;
+            option.textContent = equipo;
+            equipoSelect.appendChild(option);
+        });
     </script>
 </body>
 </html>
-
