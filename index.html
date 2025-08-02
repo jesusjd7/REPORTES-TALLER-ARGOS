@@ -264,17 +264,13 @@
         import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
         window.XLSX = XLSX;
 
-        // ===================================================================
-        // [MODIFICADO: Variables y Clientes de Supabase]
-        // Se ha actualizado con su URL de proyecto y su clave anónima.
-        // ===================================================================
         const SUPABASE_URL = 'https://txpezttlhtxjkwtfehme.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGV6dHRsaHR4amt3dGZlaG1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNzA1MDcsImV4cCI6MjA2OTY0NjUwN30.74iEuQQfSvlu36lbfd78e8aM6vFcZUkA7ab0oWT9yGI'; 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let loggedInUser = null;
         let currentWorkshop = '';
-        let editingRecord = null; // Cambiado de índice a objeto para Supabase
+        let editingRecord = null; 
 
         // --- DOM Elements ---
         const appContainer = document.getElementById('appContainer');
@@ -386,7 +382,7 @@
             "Radiador": ["REPARAR RADIADOR", "CAMBIAR RADIADOR"],
             "Tubo": ["CAMBIAR TUBO DE ESCAPE", "REPARAR TUBO DE COMBUSTIBLE"],
             "Bomba de agua": ["CAMBIAR BOMBA DE AGUA"],
-            "Bomba de combustible": ["CAMBIAR BOMBA DE COMBUSTIBLE"],
+            "Bomba de combustible": ["CAMBIAR BOMBA de COMBUSTIBLE"],
             "Alternador": ["CAMBIAR ALTERNADOR", "REPARAR ALTERNADOR"],
             "Batería": ["CAMBIAR BATERIA", "RECARGAR BATERIA"],
             "Motor de arranque": ["CAMBIAR MOTOR DE ARRANQUE", "REPARAR MOTOR DE ARRANQUE"],
@@ -429,9 +425,6 @@
 
         const equipos = ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10", "G11", "G12", "G13", "G14", "G15", "G16", "G17", "G18", "G19", "G20"];
         
-        // ===================================================================
-        // [MODIFICADO: Lógica de la interfaz de usuario para Supabase]
-        // ===================================================================
         function showLogin() {
             loginView.style.display = 'flex';
             appContainer.style.display = 'none';
@@ -503,9 +496,6 @@
             }
         }
 
-        // ===================================================================
-        // [MODIFICADO: Nuevas funciones para la vista de administrador]
-        // ===================================================================
         async function showAllReportsView() {
             loginView.style.display = 'none';
             appContainer.style.display = 'block';
@@ -516,7 +506,7 @@
             rightHeaderElements.style.display = 'flex';
             reportSubtitle.style.display = 'none';
             workshopSelectionView.style.display = 'none';
-            formView.style.display = 'block'; // Usamos la misma vista de tabla
+            formView.style.display = 'block'; 
 
             loadReports();
         }
@@ -606,7 +596,6 @@
             const fotoFile = formData.get('foto');
             if (fotoFile && fotoFile.name) {
                 const fotoPath = `${currentWorkshop}/${Date.now()}-${fotoFile.name}`;
-                // [MODIFICADO] Se actualiza el nombre del bucket de almacenamiento
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('reportefotos')
                     .upload(fotoPath, fotoFile);
@@ -616,7 +605,6 @@
                     alert("Error al subir la foto. Intente de nuevo.");
                     return;
                 }
-                // [MODIFICADO] Se actualiza el nombre del bucket de almacenamiento
                 const { data: urlData } = supabase.storage.from('reportefotos').getPublicUrl(fotoPath);
                 record.fotoUrl = urlData.publicUrl;
             }
@@ -651,9 +639,6 @@
             }
         }
 
-        // ===================================================================
-        // [MODIFICADO: Funciones para editar y eliminar registros]
-        // ===================================================================
         async function editRecord(id) {
             const { data: record, error } = await supabase
                 .from('reports')
@@ -757,9 +742,6 @@
             }
         }
         
-        // ===================================================================
-        // [MODIFICADO: Event Listeners y Funciones de Carga Inicial]
-        // ===================================================================
         loginBtn.addEventListener('click', handleLogin);
         logoutBtn.addEventListener('click', handleLogout);
         dataForm.addEventListener('submit', saveFormData);
@@ -786,9 +768,6 @@
             parteSelect.addEventListener('change', (e) => populateTextoEstandarSelect(e.target.value));
         });
 
-        // ===================================================================
-        // [MODIFICADO: Función de descarga de Excel para usar los datos de Supabase]
-        // ===================================================================
         downloadExcelBtn.addEventListener('click', async () => {
             let query = supabase.from('reports').select('*');
 
