@@ -465,22 +465,37 @@
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
 
-            if (username && password) {
-                let email = `${username}@taller.com`; 
-                if (username.toLowerCase() === 'argos') {
-                    email = 'argos@argos.com';
-                }
+            if (!username || !password) {
+                loginError.textContent = 'Por favor, ingrese un usuario y contraseña.';
+                loginError.style.display = 'block';
+                return;
+            }
 
-                loginError.style.display = 'none';
+            // Cambiar el estado del botón para dar feedback al usuario
+            loginBtn.textContent = 'Cargando...';
+            loginBtn.disabled = true;
+            loginError.style.display = 'none';
+            
+            let email = `${username}@taller.com`; 
+            if (username.toLowerCase() === 'argos') {
+                email = 'argos@argos.com';
+            }
+
+            try {
                 const { error } = await supabase.auth.signInWithPassword({ email: email, password: password });
 
                 if (error) {
                     loginError.textContent = 'Error: Usuario o contraseña incorrectos.';
                     loginError.style.display = 'block';
                 }
-            } else {
-                loginError.textContent = 'Por favor, ingrese un usuario y contraseña.';
+            } catch (err) {
+                console.error("Error inesperado en el inicio de sesión:", err);
+                loginError.textContent = 'Ocurrió un error inesperado. Por favor, verifique su conexión a internet.';
                 loginError.style.display = 'block';
+            } finally {
+                // Restaurar el estado del botón
+                loginBtn.textContent = 'INGRESAR';
+                loginBtn.disabled = false;
             }
         }
 
@@ -747,9 +762,8 @@
             }
         });
 
-        // Este es el nuevo y principal bloque de lógica.
-        // Se ejecuta una vez y el oyente de estado de autenticación
-        // se encarga de mostrar la vista correcta en todo momento.
+        // Este es el principal bloque de lógica.
+        // El oyente de estado de autenticación se encarga de mostrar la vista correcta.
         supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 showApp(session.user);
@@ -758,8 +772,7 @@
             }
         });
 
-        // También he movido la carga inicial de los selectores aquí para que
-        // se ejecute solo cuando el usuario vea la aplicación.
+        // Inicializa los selectores de equipo.
         equipos.forEach(equipo => {
             const option = document.createElement('option');
             option.value = equipo;
