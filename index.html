@@ -430,18 +430,31 @@
             appContainer.style.display = 'none';
         }
 
-        async function showApp() {
-            const { data: { user } } = await supabase.auth.getUser();
+        async function showApp(user) {
             loggedInUser = user ? user.user_metadata.workshop : null;
-
             if (loggedInUser) {
+                loginView.style.display = 'none';
+                appContainer.style.display = 'block';
+                document.body.classList.add('align-top-content');
+                appContainer.classList.remove('transparent-bg');
+                rightHeaderElements.style.display = 'flex';
+                
                 if (loggedInUser === 'admin') {
-                    showAllReportsView();
+                    mainPageTitle.textContent = "TODOS LOS REPORTES";
+                    leftHeaderElements.style.display = 'none';
+                    reportSubtitle.style.display = 'none';
+                    workshopSelectionView.style.display = 'none';
+                    formView.style.display = 'block';
                 } else {
                     currentWorkshop = loggedInUser;
                     mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
-                    showFormView();
+                    leftHeaderElements.style.display = 'flex';
+                    reportSubtitle.style.display = 'block';
+                    workshopSelectionView.style.display = 'none';
+                    formView.style.display = 'block';
+                    resetForm();
                 }
+                loadReports();
             } else {
                 showLogin();
             }
@@ -454,31 +467,16 @@
 
             if (username && password) {
                 let email = `${username}@taller.com`; 
-                
-                // Excepción para el usuario 'argos'
                 if (username.toLowerCase() === 'argos') {
                     email = 'argos@argos.com';
                 }
 
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email, 
-                    password: password,
-                });
+                loginError.style.display = 'none';
+                const { error } = await supabase.auth.signInWithPassword({ email: email, password: password });
 
                 if (error) {
                     loginError.textContent = 'Error: Usuario o contraseña incorrectos.';
                     loginError.style.display = 'block';
-                } else {
-                    const user = data.user;
-                    loggedInUser = user.user_metadata.workshop;
-                    loginError.style.display = 'none';
-                    if (loggedInUser === 'admin') {
-                        showAllReportsView();
-                    } else {
-                        currentWorkshop = loggedInUser;
-                        mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
-                        showFormView();
-                    }
                 }
             } else {
                 loginError.textContent = 'Por favor, ingrese un usuario y contraseña.';
@@ -488,42 +486,9 @@
 
         async function handleLogout() {
             const { error } = await supabase.auth.signOut();
-            if (!error) {
-                loggedInUser = null;
-                showLogin();
-            } else {
+            if (error) {
                 console.error("Error al cerrar sesión:", error);
             }
-        }
-
-        async function showAllReportsView() {
-            loginView.style.display = 'none';
-            appContainer.style.display = 'block';
-            document.body.classList.add('align-top-content');
-            appContainer.classList.remove('transparent-bg');
-            mainPageTitle.textContent = "TODOS LOS REPORTES";
-            leftHeaderElements.style.display = 'none';
-            rightHeaderElements.style.display = 'flex';
-            reportSubtitle.style.display = 'none';
-            workshopSelectionView.style.display = 'none';
-            formView.style.display = 'block'; 
-
-            loadReports();
-        }
-
-        async function showFormView() {
-            loginView.style.display = 'none';
-            appContainer.style.display = 'block';
-            document.body.classList.add('align-top-content');
-            appContainer.classList.remove('transparent-bg');
-            mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
-            leftHeaderElements.style.display = 'flex';
-            rightHeaderElements.style.display = 'flex';
-            reportSubtitle.style.display = 'block';
-            workshopSelectionView.style.display = 'none';
-            formView.style.display = 'block';
-            resetForm();
-            loadReports();
         }
 
         async function loadReports() {
@@ -750,7 +715,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             supabase.auth.onAuthStateChange((event, session) => {
                 if (session) {
-                    showApp();
+                    showApp(session.user);
                 } else {
                     showLogin();
                 }
@@ -801,3 +766,4 @@
     </script>
 </body>
 </html>
+
