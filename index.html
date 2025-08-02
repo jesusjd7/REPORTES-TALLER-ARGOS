@@ -432,6 +432,7 @@
 
         async function showApp(user) {
             loggedInUser = user ? user.user_metadata.workshop : null;
+            console.log("showApp called. Logged in user:", loggedInUser);
             if (loggedInUser) {
                 loginView.style.display = 'none';
                 appContainer.style.display = 'block';
@@ -456,6 +457,7 @@
                 }
                 loadReports();
             } else {
+                console.log("No logged in user. Showing login view.");
                 showLogin();
             }
         }
@@ -471,7 +473,6 @@
                 return;
             }
 
-            // Cambiar el estado del botón para dar feedback al usuario
             loginBtn.textContent = 'Cargando...';
             loginBtn.disabled = true;
             loginError.style.display = 'none';
@@ -480,20 +481,25 @@
             if (username.toLowerCase() === 'argos') {
                 email = 'argos@argos.com';
             }
+            console.log("Attempting to sign in with email:", email);
 
             try {
-                const { error } = await supabase.auth.signInWithPassword({ email: email, password: password });
+                const { data, error } = await supabase.auth.signInWithPassword({ email: email, password: password });
 
                 if (error) {
+                    console.error("Supabase sign-in error:", error);
                     loginError.textContent = 'Error: Usuario o contraseña incorrectos.';
                     loginError.style.display = 'block';
+                } else {
+                    console.log("Supabase sign-in successful. Data:", data);
+                    // The onAuthStateChange listener will handle the rest.
                 }
             } catch (err) {
-                console.error("Error inesperado en el inicio de sesión:", err);
+                console.error("Unexpected error during login:", err);
                 loginError.textContent = 'Ocurrió un error inesperado. Por favor, verifique su conexión a internet.';
                 loginError.style.display = 'block';
             } finally {
-                // Restaurar el estado del botón
+                // Restore button state after the login attempt
                 loginBtn.textContent = 'INGRESAR';
                 loginBtn.disabled = false;
             }
@@ -765,6 +771,8 @@
         // Este es el principal bloque de lógica.
         // El oyente de estado de autenticación se encarga de mostrar la vista correcta.
         supabase.auth.onAuthStateChange((event, session) => {
+            console.log("onAuthStateChange event:", event);
+            console.log("onAuthStateChange session:", session);
             if (session) {
                 showApp(session.user);
             } else {
