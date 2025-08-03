@@ -432,13 +432,13 @@
 
         async function showApp(user) {
             // Manejamos el caso en que el usuario es nulo, para evitar el error.
-            if (!user) {
-                console.log("showApp fue llamado con un usuario nulo. Mostrando la vista de inicio de sesión.");
+            if (!user || !user.user_metadata) {
+                console.log("showApp fue llamado con un usuario nulo o sin metadata. Mostrando la vista de inicio de sesión.");
                 showLogin();
                 return;
             }
 
-            loggedInUser = user ? user.user_metadata.workshop : null;
+            loggedInUser = user.user_metadata.workshop;
             console.log("showApp called. Logged in user:", loggedInUser);
 
             if (loggedInUser) {
