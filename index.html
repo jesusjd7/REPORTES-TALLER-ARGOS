@@ -431,8 +431,8 @@
         }
 
         async function showApp(user) {
-            // Manejamos el caso en que el usuario es nulo, para evitar el error.
-            if (!user || !user.user_metadata) {
+            // **[CAMBIO 1]**: Añadida una comprobación robusta para evitar errores si el usuario no es válido.
+            if (!user || !user.user_metadata || !user.user_metadata.workshop) {
                 console.log("showApp fue llamado con un usuario nulo o sin metadata. Mostrando la vista de inicio de sesión.");
                 showLogin();
                 return;
@@ -441,33 +441,28 @@
             loggedInUser = user.user_metadata.workshop;
             console.log("showApp called. Logged in user:", loggedInUser);
 
-            if (loggedInUser) {
-                loginView.style.display = 'none';
-                appContainer.style.display = 'block';
-                document.body.classList.add('align-top-content');
-                appContainer.classList.remove('transparent-bg');
-                rightHeaderElements.style.display = 'flex';
-                
-                if (loggedInUser === 'admin') {
-                    mainPageTitle.textContent = "TODOS LOS REPORTES";
-                    leftHeaderElements.style.display = 'none';
-                    reportSubtitle.style.display = 'none';
-                    workshopSelectionView.style.display = 'none';
-                    formView.style.display = 'block';
-                } else {
-                    currentWorkshop = loggedInUser;
-                    mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
-                    leftHeaderElements.style.display = 'flex';
-                    reportSubtitle.style.display = 'block';
-                    workshopSelectionView.style.display = 'none';
-                    formView.style.display = 'block';
-                    resetForm();
-                }
-                loadReports();
+            loginView.style.display = 'none';
+            appContainer.style.display = 'block';
+            document.body.classList.add('align-top-content');
+            appContainer.classList.remove('transparent-bg');
+            rightHeaderElements.style.display = 'flex';
+            
+            if (loggedInUser === 'admin') {
+                mainPageTitle.textContent = "TODOS LOS REPORTES";
+                leftHeaderElements.style.display = 'none';
+                reportSubtitle.style.display = 'none';
+                workshopSelectionView.style.display = 'none';
+                formView.style.display = 'block';
             } else {
-                console.log("No logged in user. Showing login view.");
-                showLogin();
+                currentWorkshop = loggedInUser;
+                mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
+                leftHeaderElements.style.display = 'flex';
+                reportSubtitle.style.display = 'block';
+                workshopSelectionView.style.display = 'none';
+                formView.style.display = 'block';
+                resetForm();
             }
+            loadReports();
         }
 
         async function handleLogin(e) {
@@ -507,7 +502,6 @@
                 loginError.textContent = 'Ocurrió un error inesperado. Por favor, verifique su conexión a internet.';
                 loginError.style.display = 'block';
             } finally {
-                // Restore button state after the login attempt
                 loginBtn.textContent = 'INGRESAR';
                 loginBtn.disabled = false;
             }
@@ -776,8 +770,8 @@
             }
         });
 
-        // Este es el principal bloque de lógica.
-        // El oyente de estado de autenticación se encarga de mostrar la vista correcta.
+        // **[CAMBIO 2]**: Aquí está la lógica de autenticación principal.
+        // Se ha mejorado la verificación del usuario para evitar errores de tipo 'null'.
         supabase.auth.onAuthStateChange((event, session) => {
             console.log("onAuthStateChange event:", event);
             console.log("onAuthStateChange session:", session);
@@ -787,6 +781,21 @@
                 showLogin();
             }
         });
+
+        // **[OPCIÓN TEMPORAL]**: Si desea omitir el inicio de sesión para ver los datos,
+        // comente el bloque 'supabase.auth.onAuthStateChange' de arriba y descomente
+        // el siguiente bloque.
+        /*
+        async function startWithoutLogin() {
+            // Reemplace 'ABFREN' con el taller que desee ver por defecto.
+            const tempUser = { user_metadata: { workshop: 'ARGOS' } };
+            showApp(tempUser);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            startWithoutLogin();
+        });
+        */
 
         // Inicializa los selectores de equipo.
         equipos.forEach(equipo => {
