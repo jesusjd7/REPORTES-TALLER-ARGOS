@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>REPORTE por Taller</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Updated background image path to relative path */
+            background-image: url('FONDO.png'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-color: #f3f4f6; /* Fallback color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        @media (min-width: 640px) {
+            body { padding: 1.5rem; }
+        }
+        @media (min-width: 768px) {
+            body { padding: 2rem; }
+        }
+
+        /* Adjusted container for more transparency in form view */
+        .container {
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.4); /* More transparent */
+            width: 100%;
+        }
+
+        /* New class for transparent background in workshop view */
+        .container.transparent-bg {
+            background-color: transparent;
+            box-shadow: none; /* Remove shadow for transparent background */
+            border: none; /* Remove border for transparent background */
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        body.align-top-content {
+            align-items: flex-start;
+        }
+        body.align-top-content .container {
+            margin-top: 2rem;
+            margin-bottom: auto;
+        }
+    </style>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        customGreen: '#65A30D',
+                        customBlue: '#1E3A8A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<!-- Login View (Initially visible) -->
+<div class="flex flex-col items-center justify-center p-8 w-full" id="loginView">
+<div class="border border-black rounded-lg p-6 shadow-xl bg-white max-w-sm w-full mx-auto">
+<!-- Truck Image - Updated src to CAMION.png -->
+<img alt="Camión Argos" class="w-48 h-auto mx-auto mb-6 rounded-md" id="loginTruckImage" src="CAMION.png"/>
+<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
+<div class="w-full">
+<div class="mb-4">
+<label class="block text-sm font-medium text-gray-700 mb-1" for="username">Usuario</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="username" name="username" required="" type="text"/>
+</div>
+<div class="mb-6">
+<label class="block text-sm font-medium text-gray-700 mb-1" for="password">Contraseña</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="password" name="password" required="" type="password"/>
+</div>
+<button class="w-full px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150" id="loginBtn">
+                    INGRESAR
+                </button>
+<p class="text-red-600 text-center mt-4" id="loginError" style="display: none;"></p>
+</div>
+</div>
+</div>
+<!-- Main application container (hidden initially) -->
+<div class="container mx-auto bg-white p-6 rounded-lg shadow-lg" id="appContainer" style="display: none;">
+<div class="relative flex items-center justify-center mb-8">
+<div class="absolute left-0 flex items-center space-x-2" id="leftHeaderElements" style="display: none;">
+<button class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150" id="backToMenuBtn">
+                    ATRAS
+                </button>
+</div>
+<!-- Adjusted mainPageTitle for transparent background on mobile -->
+<h1 class="text-3xl font-bold text-gray-800 text-center bg-white bg-opacity-70 rounded-md px-4 py-2" id="mainPageTitle"></h1>
+<div class="absolute right-0 flex items-center space-x-2" id="rightHeaderElements" style="display: none;">
+<button class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150" id="logoutBtn">
+                    Cerrar Sesión
+                </button>
+</div>
+</div>
+<h2 class="text-xl font-semibold text-center text-gray-600 mb-8" id="reportSubtitle" style="display: none;">REPORTE</h2>
+<!-- Workshop Selection View (Card Menu - Initially hidden) -->
+<!-- Changed grid-cols-1 to grid-cols-2 for mobile view -->
+<div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" id="workshopSelectionView" style="display: none;">
+<!-- Workshop cards will be dynamically generated here -->
+</div>
+<!-- Registration Form View (Initially hidden) -->
+<div id="formView" style="display: none;">
+<form class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="dataForm">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="equipo">EQUIPO *</label>
+<select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="equipo" name="equipo" required="">
+<option value="">Seleccione un Equipo</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="fecha">FECHA *</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="fecha" name="fecha" required="" type="date"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="otOrigen">OT ORIGEN *</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="otOrigen" name="otOrigen" required="" type="number" value="0"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="conjunto">CONJUNTO *</label>
+<select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" disabled="" id="conjunto" name="conjunto" required="">
+<option value="">Seleccione un Conjunto</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="parte">PARTE *</label>
+<select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" disabled="" id="parte" name="parte" required="">
+<option value="">Seleccione una Parte</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="prioridad">PRIORIDAD *</label>
+<select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="prioridad" name="prioridad" required="">
+<option value="">Seleccione una Prioridad</option>
+<option value="Alta">Alta</option>
+<option value="Media">Media</option>
+<option value="Baja">Baja</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-gray-700 mb-1" for="textoEstandar">TEXTO ESTANDAR *</label>
+<select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" disabled="" id="textoEstandar" name="textoEstandar" required="">
+<option value="">Seleccione un Texto Estandar</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-gray-700 mb-1" for="descripcionDetallada">DESCRIPCION DETALLADA *</label>
+<textarea class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="descripcionDetallada" name="descripcionDetallada" required="" rows="3"></textarea>
+</div>
+<!-- Moved TECNICO and TELEFONO here -->
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="tecnico">TECNICO *</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="tecnico" name="tecnico" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="telefono">TELEFONO *</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="telefono" name="telefono" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="foto">FOTO</label>
+<input accept="image/*" class="hidden" id="foto" name="foto" type="file"/>
+<label class="inline-flex items-center px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer" for="foto">
+                        Añadir Foto
+                    </label>
+<p class="mt-1 text-xs text-gray-500">Nota: La carga de archivos grandes no es compatible con el almacenamiento local.</p>
+</div>
+<div class="md:col-span-2 flex justify-center space-x-4">
+<button class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150" id="saveRecordBtn" type="submit">
+                        Guardar Registro
+                    </button>
+<button class="px-6 py-3 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150" id="cancelEditBtn" style="display:none;" type="button">
+                        Cancelar Edición
+                    </button>
+</div>
+</form>
+<hr class="my-8 border-gray-300"/>
+<h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Datos de REPORTE</h3>
+<div class="flex justify-center mb-6">
+<button class="px-6 py-3 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150" id="downloadExcel">
+                    Descargar Excel
+                </button>
+</div>
+<div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 w-full">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Equipo</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Fecha</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">OT Origen</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Conjunto</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Parte</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Texto Estandar</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Descripción Detallada</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Prioridad</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Técnico</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Teléfono</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">Foto (Nombre)</th>
+<th class="relative px-6 py-3" scope="col">
+<span class="sr-only">Acciones</span>
+</th>
+</tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200" id="dataTableBody">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500" colspan="12">Cargando datos...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- SheetJS (xlsx) CDN for Excel export -->
+<script type="module">
+        import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.2/package/xlsx.mjs";
+        window.XLSX = XLSX;
+
+        let loggedInUser = null;
+        let currentWorkshop = '';
+        let editingRecordIndex = -1; // -1 means no record is being edited
+
+        // --- DOM Elements ---
+        const appContainer = document.getElementById('appContainer');
+        const mainPageTitle = document.getElementById('mainPageTitle');
+        const reportSubtitle = document.getElementById('reportSubtitle');
+        const loginView = document.getElementById('loginView');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const leftHeaderElements = document.getElementById('leftHeaderElements');
+        const rightHeaderElements = document.getElementById('rightHeaderElements');
+        const dataForm = document.getElementById('dataForm');
+        const equipoSelect = document.getElementById('equipo');
+        const conjuntoSelect = document.getElementById('conjunto');
+        const parteSelect = document.getElementById('parte');
+        const textoEstandarSelect = document.getElementById('textoEstandar');
+        const dataTableBody = document.getElementById('dataTableBody');
+        const downloadExcelBtn = document.getElementById('downloadExcel');
+        const workshopSelectionView = document.getElementById('workshopSelectionView');
+        const formView = document.getElementById('formView');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
+        const loginTruckImage = document.getElementById('loginTruckImage'); // Reference to the truck image
+        const saveRecordBtn = document.getElementById('saveRecordBtn'); // Reference to the Save/Update button
+        const cancelEditBtn = document.getElementById('cancelEditBtn'); // Reference to the Cancel Edit button
+
+        // --- Data for Workshops and Dependent Dropdowns ---
+        const allWorkshops = ["KAEL", "ABFREN", "SOMEC", "DRACSO", "JS OUT", "MG", "SIMIYP", "SERVII", "ARGOS"];
+        
+        const workshopDisplayNames = {
+            "KAEL": "KAEL",
+            "ABFREN": "ABFREN",
+            "SOMEC": "SOMEC",
+            "DRACSO": "DRACSO",
+            "JS OUT": "JS OUT",
+            "MG": "MG SOL",
+            "SIMIYP": "SIMIYP",
+            "SERVII": "SERVII",
+            "ARGOS": "ARGOS" // Added ARGOS display name
+        };
+
+        // Workshop image paths - Updated to relative paths
+        const workshopImagePaths = {
+            "KAEL": "LOGOKAEL.jpg",
+            "ABFREN": "LOGOABFREN.png",
+            "SOMEC": "LOGOSOMEC.png",
+            "DRACSO": "LOGODRACSO.png",
+            "JS OUT": "LOGOJS.png",
+            "MG": "LOGOMG.png",
+            "SIMIYP": "LOGOSIMIYP.png",
+            "SERVII": "LOGOSERVICIO.png",
+            "ARGOS": "LOGOARGOS.jpg" // Added ARGOS image path
+        };
+
+        // This map holds the relationship between PARTE and TEXTO ESTANDAR.
+        const parteToTextoEstandarMap = {
+            "Accesorios": [
+                "CAMBIAR TAPETES CABINA", "REPARAR TOMA ELEC 12V CABINA", "CAMBIAR CINTA DE TIMON",
+                "CAMBIAR INTERRUPTOR CRUCERO TIMON", "CAMBIAR INTERRUPTOR DER TIMON", "CAMBIAR TAPA CABRILLA O TIMON",
+                "CAMBIAR ACCESORIOS CABINA", "CAMBIAR GUARDAMOTOR DERECHO", "INSTALAR CAMARA DE VIDEO REVERSA",
+                "REPARAR CAMARA DE VIDEO REVERSA", "CAMBIAR GUARDAMOTOR IZQUIERDO", "CAMBIAR PITO CIUDAD",
+                "CAMBIAR PITO CABINA", "CAMBIAR ALARMA REVERSA", "CAMBIAR PITO CARRETERA",
+                "CAMBIAR VENTILADOR ENFRIADOR", "CAMBIAR ACCESORIOS MOTOR", "CAMBIAR PTO SWITCH",
+                "CAMBIAR TUBO SUC DEF SIS POSTRATAMIENTO", "REPARAR SISTEMA POSTRATAMIENTO", "CAMBIAR BOMBA SISTEMA POSTRATAMIENTO"
+            ],
+            "Aire_acondicionado": [
+                "CAMBIAR FILTRO DE CABINA A/C", "CAMBIAR SENSOR DE TEMPERATURA A/C", "CAMBIAR VALVULA EXPANSION A/C",
+                "MANTENIMIENTO A/C TIPO A", "REPARAR CONDENSADOR", "REPARAR A/C",
+                "MANTENIMIENTO A/C TIPO B", "CAMBIAR CORREA COMPRESOR A/C", "CAMBIAR BLOWER A/C",
+                "CAMBIAR COMPRESOR A/C", "CAMBIAR CONDENSADOR A/C", "REPARAR EVAPORADOR",
+                "CAMBIAR EVAPORADOR A/C", "CAMBIAR BLOWER A-C", "CAMBIAR COMPRESOR A-C",
+                "CAMBIAR CONDENSADOR A-C", "CAMBIAR CORREA COMPRESOR A-C", "CAMBIAR EVAPORADOR A-C",
+                "CAMBIAR FILTRO DE CABINA A-C", "CAMBIAR SENSOR DE TEMPERATURA A-C", "CAMBIAR VALVULA EXPANSION A-C",
+                "MANTENIMIENTO A-C TIPO A", "MANTENIMIENTO A-C TIPO B", "MANTENIMIENTO PREVENTIVO A-C",
+                "REPARAR A-C"
+            ],
+            "Cabina": [
+                "CAMBIAR TAPETES", "CAMBIAR ESCOTILLA TRASERA CABINA", "REPARAR FILTRACION VIDRIO TRASERO",
+                "REPARAR TAPIZADO TECHO", "CAMBIAR EMPAQUE PALANCA CAMBIOS", "REPARAR LUZ DE TECHO",
+                "LODERA DELANTERA DERECHA", "LODERA DELANTERA IZQUIERDA", "CAMBIAR GUARDAPOLVO",
+                "PANEL INFERIOR DERECHO", "PANEL INFERIOR IZQUIERDO CABINA MOTOR", "REPARAR FIBRA CABINA",
+                "REPARAR LATONERIA CABINA", "INSONORIZAR CABINA", "CAMBIAR SISTEMA PEDAL ACELERACION",
+                "PINTAR CABINA", "CAMBIAR GUARDAPOLVO DER", "CAMBIAR GUARDAPOLVO IZQ",
+                "CAMBIAR LODERA DELANTERA DERECHA", "CAMBIAR LODERA DELANTERA IZQUIERDA", "CAMBIAR PANEL INF IZQ CABINA MOTOR",
+                "CAMBIAR PANEL INFERIOR DERECHO", "REPARAR FIBRA CAPOT"
+            ],
+            "Capot": [
+                "REPARAR GUAYA DE CAPOT", "CAMBIAR BISAGRAS CAPOT", "CAMBIAR CABLE ACERO CAPOT",
+                "CAMBIAR REJILLA AIRE CAPOT IZQ", "CAMBIAR TOPES CAPOT", "CAMBIAR AMORTIGUADOR CAPOT",
+                "CAMBIAR SEGURO CAPOT", "INSTALAR GUARDAPOLVO LADO DERECHO", "INSTALAR GUARDAPOLVO LADO IZQUIERDO",
+                "CAMBIAR BISEL LADO DERECHO", "CAMBIAR BISEL LADO IZQUIERDO", "REPARAR FIBRA CAPOT",
+                "CAMBIAR SOPORTES CAPOT", "CAMBIAR BISEL CAPOT DERECHO", "CAMBIAR BISEL CAPOT IZQUIERDO"
+            ],
+            "Chapa": [
+                "CAMBIAR BISEL CHAPA PUERTA DER", "CAMBIAR BISEL CHAPA PUERTA IZQ", "CAMBIAR CILINDRO DE CERRADURA",
+                "CAMBIAR CHAPA PUERTA", "REPARAR CILINDRO DE CERRADURA", "CAMBIAR CHAPA PUERTA DER",
+                "CAMBIAR CHAPA PUERTA IZQ"
+            ],
+            "Cinturón seguridad": [
+                "REPARAR CINTURON DE SEGURIDAD", "CAMBIAR CINTURON SEGURIDAD", "CAMBIAR CINTURÓN SEGURIDAD DER",
+                "CAMBIAR CINTURÓN SEGURIDAD IZQ"
+            ],
+            "Espejo": [
+                "CAMBIAR ESPEJO CAPOT IZQUIERDO POS5", "CAMBIAR ESPEJO CAPOT DERECHO POS6", "CAMBIAR SOPORTE DEL ESPEJO POS7",
+                "CAMBIAR ESPEJO DERECHO PEQUEÑO POS4", "CAMBIAR ESPEJO IZQUIERDO GRANDE POS1", "CAMBIAR ESPEJO DERECHO GRANDE POS3",
+                "ESPEJO SUPERIOR DE CABINA TECHO POS7", "CAMBIAR ESPEJO IZQUIERDO PEQUEÑO POS2", "CAMBIAR ESPEJO DER GRANDE POS3 CON MARCO",
+                "CAMBIAR ESPEJO IZQ GRANDE POS1 CON MARCO", "CAMBIAR ESPEJO RETROVISOR", "CAMBIAR ESPEJO SUP CABINA TECHO POS7"
+            ],
+            "Estribo": [
+                "REPARAR ESTRIBO O PELDAÑO", "CAMBIAR ESTRIBO O PELDAÑO SUPERIOR", "CAMBIAR ESTRIBO O PELDAÑO INFERIOR",
+                "CAMBIAR ESTRIBO CABINA DER", "CAMBIAR ESTRIBO CABINA IZQ", "CAMBIAR ESTRIBO O PELDAÑO SUPERIOR"
+            ],
+            "Limpia_vidrios": [
+                "CAMBIAR PLUMILLAS LIMPIA VIDRIOS", "CAMBIAR TAPA DEPOSITO LIMPIA VIDRIOS", "CAMBIAR MANGUERA LIMPIAVIDRIOS",
+                "CAMBIAR BOMBA LIMPIA VIDRIOS", "CAMBIAR BRAZOS LIMPIA VIDRIOS", "REPARAR SISTEMA LIMPIA VIDRIOS",
+                "CAMBIAR MOTOR LIMPIA VIDRIOS", "CAMBIAR DEPOSITO LIMPIA VIDRIOS", "CAMBIAR TRAPECIO LIMPIA VIDRIOS",
+                "CAMBIAR MOTOR LIMPIA VIDRIO"
+            ],
+            "Panorámico": [
+                "AJUSTAR SELLO PANORAMICO", "CAMBIAR PANORAMICO DERECHO MACK", "CAMBIAR PANORAMICO IZQUIERDO MACK",
+                "CAMBIAR VIDRIO PANORAMICO", "CAMBIAR VIDRIO PANORÁMICO"
+            ],
+            "Persiana": [
+                "AJUSTAR O REPARAR PERSIANA", "CAMBIAR MARCO BISEL FAROLA DELANTERA DER", "CAMBIAR MARCO BISEL FAROLA DELANTERA IZQ",
+                "CAMBIAR BISEL FIBRA INFERIOR FAROLA DER", "CAMBIAR BISEL FIBRA INFERIOR FAROLA IZQ", "CAMBIAR PERSIANA CAPOT"
+            ],
+            "Puerta": [
+                "AJUSTAR PUERTA", "CAMBIAR MANIJA INTERNA PUERTA", "CAMBIAR SENSOR PUERTA ABIERTA",
+                "CAMBIAR CAUCHO DE LA PUERTA", "CAMBIAR MANIJA EXTERNA IZQUIERDA", "REPARAR MAQUINA ELEVAVIDRIOS",
+                "CAMBIAR CERRADURA", "CAMBIAR BISAGRAS PUERTA", "CAMBIAR MANIJA EXTERNA DERECHA",
+                "CAMBIAR KIT CILINDRO PUERTA STARTED", "CAMBIAR ACTUADOR SEGURO PUERTA", "REPARAR LATONERIA PUERTA",
+                "CAMBIAR CARTERA INTERNA PUERTA IZQ", "CAMBIAR TAPIZADO PUERTA INTERNA", "CAMBIAR INTERRUPTOR PUERTA DER",
+                "CAMBIAR INTERRUPTOR PUERTA IZQ", "CAMBIAR MAQUINA ELEVAVIDRIOS", "CAMBIAR MODULO ELEVAVIDRIOS",
+                "AJUSTAR PUERTA IZQ", "AJUSTAR PUERTA DER", "CAMBIAR ACTUADOR SEGURO PUERTA DER",
+                "CAMBIAR ACTUADOR SEGURO PUERTA IZQ", "CAMBIAR BISAGRAS PUERTA DER", "CAMBIAR BISAGRAS PUERTA IZQ",
+                "CAMBIAR CAUCHO PUERTA DER", "CAMBIAR CAUCHO PUERTA IZQ", "CAMBIAR CERRADURA DER",
+                "CAMBIAR CERRADURA IZQ", "CAMBIAR MANIJA EXTERNA PUERTA DER", "CAMBIAR MANIJA EXTERNA PUERTA IZQ",
+                "CAMBIAR MANIJA INTERNA PUERTA DER", "CAMBIAR MANIJA INTERNA PUERTA IZQ", "CAMBIAR MAQUINA ELEVA VIDRIOS DER",
+                "CAMBIAR MAQUINA ELEVA VIDRIOS IZQ", "CAMBIAR MODULO ELEVAVIDRIOS DER", "CAMBIAR MODULO ELEVAVIDRIOS IZQ",
+                "CAMBIAR TAPIZADO PUERTA INTERNA DER", "CAMBIAR TAPIZADO PUERTA INTERNA IZQ", "REPARAR LATONERIA PUERTA DER",
+                "REPARAR LATONERIA PUERTA IZQ"
+            ],
+            "Silla": [
+                "CAMBIAR COJIN SILLA", "CAMBIAR VALVULA O INTERRUPTOR SILLA", "REPARAR BASE SILLA",
+                "CAMBIAR AMORTIGUADOR SILLA", "CAMBIAR TORNILLERIA BASE SILLA", "CAMBIAR VEJIGA ESPALDAR SILLA",
+                "CAMBIAR BOMBONA SILLA", "REPARAR RIEL ASIENTO SILLA", "REPARAR TAPICERIA SILLA",
+                "REPARAR ESPALDAR SILLA", "REPARAR SILLA", "CAMBIAR SILLA",
+                "CAMBIAR AMORTIGUADOR SILLA DER", "CAMBIAR AMORTIGUADOR SILLA IZQ", "CAMBIAR BOMBONA SILLA DER",
+                "CAMBIAR BOMBONA SILLA IZQ", "CAMBIAR COJÍN SILLA DER", "CAMBIAR COJÍN SILLA IZQ",
+                "CAMBIAR TORNILLERIA BASE SILLA DER", "CAMBIAR TORNILLERIA BASE SILLA IZQ", "REPARAR BASE SILLA DER",
+                "REPARAR BASE SILLA IZQ", "REPARAR ESPALDAR SILLA DER", "REPARAR ESPALDAR SILLA IZQ",
+                "REPARAR RIEL ASIENTO SILLA DER", "REPARAR RIEL ASIENTO SILLA IZQ", "REPARAR SILLA DER",
+                "REPARAR SILLA IZQ", "REPARAR TAPICERIA SILLA DER", "REPARAR TAPICERIA SILLA IZQ"
+            ],
+            "Soporte cabina": [
+                "CAMBIAR VEJIGA CABINA", "CAMBIAR VALVULA LEVANTE CABINA", "REPARAR O CAMBIAR SOPORTE",
+                "CAMBIAR BUJES SOPORTES DE CABINA", "CAMBIAR AMORTIGUADORES CABINA", "CAMBIAR VÁLVULA LEVANTE CABINA"
+            ],
+            "Tablero instrumentos": [
+                "CAMBIAR LED DE TABLERO INSTRUMENTOS", "REPARAR TABLERO DE INSTRUMENTOS", "CAMBIAR ACRILICO TABLERO INSTRUMENTOS",
+                "CAMBIAR SENSOR ODOMETRO", "CAMBIAR TABLERO DE INSTRUMENTOS"
+            ],
+            "Tapicería": [
+                "CAMBIAR TAPIZADO CABINA", "CAMBIAR TAPIZADO SILLA", "CAMBIAR TAPIZADO SILLA DER",
+                "CAMBIAR TAPIZADO SILLA IZQ"
+            ],
+            "Vidrio": [
+                "CAMBIAR VIDRIO TRASERO", "CAMBIAR VIDRIO PUERTA", "CAMBIAR VIDRIO PUERTA DER",
+                "CAMBIAR VIDRIO PUERTA IZQ"
+            ],
+            "Caja_velocidades": [
+                "CALIBRAR ELECTRONICAMENTE EMBRAGUE", "CAMBIAR ENFRIADOR ACEITE CAJA", "CAMBIAR RETENEDOR DE LA CAJA VEL",
+                "REPARAR CAJA VELOCIDADES", "REPARAR SISTEMA PDL", "REPARAR TAPA SELECTOR CAMBIOS MDRIVE",
+                "CAMBIAR RACORES CAJA M DRIVE", "CAMBIAR EMPAQUE TAPA CAJA", "CAMBIAR MANGUERA ENFRIADOR CAJA",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR PERA BARRA DE CAMBIOS", "CAMBIAR BUJES BARRA DE CAMBIOS",
+                "CAMBIAR VENTILADOR EMBRAGUE", "REPARAR PISTON SELECTOR", "REPARAR SISTEMA PDL",
+                "CAMBIAR ENFRIADOR ACEITE", "REPARAR ENFRIADOR CAJA DE VEL", "CAMBIAR RETENEDOR DE LA CAJA VEL",
+                "CAMBIAR VALVULA O PISTOLA AIRE", "CAMBIAR VALVULA EXCLAVA", "RECTIFICAR TORNILLOS CAJA VEL",
+                "CAMBIAR SINCRONIZADOR", "REPARAR CAJA"
+            ],
+            "Disco embrague/clutch": [
+                "CALIBRAR EMBRAGUE", "DESVARE EN OBRA Y/O VIA", "SUAVIZAR EMBRAGUE",
+                "CAMBIAR O REPARAR DISCO CLUTH", "REMANUFACTURAR EMBRAGUE", "REPARAR EMBRAGUE",
+                "CAMBIAR EMBRAGUE"
+            ],
+            "Prensa": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR O REPARAR PRENSA CLUTH"
+            ],
+            "PTO": [
+                "CAMBIAR O RING PTO", "DESVARE EN OBRA Y/O VIA", "REPARAR PTO"
+            ],
+            "Rodillo": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR RODILLO"
+            ],
+            "Separador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR SEPARADOR"
+            ],
+            "Válvula control pto": [
+                "CAMBIAR VALVULA CONTROL PTO"
+            ],
+            "Volante": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR VOLANTE"
+            ],
+            "Caja baterías": [
+                "CAMBIAR SEGUROS TAPA BATERIAS", "REPARAR CAJA BATERIAS", "CAMBIAR TAPA CAJA BATERIAS",
+                "CAMBIAR CAJA BATERIAS", "CAMBIAR SEGUROS TAPA BATERÍAS"
+            ],
+            "Caja herramienta": [
+                "CAMBIAR BISAGRAS CAJA HERRAMIENTA", "CAMBIAR PORTA CONOS", "CAMBIAR TAPA CAJA HERRAMIENTA",
+                "CAMBIAR CAJA HERRAMIENTA", "REPARAR CAJA HERRAMIENTA O PORTA GALON"
+            ],
+            "Carrocería": [
+                "INSTALAR ROTULACION INTERNA EQUIPO", "INSTALAR ROTULO COMO CONDUZCO", "INSTALAR ROTULACION GENERAL",
+                "REPARAR CARROCERIA"
+            ],
+            "Defensa": [
+
+                "INSTALAR NUMERO INTERNO DEFENSA DEL", "CAMBIAR CINTAS REFLECTIVAS", "REPARAR DEFENSA DELANTERA",
+                "REPARAR DEFENSA TRASERA", "PINTAR DEFENSA TRASERA", "REPARAR BICICLETEROS",
+                "CAMBIAR DEFENSA TRASERA", "INSTALAR BICICLETEROS", "CAMBIAR DEFENSA DELANTERA"
+            ],
+            "Guardabarros": [
+                "CAMBIAR LODERAS TRASERAS", "CAMBIAR CINTAS REFLECTIVAS", "AJUSTAR GUARDABARROS TRASEROS",
+                "REPARAR Y PINTAR GUARDABARROS", "PINTAR GUARDABARROS", "CAMBIAR GUARDABARROS",
+                "CAMBIAR GUARDABARROS DER", "CAMBIAR GUARDABARROS IZQ", "REPARAR Y PINTAR GUARDABARROS DER",
+                "REPARAR Y PINTAR GUARDABARROS IZQ"
+            ],
+            "Perfil chasis": [
+                "INSPECCIONAR TECNICAMENTE CHASIS", "DESCONCRETAR CHASIS", "REPARAR SOBRE CHASIS",
+                "INSTALAR GUARDA CARDAN PTO", "CAMBIAR TORNILLERIA SOBRECHASIS", "PINTAR CHASIS",
+                "SOLDAR FISURA EN PERFIL DE CHASIS", "SANDBLASTEAR Y PINTAR CHASIS", "CAMBIAR SOBRE CHASIS",
+                "PINTAR CHASIS"
+            ],
+            "Porta extintor": [
+                "CAMBIAR PORTA EXTINTOR", "REPARAR PORTA EXTINTOR"
+            ],
+            "Porta_repuesto": [
+                "CAMBIAR PORTA REPUESTO", "CAMBIAR CABLE ACERO PORTA REPUESTO", "REPARAR MALACATE"
+            ],
+            "Puente_chasis": [
+                "CAMBIAR BASE O SOPORTE STOPS TRASEROS", "DESVARE EN OBRA Y/O VIA", "REPARAR PUENTE DE CHASIS",
+                "CAMBIAR PUENTE U DE CHASIS", "CAMBIAR PUENTE H DE CHASIS"
+            ],
+            "Soporte tanques aire": [
+                "CAMBIAR CABLES TANQUE DE AIRE", "CAMBIAR BASES TANQUES AIRE", "CAMBIAR BASES TANQUE AIRE"
+            ],
+            "Tanque combustible": [
+                "CAMBIAR TAPA TANQUE COMBUSTIBLE", "REPARAR TANQUE COMBUSTIBLE", "CAMBIAR ABRAZADERA TANQUE COMBUSTIBLE",
+                "CAMBIAR SOPORTES TANQUE COMBUSTIBLE"
+            ],
+            "Mando cabina": [
+                "CAMBIAR SWITCH DE CABINA", "CAMBIO DE SWITCH DE CABINA", "REPARAR MANDO CABINA"
+            ],
+            "Control remoto": [
+                "REPARAR CONTROL DE GIRO DE OLLA", "INSTALAR TAPA CONTROL TRASERO", "DESVARE EN OBRA Y/O VIA",
+                "REPARAR CONTROL REMOTO ALAMBRICO", "REPARAR CONTROL REMOTO INALAMBRICO", "CAMBIAR BASE CARGADOR DE CONTROL REMOTO",
+                "CAMBIAR BOTON PARO DE EMERGENCIA", "INSTALAR CONTROL REMOTO INALAMBRICO", "CAMBIAR SWICTHE AUTOREVERSIBLE"
+            ],
+            "Manómetro": [
+                "CAMBIAR MANOMETRO", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Módulo electrónico": [
+                "LIMITAR VELOCIDAD A 60 KM POR HORA", "ESCANEAR MODULO ECM MOTOR", "DESVARE EN OBRA Y/O VIA",
+                "ESCANEAR MODULO CABINA", "REPARAR MODULO CAJA VEL", "CAMBIAR TARJETA INTERFAZ GIRO OLLA",
+                "CAMBIAR MODULO GIRO DE OLLA", "REPARAR MODULO GIRO DE OLLA", "CAMBIAR MODULO SELECTOR MARCHA MDRIVE",
+                "REPARAR MODULO CABINA", "REPARAR MODULO EP", "CAMBIAR MODULO CABINA",
+                "CAMBIAR MODULO MOTOR"
+            ],
+            "Conector": [
+                "PROTEGER CONECTOR SISTEMA CONTROL", "CAMBIAR CONECTOR", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR CONECTOR SISTEMA CONTROL"
+            ],
+            "Alarma": [
+                "CAMBIAR ALARMA REVERSA", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Electroválvula": [
+                "CAMBIAR SOLENOIDE ELECTROVALVULA", "DESVARE EN OBRA Y/O VIA", "CAMBIAR RELE SISTEMA ENFRIAMIENTO",
+                "CAMBIAR EMPAQUE BLOQUE ELECTROVALVULA", "CAMBIAR ELECTROVALVULA", "INSTALAR LINEA STAR STOP",
+                "CAMBIAR VALVULA RETENCION DE CANAL", "CAMBIAR SOLENOIDE DINACHUTA", "CAMBIAR KIT REPARACION VALVULA EP",
+                "CAMBIAR TAPA VALVULA EP BOBINAS", "CAMBIAR VALVULA EP"
+            ],
+            "Instrumentos": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR INSTRUMENTO DE CONTROL", "CAMBIAR CAMARA DE REVERSA"
+            ],
+            "Sensor": [
+                "CAMBIAR SENSOR TEMPERATURA AMBIENTE", "CAMBIAR SENSOR DE VELOCIDAD", "CAMBIAR SENSOR EJE DE LEVAS",
+                "CAMBIAR PERA SENSOR TEMPERATURA", "CAMBIAR SENSOR ABS DELANTERO", "CAMBIAR SENSOR ABS TRASERO",
+                "CAMBIAR SENSOR BLOQUEO DIF TRASERO", "CAMBIAR SENSOR NIVEL UREA", "CAMBIAR SENSOR COMBUSTIBLE",
+                "CAMBIAR SENSOR NIVEL REFRIGERANTE", "CAMBIAR SENSOR PEDAL CLUTH", "CAMBIAR SENSOR CONTRAPRESION DE ESCAPE",
+                "CAMBIAR SENSOR DE OXIGENO", "CAMBIAR SENSOR NIVEL ACEITE CARTER", "CAMBIAR SENSOR PRESION DE ACEITE",
+                "CAMBIAR SENSOR CONTADOR REVOLUCIONES", "CAMBIAR SENSOR NOX"
+            ],
+            "Cableado": [
+                "REPARAR SISTEMA CRUCERO ACELERACION OLLA", "REPARAR ARNES DE GIRO DE OLLA", "REPARAR ARNES DE CABINA",
+                "REPARAR CABLEADO DE CONTROL", "CAMBIAR ARNES DE GIRO DE OLLA", "CAMBIAR TERMINALES DE BATERIA",
+                "CAMBIAR CABLES DE BATERIA", "DESVARE EN OBRA Y/O VIA", "REPARAR O CAMBIAR CABLEADO"
+            ],
+            "Cardán": [
+                "SERVICIO ENGRASE QUINCENAL INHOUSE", "INSTALAR GRASERA", "CAMBIAR KIT GUARDAPOLVO DEL CARDAN",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR RODAMIENTO CENTRAL CARDAN PPAL", "CAMBIAR CRUCETAS CARDAN PPAL",
+                "CAMBIAR BOTELLA DEL CARDAN", "CAMBIAR ESPIGA DEL CARDAN", "CAMBIAR ESPIGA Y BOTELLA CARDAN",
+                "CAMBIAR EJE CARDAN PRINCIPAL", "CAMBIAR EJE CARDAN INTERDIFERENCIALES", "CAMBIAR EJE CARDAN INTERTROQUES",
+                "ENGRASAR GENERAL (350 HR)", "ENGRASAR QUINCENAL INHOUSE", "INSTALAR GRASERA CARDAN MIXER",
+                "CAMBIAR CRUCETAS CARDAN BOMBA"
+            ],
+            "Cruceta": [
+                "ENGRASE DE CRUCETA", "INSTALAR GRASERA", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR CRUCETA CARDAN PPAL", "CAMBIAR CRUCETA INTERDIFERENCIAL", "CAMBIAR CRUCETA EJE CARDAN",
+                "ENGRASAR CRUCETA"
+            ],
+            "Diferencial delantero": [
+                "CAMBIAR FILTRO DE DIFERENCIAL", "CAMBIAR ACEITE DIFERENCIAL TRASERO", "CBM ALERTA ANALISIS DE ACEITE",
+                "CORREGIR FUGA DIFERENCIAL DELANTERO", "DESVARE EN OBRA Y/O VIA", "MONTAR HOUSING DIFERENCIAL TRASERO",
+                "DESMONTAR HOUSING DIFERENCIAL TRASERO", "TOMAR MUESTRA DE ACEITE DIF DEL MIX"
+            ],
+            "Diferencial trasero": [
+                "CAMBIAR ACEITE DIFERENCIAL TRASERO", "CAMBIAR KIT TRABA ANTIPATINAJE", "CAMBIAR MANGUERA SISTEMA ANTIPATINAJE",
+                "CBM ALERTA ANALISIS DE ACEITE", "DESCONCRETAR DIFERENCIAL TRASERO", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR RETENEDOR DIFERENCIAL TRASERO", "REPARAR TRABA DIFERENCIAL TRASERO", "AJUSTAR DIFERENCIAL TRASERO",
+                "CAMBIAR HOUSING TROQUE TRASERO", "TOMAR MUESTRA DE ACEIT DIF TRAS MIXER"
+            ],
+            "Divisor potencia": [
+                "HABITAR ANTIPATINAJE", "DESVARE EN OBRA Y/O VIA", "REPARAR DIVISOR POTENCIA",
+                "CAMBIAR RETENEDOR DIVISOR POTENCIA"
+            ],
+            "Eje": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR EJE LATERAL", "CAMBIAR EJE DIF DERECHO",
+                "CAMBIAR EJE DIF IZQUIERDO"
+            ],
+            "Soporte": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR SOPORTE CENTRAL EJE CARDAN", "CAMBIAR BARRA TENSORA",
+                "CAMBIAR BUJES DE BARRA TENSORA", "CAMBIAR TORNILLO BARRA TENSORA"
+            ],
+            "Válvula": [
+                "CAMBIAR ELECTROVALVULA ANTIPATINAJE", "CAMBIAR VALVULA SISTEMA DIRECCION", "CAMBIAR VALVULA AIR BAG EJE AUX",
+                "CAMBIAR VALVULA ESCAPE RAPIDO", "CAMBIAR VALVULA RELAY R12", "CAMBIAR VALVULA SECADOR",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR VALVULA ANTIRETORNO SIST FRENO", "CAMBIAR VALVULA PP1",
+                "CAMBIAR VALVULA E08", "CAMBIAR VALVULA SR7", "CAMBIAR RACOR SISTEMA DE LAVADO",
+                "CAMBIAR VALVULA ANTIRETORNO", "CAMBIAR VALVULA 3/4 DE LAVADO", "CAMBIAR VALVULA 3 VIAS",
+                "CAMBIAR VALVULAS DE LAVADO", "CAMBIAR VALVULA DE PRESURIZADO", "CAMBIAR VALVULA CONTENCION"
+            ],
+            "Barra dirección": [
+                "CAMBIAR RODAMIENTOS DE DIRECCION", "DESVARE EN OBRA Y/O VIA", "CAMBIAR CRUCETAS DE BARRA DE DIRECCION",
+                "ENDEREZAR BARRA DE DIRECCION", "CAMBIAR BARRA DE DIRECCION", "CAMBIAR BARRA Y TERMINALES DIRECCION"
+            ],
+            "Bomba dirección": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR BOMBA DIRECCION", "CAMBIAR BOMBA DIRECCION",
+                "REVISAR DIRECCION DURA"
+            ],
+            "Caja dirección": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR CAJA DIRECCION PPAL", "REPARAR CAJA DIRECCION AUX",
+                "CAMBIAR EMPAQUE CAJA DIRECCION PPAL", "CAMBIAR EMPAQUE CAJA DIRECCION AUX", "CAMBIAR CAJA DIRECCION AUX",
+                "REVISAR DIRECCION DURA", "CAMBIAR CAJA DIRECCION PPAL", "CAMBIAR EMPAQUE CAJA DIRECCION PPAL"
+            ],
+            "Depósito aceite": [
+                "CAMBIAR ACEITE Y FILTRO DIRECCION", "CORREGIR FUGA DEPOSITO ACEITE DIRECCION", "COMPLETAR NIVEL DE ACEITE DIRECCION",
+                "CBM ALERTA ANALISIS DE ACEITE", "LAVAR DEPOSITO ACEITE DIRECCION", "DESVARE EN OBRA Y/O VIA",
+                "TOMAR MUESTRA DE ACEITE DIR MIXER"
+            ],
+            "Filtro": [
+                "CAMBIAR FILTRO DIRECCION", "CAMBIAR FILTRO HIDRAULICO", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR FILTRO MOTOR", "CAMBIAR VASO TRAMPA COMBUSTIBLE", "CAMBIAR FILTRO ADMISION AIRE",
+                "INSTALAR INDICADOR RESTRICCION AIRE", "CAMBIAR O RING TRAMPA COMBUSTIBLE", "CAMBIAR TRAMPA COMBUSTIBLE COMPLETA"
+            ],
+            "Manguera": [
+                "CORREGIR FUGA POR MANGUERA DIRECCION", "CAMBIAR MANGUERAS DE LA DIRECCION", "CAMBIAR MANGUERA SISTEMA FRENOS",
+                "CAMBIAR MANGUERA CAMARA DE FRENOS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR MANGUERA REFRIGERACION CULATA",
+                "CAMBIAR MANGUERA CAMARA DE FRENOS 11-12", "CAMBIAR MANGUERA CAMARA DE FRENOS 3-4", "CAMBIAR MANGUERA CAMARA DE FRENOS 5-6",
+                "CAMBIAR MANGUERA CAMARA DE FRENOS 7-8", "CAMBIAR MANGUERA CAMARA DE FRENOS 9-10", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 1",
+                "CAMBIAR MANGUERA CAMARA DE FRENOS POS 2", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 3", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 4",
+                "CAMBIAR MANGUERA LARGA LEVANTE CANAL", "CAMBIAR MANGUERA CORTA LEVANTE CANAL", "CAMBIAR MANGUERAS BOMBA HIDRAULICA",
+                "CAMBIAR MANGUERA DE LEVANTE CANAL", "CAMBIAR MANGUERA DE PRESURIZACION", "CAMBIAR SECCION MANGUERA LAVADO",
+                "CAMBIAR MANGUERA MOTOR", "CAMBIAR MANGUERA RADIADOR", "CAMBIAR MANGUERA SIST POSTRATAMIENTO",
+                "REPARAR MANGUERA CIL TAPA ECO", "CAMBIAR MANGUERA CIL TAPA ECO", "REPARAR MANGUERA LUB RODILLO",
+                "CAMBIAR MANGUERA LUB RODILLO", "CAMBIAR MANGUERA LUB CHUMACERA TAPA ECO"
+            ],
+            "Terminal": [
+                "ALINEAR Y ROTAR LLANTAS", "ALINEAR LLANTAS DIRECCIONALES", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR TERMINAL DERECHO", "CAMBIAR TERMINAL IZQUIERDO", "CAMBIAR KIT SPLINDER",
+                "CAMBIAR TERMINALES DE DIRECCION", "REVISAR DIRECCION DURA"
+            ],
+            "Alternador": [
+                "INICIAR EQUIPO", "CAMBIAR CORREA DE ALTERNADOR", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR POLEA ALTERNADOR", "REPARAR ALTERNADOR", "CAMBIAR ALTERNADOR"
+            ],
+            "Arnés": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR ARNES", "REPARAR ARNES INYECCION MOTOR",
+                "CAMBIAR ARNES"
+            ],
+            "Arranque": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR MOTOR ARRANQUE", "CAMBIAR MOTOR ARRANQUE"
+            ],
+            "Batería": [
+                "INICIAR EQUIPO", "LIMPIAR BORNES DE BATERIA", "CAMBIAR CABLES BATERIAS",
+                "CAMBIAR PUENTES DE BATERIA", "DESVARE EN OBRA Y/O VIA", "CAMBIAR BATERIAS",
+                "CAMBIAR CABLES DE BATERIA"
+            ],
+            "Fusible": [
+                "CAMBIAR FUSIBLE", "DESVARE EN OBRA Y/O VIA", "REPARAR CAJA DE FUSIBLES"
+            ],
+            "Luces": [
+                "CAMBIAR BOMBILLO INCANDESCENTE", "CAMBIAR LUZ DIRECCIONAL DELANTERA", "CAMBIAR O REPARAR LUCES DELANTERAS",
+                "CAMBIAR LUZ CABINA", "CAMBIAR LUZ DIRECCIONAL TRASERA", "CAMBIAR LUZ STOP",
+                "REPARAR LUZ DE CABINA", "DESVARE EN OBRA Y/O VIA", "CAMBIAR LUZ REVERSA",
+                "CAMBIAR LUZ TRABAJO", "REPARACION GENERAL SISTEMA LUCES", "CAMBIAR LUZ ESTRIBO",
+                "CAMBIAR FAROLA DELANTERA DERECHA", "CAMBIAR FAROLA DELANTERA IZQUIERDA", "CAMBIAR LAMPARA DELANTERA DER",
+                "CAMBIAR LAMPARA DELANTERA IZQ", "CAMBIAR LUZ EXPLORADORA"
+            ],
+            "Regulador": [
+                "CAMBIAR REGULADOR", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Embudo_cargue": [
+                "INSTALAR NUMERO INTERNO", "DESCONCRETAR EMBUDO DE CARGUE", "AJUSTAR O ALINEAR CONO CARGUE",
+                "CAMBIAR CAUCHO SUPERIOR EMBUDO CARGUE", "REPARAR EMBUDO DE CARGUE", "ENCAMISAR EMBUDO DE CARGUE",
+                "CAMBIAR EMBUDO DE CARGUE"
+            ],
+            "Pedestal": [
+                "INSTALAR CINTA REFLECTIVA PEDESTAL TRAS", "DESCONCRETAR PEDESTAL TRASERO", "INSTALAR GUARDA DE SEGURIDAD",
+                "CAMBIAR CAJA DE PRESURIZADO", "REPARAR FISURA PEDESTAL TRASERO", "REPARAR TIJERA PEDESTAL TRASERO",
+                "AJUSTAR TORNILLOS PEDESTALES", "LIMPIAR Y PINTAR PEDESTAL DELANTERO", "CAMBIAR BUJE PASADOR TIJERA PEDESTAL",
+                "FABRICAR TIJERA PEDESTAL TRASERO", "RECONSTRUIR PEDESTAL DELANTERO", "LIMPIAR Y PINTAR PEDESTAL TRASERO",
+                "RECONSTRUIR PEDESTAL TRASERO", "REPARAR FISURA PEDESTAL DELANTERO"
+            ],
+            "Tapa_canal": [
+                "REPARAR TAPA CANAL", "CAMBIAR TAPA CANAL", "CAMBIAR EMPAQUE Y TORNILLOS TAPA CANAL"
+            ],
+            "Canal": [
+                "CAMBIAR BASE O SOPORTES CANALES AUX", "ENDEREZAR BOCA DESCARGA CANAL PPAL", "REPARAR CANALES AUXILIARES",
+                "CAMBIAR SEGURO CANALES AUX", "CAMBIAR SEGURO CANAL PPAL", "ENCAMISAR CANAL PRINCIPAL",
+                "INSTALAR TAPA ANTIDERRAME", "REPARAR CANAL PPAL", "CAMBIAR PERNOS Y BUJES DE LA CANAL PPAL",
+                "CAMBIAR CANALES AUXILIARES", "LIMPIAR Y PINTAR CANAL PPAL", "REPARAR PESTAÑA CHUTE DESCARGA",
+                "CAMBIAR KIT PIVOTE CANAL PPAL", "LIMPIAR Y PINTAR CANAL PPAL", "REPARAR CANALES AUXILIARES"
+            ],
+            "Plataforma": [
+                "REPARAR BARANDA SEGURIDAD", "REPARAR PLATAFORMA", "CAMBIAR PISO PLATAFORMA"
+            ],
+            "Escalera": [
+                "REPARAR ESCALERA", "CAMBIAR PELDAÑO ESCALERA", "CAMBIAR ESCALERA ABATIBLE"
+            ],
+            "Chute": [
+                "CAMBIAR CAUCHO CHUTE DESCARGA", "INSTALAR CINTA REFLECTIVA", "REPARAR CHUTE DESCARGA",
+                "CAMBIAR CHUTE DESCARGA", "ENCAMISAR TOLVA DE CARGUE"
+            ],
+            "Platina_tornillo_fijación_chasis": [
+                "CAMBIAR TORNILLOS CARTELAS DEL", "CAMBIAR TORNILLOS CARTELAS TRA", "CAMBIAR TORNILLOS Y CARTELAS PEDESTALES",
+                "AJUSTAR TORNILLOS PEDESTALES"
+            ],
+            "Tanque_aire": [
+                "CAMBIAR GRIFOS DE TANQUE DE AIRE", "CAMBIAR RACORES TANQUE DE AIRE", "REPARAR FISURA EN TANQUE DE AIRE",
+                "DESVARE EN OBRA Y/O VIA", "REPARAR TANQUE DE AIRE", "REPARAR TANQUE AIRE EJE AUX",
+                "CAMBIAR TANQUE AIRE EJE AUX", "CAMBIAR TANQUE AIRE PRIMARIO", "CAMBIAR TANQUE AIRE SECUNDARIO"
+            ],
+            "Ratchet": [
+                "ENGRASAR RATCHETS", "CAMBIAR RATCHET DELANTERO", "AJUSTAR FRENOS",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR RATCHET TRASERO", "CAMBIAR RODAJAS Y AJUSTAR FRENOS",
+                "CAMBIAR RATCHET DELANTERO POS 1", "CAMBIAR RATCHET DELANTERO POS 2", "CAMBIAR RATCHET DELANTERO POS 3",
+                "CAMBIAR RATCHET DELANTERO POS 4", "CAMBIAR RATCHET TRASERO 11-12", "CAMBIAR RATCHET TRASERO 3-4",
+                "CAMBIAR RATCHET TRASERO 5-6", "CAMBIAR RATCHET TRASERO 7-8", "CAMBIAR RATCHET TRASERO 9-10",
+                "RECTIFICAR CAMPANA DELANTERA POS 1", "RECTIFICAR CAMPANA DELANTERA POS 2", "RECTIFICAR CAMPANA DELANTERA POS 3",
+                "RECTIFICAR CAMPANA DELANTERA POS 4", "RECTIFICAR CAMPANA TRASERA 11-12", "RECTIFICAR CAMPANA TRASERA 3-4",
+                "RECTIFICAR CAMPANA TRASERA 5-6", "RECTIFICAR CAMPANA TRASERA 7-8", "RECTIFICAR CAMPANA TRASERA 9-10"
+            ],
+            "Campana": [
+                "RECTIFICAR CAMPANA DELANTERA", "RECTIFICAR CAMPANA TRASERA", "CAMBIAR CAMPANA TRASERA",
+                "CAMBIAR CAMPANA DELANTERA", "CAMBIAR CAMPANA DELANTERA POS 1", "CAMBIAR CAMPANA DELANTERA POS 2",
+                "CAMBIAR CAMPANA DELANTERA POS 3", "CAMBIAR CAMPANA DELANTERA POS4", "CAMBIAR CAMPANA TRASERA 11-12",
+                "CAMBIAR CAMPANA TRASERA 3-4", "CAMBIAR CAMPANA TRASERA 5-6", "CAMBIAR CAMPANA TRASERA 7-8",
+                "CAMBIAR CAMPANA TRASERA 9-10"
+            ],
+            "Bomba_freno": [
+                "CAMBIAR INTERIORES BOMBA FRENOS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR BOMBA FRENOS"
+            ],
+            "Accesorios..": [
+                "CAMBIAR ACCESORIOS", "DESVARE EN OBRA Y/O VIA", "DESVARAR EN OBRA Y-O VIA"
+            ],
+            "Gobernador": [
+                "CAMBIAR KITS REPARACION GOBERNADOR", "DESVARE EN OBRA Y/O VIA", "CAMBIAR GOBERNADOR"
+            ],
+            "Cámara_seguridad": [
+                "CAMBIAR CAMARA FRENO DELANTERA", "CAMBIAR CAMARA FRENO TRASERA", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR CAMARA FRENO DELANTERA POS 1", "CAMBIAR CAMARA FRENO DELANTERA POS 2", "CAMBIAR CAMARA FRENO DELANTERA POS 3",
+                "CAMBIAR CAMARA FRENO DELANTERA POS 4", "CAMBIAR CAMARA FRENO TRASERA 11-12", "CAMBIAR CAMARA FRENO TRASERA 3-4",
+                "CAMBIAR CAMARA FRENO TRASERA 5-6", "CAMBIAR CAMARA FRENO TRASERA 7-8", "CAMBIAR CAMARA FRENO TRASERA 9-10"
+            ],
+            "Secador": [
+                "CAMBIAR VALVULA SECADOR", "DESVARE EN OBRA Y/O VIA", "CAMBIAR KIT DE INTERIORES SECADOR",
+                "CAMBIAR FILTRO SECADOR", "REPARAR SECADOR", "CAMBIAR SECADOR",
+                "CAMBIAR INTERIORES SECADOR"
+            ],
+            "Compresor": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR MANGUERA REFRIGERACION CULATA", "CAMBIAR CULATIN O CULATA",
+                "REPARAR COMPRESOR", "CAMBIAR COMPRESOR", "CAMBIAR CULATA COMPRESOR"
+            ],
+            "Banda": [
+                "AJUSTAR CALIPER FRENO DISCO", "CAMBIAR BANDAS DELANTERAS", "CAMBIAR BANDAS TROQUE TRASERO",
+                "CAMBIAR BANDAS DELANTERA POS 1", "CAMBIAR BANDAS DELANTERA POS 2", "CAMBIAR BANDAS DELANTERA POS 3",
+                "CAMBIAR BANDAS DELANTERA POS 4", "CAMBIAR BANDAS TRASERA POS 11-12", "CAMBIAR BANDAS TRASERA POS 3-4",
+                "CAMBIAR BANDAS TRASERA POS 5-6", "CAMBIAR BANDAS TRASERA POS 7-8", "CAMBIAR BANDAS TRASERA POS 9-10",
+                "CAMBIAR PASTILLAS DELANTERA POS 1", "CAMBIAR PASTILLAS DELANTERA POS 2", "CAMBIAR PASTILLAS TRASERA POS 3-4",
+                "CAMBIAR PASTILLAS TRASERA POS 5-6", "CAMBIAR PASTILLAS TRASERA POS 7-8", "CAMBIAR PASTILLAS TRASERA POS 9-10"
+            ],
+            "Bloque_Válvula": [
+                "CAMBIAR BOBINA BLOQUE DE VALVULAS", "DESVARE EN OBRA Y/O VIA", "REPARAR BLOQUE LEVANTE CANAL"
+            ],
+            "Tanque": [
+                "INSTALAR MANGUERA EN RESPIRADERO", "CAMBIAR MIRILLA TANQUE HIDRAULICO", "CBM ALERTA ANALISIS DE ACEITE",
+                "DESVARE EN OBRA Y/O VIA", "COMPLETAR NIVEL DE ACEITE HIDRAULICO", "CAMBIAR ACEITE Y FILTRO HIDRAULICO",
+                "REPARAR TANQUE HIDRAULICO", "CAMBIAR TANQUE HIDRAULICO", "CAMBIAR MIRILLA TANQUE ACEITE HIDRAULICO",
+                "TOMAR MUESTRA DE ACEITE HID MIXER"
+            ],
+            "Regulador_presión": [
+                "CAMBIAR REGULADOR PRESION HIDRAULICO", "CAMBIAR MANOMETRO DE PRESURIZADO", "CAMBIAR REGULADOR DE PRESION"
+            ],
+            "Enfriador_aceite_hco": [
+                "CAMBIAR VENTILADOR ENFRIADOR ACEITE", "DESVARE EN OBRA Y/O VIA", "LIMPIAR Y SONDEAR ENFRIADOR ACEITE",
+                "REPARAR ENFRIADOR DE ACEITE HIDRAULICO", "REPARAR ENFRIADOR HIDRAULICO", "UPGRADE SISTEMA ENFRIAMIENTO HID",
+                "CAMBIAR ENFRIADOR DE ACEITE HIDRAULICO", "CAMBIAR VENTILADOR DEL HIDRAULICO", "LIMPIAR Y SONDEAR ENFRIADOR HID"
+            ],
+            "Actuador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR CILINDRO CANAL PPAL"
+            ],
+            "Acumulador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR ACUMULADOR HIDRAULICO"
+            ],
+            "Bomba_hidráulica": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR DISCOS DE FRICCION", "REPARAR BOMBA LEVANTE CANAL",
+                "REPARAR BOMBA HIDRAULICA", "CAMBIAR CILINDRO LEVANTE CANAL", "CAMBIAR EMPAQUETADURA BOMBA HIDRAULICA",
+                "CAMBIAR BOMBA HIDRAULICA"
+            ],
+            "Cilindro_hidráulico": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR SELLOS CILINDRO CANAL PPAL", "REPARAR CILINDRO CANAL PPAL",
+                "CAMBIAR CILINDRO LEVANTE CANAL", "REPARAR CILINDRO LEVANTE CANAL"
+            ],
+            "Motor_hidráulico": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR EMPAQUETADURA MOTOR HIDRAULICO", "REPARAR MOTOR HIDRAULICO",
+                "CAMBIAR MOTOR HIDRAULICO"
+            ],
+            "Tubería": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR O CAMBIAR TUBERIA HIDRAULICA", "CAMBIAR TUBO AGUA OLLA",
+                "INSTALAR PUNTO DE LAVADO CABINA", "REPARAR TUBERIA DE AGUA", "INSTALAR SISTEMA LAVADO OLLA"
+            ],
+            "Válvula_contención": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR VALVULA CONTENCION"
+            ],
+            "Valvula_Hd": [
+                "CAMBIAR VALVULA HIDRAULICA"
+            ],
+            "Contador agua": [
+                "CAMBIAR CONTADOR DE AGUA"
+            ],
+            "Tanque agua": [
+                "CAMBIAR SOPORTES TANQUE AGUA", "REPARAR TANQUE DE AGUA", "CAMBIAR TANQUE DE AGUA",
+                "CAMBIAR SOPORTES TANQUE DE AGUA", "CAMBIAR TANQUE AGUA"
+            ],
+            "Araña": [
+                "CAMBIAR ARAÑA 11-12", "CAMBIAR ARAÑA 3-4", "CAMBIAR ARAÑA 4-5",
+                "CAMBIAR ARAÑA 5-6", "CAMBIAR ARAÑA 7-8", "CAMBIAR ARAÑA 9-10",
+                "CAMBIAR ARAÑA POS 1", "CAMBIAR ARAÑA POS 2", "CAMBIAR ARAÑA POS 3",
+                "CAMBIAR ARAÑA POS 4", "CAMBIAR ARAÑA", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Retenedor": [
+                "CAMBIAR BOCIN DE RUEDAS 11-12", "CAMBIAR BOCIN DE RUEDAS 3-4", "CAMBIAR BOCIN DE RUEDAS 5-6",
+                "CAMBIAR BOCIN DE RUEDAS 7-8", "CAMBIAR BOCIN DE RUEDAS 9-10", "CAMBIAR RETENEDOR LLANTA TRASERA 11-12",
+                "CAMBIAR RETENEDOR LLANTA TRASERA 3-4", "CAMBIAR RETENEDOR LLANTA TRASERA 5-6", "CAMBIAR RETENEDOR LLANTA TRASERA 7-8",
+                "CAMBIAR RETENEDOR LLANTA TRASERA 9-10", "REPARAR BOCIN DE RUEDAS 11-12", "REPARAR BOCIN DE RUEDAS 3-4",
+                "REPARAR BOCIN DE RUEDAS 5-6", "REPARAR BOCIN DE RUEDAS 7-8", "REPARAR BOCIN DE RUEDAS 9-10",
+                "REPARAR BOCIN DE RUEDAS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR RETENEDOR LLANTA TRASERA",
+                "CAMBIAR BOCIN DE RUEDAS"
+            ],
+            "Tornillería": [
+                "CAMBIAR ESPARRAGOS RUEDA 11-12", "CAMBIAR ESPARRAGOS RUEDA 3-4", "CAMBIAR ESPARRAGOS RUEDA 5-6",
+                "CAMBIAR ESPARRAGOS RUEDA 7-8", "CAMBIAR ESPARRAGOS RUEDA 9-10", "CAMBIAR ESPARRAGOS RUEDA POS 1",
+                "CAMBIAR ESPARRAGOS RUEDA POS 2", "CAMBIAR ESPARRAGOS RUEDA POS 3", "CAMBIAR ESPARRAGOS RUEDA POS 4",
+                "INSTALAR INDICADOR DE TORQUE", "INSTALAR INDICADOR DE TORQUE", "CAMBIAR TUERCA DE RUEDA",
+                "CAMBIAR ESPARRAGOS RUEDA", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Rin": [
+                "CAMBIAR RIN POS 1", "CAMBIAR RIN POS 10", "CAMBIAR RIN POS 11",
+                "CAMBIAR RIN POS 12", "CAMBIAR RIN POS 2", "CAMBIAR RIN POS 2",
+                "CAMBIAR RIN POS 3", "CAMBIAR RIN POS 4", "CAMBIAR RIN POS 5",
+                "CAMBIAR RIN POS 6", "CAMBIAR RIN POS 7", "CAMBIAR RIN POS 8",
+                "CAMBIAR RIN POS 9", "PINTAR RIN", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR RIN", "LIMPIAR Y PINTAR RINES"
+            ],
+            "Rodamiento": [
+                "CAMBIAR RODAMIENTO LLANTA DELANTERA P1", "CAMBIAR RODAMIENTO LLANTA DELANTERA P2", "CAMBIAR RODAMIENTO LLANTA DELANTERA P3",
+                "CAMBIAR RODAMIENTO LLANTA DELANTERA P4", "CAMBIAR RODAMIENTO LLANTA TRASERA 11-12", "CAMBIAR RODAMIENTO LLANTA TRASERA 3-4",
+                "CAMBIAR RODAMIENTO LLANTA TRASERA 5-6", "CAMBIAR RODAMIENTO LLANTA TRASERA 7-8", "CAMBIAR RODAMIENTO LLANTA TRASERA 9-10",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR RODAMIENTO LLANTA TRASERA", "CAMBIAR RODAMIENTO LLANTA DELANTERA"
+            ],
+            "Tapa eje": [
+                "CAMBIAR TAPA CUBOS LLANTA DELANTERA P1", "CAMBIAR TAPA CUBOS LLANTA DELANTERA P2", "CAMBIAR TAPA CUBOS LLANTA DELANTERA P3",
+                "CAMBIAR TAPA CUBOS LLANTA DELANTERA P4", "CAMBIAR TAPA CUBOS LLANTA DELANTERA", "COMPLETAR NIVEL DE ACEITE TAPA CUBO",
+                "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Llanta": [
+                "REPARAR LLANTA PINCHADA POS 1", "REPARAR LLANTA PINCHADA POS 10", "REPARAR LLANTA PINCHADA POS 11",
+                "REPARAR LLANTA PINCHADA POS 12", "REPARAR LLANTA PINCHADA POS 13", "REPARAR LLANTA PINCHADA POS 14",
+                "REPARAR LLANTA PINCHADA POS 2", "REPARAR LLANTA PINCHADA POS 3", "REPARAR LLANTA PINCHADA POS 4",
+                "REPARAR LLANTA PINCHADA POS 5", "REPARAR LLANTA PINCHADA POS 6", "REPARAR LLANTA PINCHADA POS 7",
+                "REPARAR LLANTA PINCHADA POS 8", "REPARAR LLANTA PINCHADA POS 9", "TRANSPORTAR LLANTAS",
+                "DESPINCHAR LLANTA INHOUSE CTG", "MONTAR Y DESMONTAR LLANTA IN HOUSE CTG", "DESPINCHAR LLANTA",
+                "DESPINCHAR LLANTA POS 1", "DESPINCHAR LLANTA POS 10", "DESPINCHAR LLANTA POS 11",
+                "DESPINCHAR LLANTA POS 12", "DESPINCHAR LLANTA POS 13", "DESPINCHAR LLANTA POS 14",
+                "DESPINCHAR LLANTA POS 2", "DESPINCHAR LLANTA POS 20", "DESPINCHAR LLANTA POS 3",
+                "DESPINCHAR LLANTA POS 4", "DESPINCHAR LLANTA POS 5", "DESPINCHAR LLANTA POS 6",
+                "DESPINCHAR LLANTA POS 7", "DESPINCHAR LLANTA POS 8", "DESPINCHAR LLANTA POS 9",
+                "REPARAR LLANTA PINCHADA", "CAMBIAR ANILLO CAUCHO", "ROTAR LLANTAS",
+                "DESPINCHAR LLANTA INHOUSE- BAQ", "DESPINCHAR LLANTA SERVITECA", "MONTAR Y DESMONTAR LLANTA",
+                "CAMBIAR LLANTA NUMERARIA POS", "MARCAR LLANTAS", "VULCANIZAR LLANTA REPARACION MAYOR",
+                "SERVICIO DE CARRO TALLER", "DESVARE EN OBRA Y/O VIA", "SERVICIO TRANSPORTE LLANTAS",
+                "CAMBIAR LLANTA POS 1", "CAMBIAR LLANTA POS 10", "CAMBIAR LLANTA POS 11",
+                "CAMBIAR LLANTA POS 12", "CAMBIAR LLANTA POS 13", "CAMBIAR LLANTA POS 14",
+                "CAMBIAR LLANTA POS 2", "CAMBIAR LLANTA POS 3", "CAMBIAR LLANTA POS 4",
+                "CAMBIAR LLANTA POS 5", "CAMBIAR LLANTA POS 6", "CAMBIAR LLANTA POS 7",
+                "CAMBIAR LLANTA POS 8", "CAMBIAR LLANTA POS 9", "SERVICIO MENSUAL INHOUSE"
+            ],
+            "Anillo caucho": [
+                "CAMBIAR ANILLO CAUCHO"
+            ],
+            "Neumático": [
+                "CAMBIAR NEUMATICO"
+            ],
+            "Varilla nivel": [
+                "CAMBIAR RACOR DE CONEXION DE FUNDA", "CAMBIAR FUNDA VARILLA NIVEL", "CAMBIAR VARILLA DE NIVEL"
+            ],
+            "Tanque refrigerante": [
+                "CAMBIAR TAPA LATERAL TANQUE EXPANSION", "CAMBIAR TAPA TANQUE EXPANSION", "REPARAR FUGA POR TANQUE REFRIGERANTE",
+                "COMPLETAR NIVEL O CAMBIAR REFRIGERANTE", "DESVARE EN OBRA Y/O VIA", "CAMBIAR TANQUE AUX NEGRO",
+                "LAVAR TANQUE REFRIGERANTE", "CAMBIAR TANQUE EXPANSION"
+            ],
+            "Motor diésel": [
+                "REALIZAR PRUEBA DE BLOW BY", "TOMAR IMPRONTAS MOTOR CHASIS", "CBM ALERTA ANALISIS DE ACEITE",
+                "COMPLETAR NIVEL DE ACEITE MOTOR", "DESVARE EN OBRA Y/O VIA", "CAMBIAR ACEITE Y FILTRO MOTOR",
+                "CAMBIAR KIT SELLO DELANTERO CIGUEÑAL", "CALIBRAR MOTOR", "DESMONTAR Y MONTAR CULATA",
+                "REVISAR SISTEMA FRENO AHOGO", "CAMBIAR EMPAQUE CARTER", "CAMBIAR RETENEDOR TRASERO CIGUEÑAL",
+                "CAMBIAR EMPAQUE TAPA VALVULAS", "CAMBIAR VENTILADOR MOTOR", "REPARAR FUGA MOTOR DIESEL",
+                "CAMBIAR EMPAQUE TAPA FRONTAL", "REPARAR FUGA POR BALANCINES", "REPARAR MOTOR DIESEL",
+                "CAMBIAR ACEITE Y FILTROS TIPO A", "CAMBIAR ACEITE Y FILTROS TIPO B", "CAMBIAR ACEITE Y FILTROS TIPO C",
+                "CAMBIAR ACEITE Y FILTROS TIPO D", "CAMBIAR CORREA MOTOR", "CAMBIAR EMPAQUE TAPA FRONTAL",
+                "CAMBIAR EMPAQUE TAPA VÁLVULAS", "CAMBIAR RETENEDOR DELANTERO CIGUEÑAL", "RAPARAR MOTOR DIESEL TOTAL",
+                "SERVICIO DE GRUA HACIA TALLER", "TOMAR MUESTRA DE ACEITE MOTOR MIXER"
+            ],
+            "Turbo o soplador": [
+                "CAMBIAR ABRAZADERA DE TURBO", "CAMBIAR MANGUERA DE TURBO", "DESVARE EN OBRA Y/O VIA",
+                "REPARAR TURBO", "CAMBIAR TURBO"
+            ],
+            "Carter": [
+                "CAMBIAR TORNILLERIA DE CARTER", "RECTIFICAR AGUJEROS DE TORNILLOS CARTER", "DESVARE EN OBRA Y/O VIA",
+                "CORREGIR FUGA POR CARTER", "CAMBIAR EMPAQUE CARTER", "CAMBIAR CARTER"
+            ],
+            "Correa": [
+                "CAMBIAR CORREA ACCESORIOS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR CORREA CORTA",
+                "CAMBIAR KIT PATIN CORREA ACCESORIOS", "CAMBIAR CORREA MOTOR"
+            ],
+            "Tubo escape": [
+                "REPARAR GUARDA TUBO ESCAPE", "CAMBIAR ABRAZADERAS", "DESVARE EN OBRA Y/O VIA",
+                "CAMBIAR GUARDA TUBO ESCAPE", "REPARAR TUBO ESCAPE"
+            ],
+            "Silenciador": [
+                "CAMBIAR ABRAZADERA TUBO ESCAPE", "DESVARE EN OBRA Y/O VIA", "CAMBIAR TUBO FLEXIBLE",
+                "CAMBIAR PROTECTOR SILENCIADOR", "REPARAR CAJA DE HUMO", "CAMBIAR SILENCIADOR",
+                "CAMBIAR CAJA DE HUMO"
+            ],
+            "Bomba refrigerante": [
+                "CAMBIAR EMPAQUE EXTERNO BOMBA", "DESVARE EN OBRA Y/O VIA", "REPARAR BOMBA REFRIGERANTE",
+                "CAMBIAR BOMBA REFRIGERANTE"
+            ],
+            "Tubería combustible": [
+                "REPARAR FUGA TUBERIA COMBUSTIBLE", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Inyector": [
+                "CALIBRAR INYECTORES", "DESVARE EN OBRA Y/O VIA", "LIMPIEZA DEL SISTEMA DE INYECCION",
+                "CAMBIAR INYECTOR UREA", "REPARAR SISTEMA INYECCION", "CAMBIAR INYECTOR",
+                "LIMPIAR SISTEMA DE INYECCION"
+            ],
+            "Bomba inyección": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR EMPAQUE BOMBA INYECCION", "REPARAR SOLENOIDE CORTE COMBUSTIBLE",
+                "REPARAR BOMBA INYECCION", "CAMBIAR SOLENOIDE CORTE COMBUSTIBLE", "CAMBIAR BOMBA INYECCION",
+                "CAMBIAR BOMBA UREA"
+            ],
+            "Bomba lubricación": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR BOMBA LUBRICACION", "CAMBIAR BOMBA LUBRICACION"
+            ],
+            "Enfriador": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR ENFRIADOR ACEITE MOTOR", "CAMBIAR ENFRIADOR ACEITE MOTOR"
+            ],
+            "Escape": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR TUBO ESCAPE", "CAMBIAR TUBO ESCAPE"
+            ],
+            "Fan clutch": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR ELECTRO VALVULA FAN CLUTH", "CAMBIAR FAN CLUTH",
+                "REPARAR FAN CLUTH"
+            ],
+            "Polea": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR POLEA MOTOR", "CAMBIAR TENSOR DE CORREA VENTILADOR"
+            ],
+            "Protector múltiple": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR PROTECCTOR MULTIPLE"
+            ],
+            "Radiador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR SOPORTES RADIADOR", "SONDEAR RADIADOR",
+                "REPARAR RADIADOR", "CAMBIAR RADIADOR"
+            ],
+            "Múltiple": [
+                "CORREGIR FUGA POR MULTIPLE", "CAMBIAR EMPAQUE DEL MULTIPLE"
+            ],
+            "Tambor/olla": [
+                "MEDIR ESPESOR OLLA", "RETIRAR REJILLA CONTRA GRUMOS", "REPARAR REJILLA CONTRA GRUMOS",
+                "INSTALAR REJILLA CONTRA GRUMOS", "CAMBIAR PERNOS MANHOLE", "CAMBIAR SECTOR ALETAS OLLA",
+                "INSTALAR ROTULO EMPLEMA ARGOS", "REPARAR ALETAS DE LA OLLA", "REPARAR FISURA EN OLLA",
+                "LIMPIAR Y PINTAR ULTIMO ANILLO OLLA", "CAMBIAR EMPAQUE MANHOLE OLLA", "ALINEAR OLLA",
+                "LAVAR Y POLICHAR OLLA", "CAMBIAR PESTAÑA DE SELLO TAPA ECO", "DESMONTAR Y MONTAR OLLA",
+                "RETOCAR O MATIZAR PINTURA OLLA", "SANDBLASTEAR Y PINTAR OLLA", "CAMBIAR SECTOR OLLA",
+                "CAMBIAR OLLA REMANUFACTURADA"
+            ],
+            "Tapa ecológica": [
+                "REPARAR MANGUERA CIL TAPA ECO", "CAMBIAR VALVULA TAPA ECOLOGICA", "CAMBIAR RACOR CILINDRO TAPA ECO",
+                "CAMBIAR RACOR VALVULA TAPA ECO", "CAMBIAR MANGUERA CIL TAPA ECO", "DESCONCRETAR TAPA ECOLOGICA",
+                "CAMBIAR CHUMACERAS TAPA ECOLOGICA", "REPARAR TAPA ECOLOGICA", "CAMBIAR CAUCHO TAPA ECOLOGICA",
+                "CAMBIAR CILINDRO TAPA ECOLOGICA", "REPARAR CILINDRO TAPA ECOLOGICA", "ENDEREZAR TAPA ECOLOGICA",
+                "CAMBIAR ANILLO TAPA ECOLOGICA", "INSTALAR TAPA ECOLOGICA", "MODIFICAR DISEÑO TAPA ECOLOGICA"
+            ],
+            "Rodillo/roldanas": [
+                "DESVARE EN OBRA Y/O VIA", "FABRICAR E INSTALAR GUARDA ROLDANA", "REPARAR MANGUERA LUB RODILLO",
+                "CAMBIAR MANGUERA LUB RODILLO", "CAMBIAR MANGUERA LUB CHUMACERA TAPA ECO", "ALINEAR RODILLOS",
+                "REPARAR ROLDANA", "CAMBIAR RODILLO", "SERVICIO ENGRASE MENSUAL INHOUSE",
+                "ALINEAR ROLDANAS", "CAMBIAR ROLDANA DER", "CAMBIAR ROLDANA IZQ",
+                "ENGRASAR MENSUAL INHOUSE", "FABRICAR E INSTALAR GUARDA ROLDANA DER", "FABRICAR E INSTALAR GUARDA ROLDANA IZQ",
+                "REPARAR ROLDANA DER", "REPARAR ROLDANA IZQ"
+            ],
+            "Pista tambor/olla": [
+                "CAMBIAR PISTA DE RODADURA", "REPARAR PISTA TAMBOR"
+            ],
+            "Reductor": [
+                "CAMBIAR ACEITE Y FILTRO REDUCTOR", "CBM ALERTA ANALISIS DE ACEITE", "COMPLETAR NIVEL DE ACEITE REDUCTOR",
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR REDUCTOR", "CAMBIAR RODAMIENTO REDUCTOR",
+                "CAMBIAR RETENEDOR DEL REDUCTOR", "CAMBIAR RETENEDOR Y RODAMIENTO", "TOMAR MUESTRA DE ACEITE RED MIXER"
+            ],
+            "Grapa": [
+                "CAMBIAR GRAPAS DELANTERAS", "DESVARE EN OBRA Y/O VIA"
+            ],
+            "Muelle/resorte/caucho": [
+                "CAMBIAR COLGANTE MUELLE", "CAMBIAR LAINAS DESGASTE", "CAMBIAR CINTO DE REBOTE",
+                "CAMBIAR HOJA MUELLE", "CAMBIAR FUELLES O PIE ELEFANTE", "CAMBIAR MUELLE DELANTERO",
+                "CAMBIAR MUELLE TRASERO", "CAMBIAR CAUCHO PRINCIPAL SUSPENSION", "CAMBIAR CAUCHO TOPE SUSPENSION",
+                "CAMBIAR MUELLE DELANTERO DER", "CAMBIAR MUELLE DELANTERO IZQ"
+            ],
+            "Amortiguador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR AMORTIGUADOR DELANTERO", "CAMBIAR AMORTIGUADOR TRASERO"
+            ],
+            "Bastidor": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR TORNILERIA ZAPAS O SILLINES", "CAMBIAR SOPORTE SUPERIOR",
+                "CAMBIAR ZAPA O SILLINES", "CAMBIAR TORNILLERIA ZAPAS O SILLINES DER", "CAMBIAR TORNILLERIA ZAPAS O SILLINES IZQ"
+            ],
+            "Buje": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR BUJE PUNTA LAPIZ", "CAMBIAR BUJE CORBATIN",
+                "CAMBIAR BUJES VIGA TANDEM", "CAMBIAR BUJE ESTABILIZADOR", "CAMBIAR BUJES BARRA ESTABILIZADORA"
+            ],
+            "Caucho": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR CAUCHO"
+            ],
+            "Eje auxiliar": [
+                "DESVARE EN OBRA Y/O VIA", "DESMONTAR EJE AUX", "CAMBIAR BASES O SOPORTES METALICOS",
+                "INSTALAR EJE AUX", "CAMBIAR BOMBONA TIPO HAMBURGUESA", "CONDENAR EJE AUX",
+                "CAMBIAR BOMBONA DE AMORTIGUACION", "REPARAR EJE AUX"
+            ],
+            "Pasador": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR PASADOR SUSPENSION"
+            ],
+            "Tope": [
+                "DESVARE EN OBRA Y/O VIA", "CAMBIAR TOPE SUSPENSION TRASERA", "CAMBIAR TOPE SUSPENSION DELANTERA"
+            ],
+            "Viga": [
+                "DESVARE EN OBRA Y/O VIA", "REPARAR VIGAS TANDEM", "CAMBIAR VIGA TANDEM",
+                "CAMBIAR SUSPENSION TRASERA COMPLETA"
+            ]
+        };
+
+        const conjuntoToParteMap = {
+            "CABINA": [
+                "Limpia_vidrios", "Cabina", "Vidrio", "Tablero instrumentos", "Aire_acondicionado", "Silla", "Accesorios", "Chapa", "Espejo", "Soporte cabina", "Capot", "Estribo", "Puerta", "Panorámico", "Tapicería", "Cinturón seguridad", "Persiana"
+            ],
+            "CAJA_Y_EMBRA": [
+                "Caja_velocidades", "Disco embrague/clutch", "Prensa", "PTO", "Rodillo", "Separador", "Válvula control pto", "Volante"
+            ],
+            "CHASIS": [
+                "Porta extintor", "Puente_chasis", "Perfil chasis", "Defensa", "Carrocería", "Porta_repuesto", "Tanque combustible", "Guardabarros", "Caja herramienta", "Caja baterías", "Soporte tanques aire"
+            ],
+            "CONTROL_Y_MO": [
+                "Mando cabina", "Control remoto", "Manómetro", "Módulo electrónico", "Conector", "Alarma", "Electroválvula", "Instrumentos", "Sensor", "Cableado"
+            ],
+            "DIFERENCIALE": [
+                "Cardán", "Cruceta", "Diferencial delantero", "Diferencial trasero", "Divisor potencia", "Eje", "Soporte", "Válvula"
+            ],
+            "DIRECCION": [
+                "Terminal", "Depósito aceite", "Barra dirección", "Manguera", "Bomba dirección", "Caja dirección", "Filtro", "Válvula"
+            ],
+            "ELECTRICO": [
+                "Cableado", "Luces", "Fusible", "Accesorios", "Alternador", "Batería", "Conector", "Regulador", "Arnés", "Arranque"
+            ],
+            "ESTRUCTURA": [
+                "Embudo_cargue", "Pedestal", "Tapa_canal", "Canal", "Plataforma", "Escalera", "Chute", "Platina_tornillo_fijación_chasis"
+            ],
+            "FRENOS": [
+                "Tanque_aire", "Ratchet", "Manguera", "Campana", "Bomba_freno", "Accesorios..", "Gobernador", "Cámara_seguridad", "Secador", "Compresor", "Banda"
+            ],
+            "HIDRAULICO": [
+                "Bloque_Válvula", "Tanque", "Regulador_presión", "Cardán", "Enfriador_aceite_hco", "Actuador", "Acumulador", "Bomba_hidráulica", "Cilindro_hidráulico", "Filtro", "Motor_hidráulico", "Tubería", "Válvula_contención", "Valvula_Hd", "Manguera", "Accesorios"
+            ],
+            "LAVADO": [
+                "Válvula", "Regulador presión", "Contador agua", "Tubería", "Manguera", "Tanque agua"
+            ],
+            "LLANTAS_Y_RIN": [
+                "Araña", "Retenedor", "Tornillería", "Rin", "Rodamiento", "Tapa eje", "Llanta", "Anillo caucho", "Neumático"
+            ],
+            "MOTOR": [
+                "Varilla nivel", "Tanque refrigerante", "Motor diésel", "Turbo o soplador", "Filtro", "Carter", "Accesorios", "Correa", "Tubo escape", "Silenciador", "Bomba refrigerante", "Tubería combustible", "Manguera", "Inyector", "Bomba inyección", "Bomba lubricación", "Enfriador", "Escape", "Fan clutch", "Polea", "Protector múltiple", "Radiador", "Múltiple", "Soporte"
+            ],
+            "OLLA": [
+                "Tambor/olla", "Tapa ecológica", "Rodillo/roldanas", "Pista tambor/olla"
+            ],
+            "REDUCTOR": [
+                "Tornillería", "Reductor"
+            ],
+            "SUSPENSION": [
+                "Grapa", "Muelle/resorte/caucho", "Amortiguador", "Bastidor", "Buje", "Caucho", "Eje auxiliar", "Pasador", "Tope", "Viga", "Soporte", "Tornillería"
+            ]
+        };
+
+        const allWorkshopsData = {
+            "KAEL": {},
+            "ABFREN": {},
+            "SOMEC": {},
+            "DRACSO": {},
+            "JS OUT": {},
+            "MG": {},
+            "SIMIYP": {},
+            "SERVII": {},
+            "ARGOS": {}
+        };
+
+        const equiposKael = [
+            "COLMX0361", "COLMX0362", "COLMX0383", "COLMX0390", "COLMX0399", "COLMX0402", "COLMX0406", "COLMX0419",
+            "COLMX0420", "COLMX0424", "COLMX0426", "COLMX0432", "COLMX0437", "COLMX0445", "COLMX0448", "COLMX0451",
+            "COLMX0453", "COLMX0464", "COLMX0467", "COLMX0469", "COLMX0470", "COLMX0471", "COLMX0473", "COLMX0476",
+            "COLMX0477", "COLMX0484", "COLMX0485", "COLMX0486", "COLMX0488", "COLMX0490", "COLMX0491", "COLMX0500",
+            "COLMX0502", "COLMX0504", "COLMX0506", "COLMX0507", "COLMX0508", "COLMX0509", "COLMX0510", "COLMX0512",
+            "COLMX0513", "COLMX0514", "COLMX0515", "COLMX0516", "COLMX0522", "COLMX0523", "COLMX0524", "COLMX0526",
+            "COLMX0527", "COLMX0528", "COLMX0553", "COLMX0554", "COLMX0560", "COLMX0561", "COLMX0571", "COLMX0572",
+            "COLMX0573", "COLMX0581", "COLMX0592", "COLMX0603", "COLMX0604", "COLMX0605", "COLMX0608", "COLMX0614",
+            "COLMX0618", "COLMX0623", "COLMX0628", "COLMX0630", "COLMX0633", "COLMX0637", "COLMX0650", "COLMX0653",
+            "COLMX0663", "COLMX0664", "COLMX0668", "COLMX0676", "COLMX0679", "COLMX0684", "COLMX0685", "COLMX0687",
+            "COLMX0688", "COLMX0897", "COLMX0904", "COLMX0914", "COLMX0962", "COLMX0963", "COLMX0964", "COLMX0965",
+            "COLMX0966", "COLMX0967", "COLMX0968", "COLMX0969", "COLMX0970", "COLMX0971", "COLMX0972", "COLMX0973",
+            "COLMX0974", "COLMX0975", "COLMX0976", "COLMX0977", "COLMX0978", "COLMX0979", "COLMX0980", "COLMX0981",
+            "COLMX0982", "COLMX0983", "COLMX0984", "COLMX0985", "COLMX0986", "COLMX0987", "COLMX0988", "COLMX0989",
+            "COLMX0990", "COLMX0991", "COLMX1015", "COLMX1016", "COLMX1017", "COLMX1018", "COLMX1019", "COLMX1020",
+            "COLMX1021", "COLMX1022", "COLMX1023", "COLMX1024", "COLMX1025", "COLMX1026", "COLMX1027", "COLMX1028",
+            "COLMX1029", "COLMX1066", "COLMX1067", "COLMX1068", "COLMX1069", "COLMX1070", "COLMX1071", "COLMX1072",
+            "COLMX1073", "COLMX1074", "COLMX1075", "COLMX1076", "COLMX1077", "COLMX1078", "COLMX1079", "COLMX1080",
+            "COLAB0034", "COLAB0038", "COLAB0039", "COLAB0042", "COLAB0043", "COLAB0044", "COLAB0054", "COLAB0055",
+            "COLAB0059", "COLAB0060", "COLAB0068"
+        ];
+
+        // 1. Populate KAEL data first
+        equiposKael.forEach(equipo => {
+            allWorkshopsData["KAEL"][equipo] = {};
+            for (const conjuntoName in conjuntoToParteMap) {
+                if (conjuntoToParteMap.hasOwnProperty(conjuntoName)) {
+                    allWorkshopsData["KAEL"][equipo][conjuntoName] = {};
+                    conjuntoToParteMap[conjuntoName].forEach(parteName => {
+                        allWorkshopsData["KAEL"][equipo][conjuntoName][parteName] = parteToTextoEstandarMap[parteName] || ["Default Texto Estandar"];
+                    });
+                }
+            }
+        });
+
+        // 2. Deep copy KAEL's data to all other workshops
+        const kaelData = JSON.parse(JSON.stringify(allWorkshopsData["KAEL"])); // Create a deep copy of KAEL's data
+
+        for (const workshopName of allWorkshops) {
+            if (workshopName !== "KAEL") {
+                allWorkshopsData[workshopName] = JSON.parse(JSON.stringify(kaelData)); // Assign the deep copy
+            }
+        }
+
+        // --- View Management Functions ---
+        function showLoginView() {
+            loginView.style.display = 'flex';
+            appContainer.style.display = 'none';
+            document.body.classList.remove('align-top-content');
+            // Ensure appContainer does not have transparent-bg class when login is shown
+            appContainer.classList.remove('transparent-bg');
+            // Directly set the background image using relative path
+            document.body.style.backgroundImage = `url('FONDO.png')`;
+            console.log("Login view shown. Background image set to FONDO.png");
+            console.log("Login truck image src:", loginTruckImage.src);
+        }
+
+        function showWorkshopSelectionView() {
+            loginView.style.display = 'none';
+            appContainer.style.display = 'block';
+            workshopSelectionView.style.display = 'grid';
+            formView.style.display = 'none';
+            mainPageTitle.textContent = 'TALLER';
+            reportSubtitle.style.display = 'none';
+            leftHeaderElements.style.display = 'none';
+            rightHeaderElements.style.display = 'flex';
+            logoutBtn.style.display = 'block';
+            populateWorkshopCards();
+            document.body.classList.add('align-top-content');
+            // Add transparent-bg class to appContainer for workshop view
+            appContainer.classList.add('transparent-bg');
+            console.log("Workshop selection view shown.");
+        }
+
+        function showFormView() {
+            loginView.style.display = 'none';
+            appContainer.style.display = 'block';
+            workshopSelectionView.style.display = 'none';
+            formView.style.display = 'block';
+            mainPageTitle.textContent = workshopDisplayNames[currentWorkshop];
+            reportSubtitle.style.display = 'block';
+            leftHeaderElements.style.display = 'flex';
+            rightHeaderElements.style.display = 'flex';
+            backToMenuBtn.style.display = 'block';
+            logoutBtn.style.display = 'none';
+            document.body.classList.add('align-top-content');
+            // Remove transparent-bg class from appContainer for form view
+            appContainer.classList.remove('transparent-bg');
+            console.log("Form view shown for workshop:", currentWorkshop);
+        }
+
+        // --- Login Logic ---
+        const validCredentials = {
+            "KAEL": "KAEL",
+            "ABFREN": "ABFREN",
+            "SOMEC": "SOMEC",
+            "DRACSO": "DRACSO",
+            "JS OUT": "JS OUT",
+            "MG": "MG",
+            "SIMIYP": "SIMIYP",
+            "SERVII": "SERVII",
+            "ARGOS": "ARGOS"
+        };
+
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+            console.log(`Attempting login for: ${username} with password: ${password}`);
+
+            if (validCredentials[username] === password) {
+                loginError.style.display = 'none';
+                loggedInUser = username;
+                console.log(`Login successful for user: ${loggedInUser}`);
+                showWorkshopSelectionView();
+            } else {
+                loginError.textContent = 'Usuario o contraseña incorrectos.';
+                loginError.style.display = 'block';
+                console.log('Login failed: Incorrect username or password.');
+            }
+        });
+
+        // --- Logout Logic ---
+        logoutBtn.addEventListener('click', () => {
+            console.log('User logged out.');
+            loggedInUser = null;
+            showLoginView();
+        });
+
+        // --- Initialize App based on Workshop ---
+        function initApp(workshopName) {
+            currentWorkshop = workshopName;
+            mainPageTitle.textContent = workshopDisplayNames[workshopName];
+            reportSubtitle.style.display = 'block';
+            
+            populateEquipoDropdown();
+            loadData();
+
+            showFormView();
+        }
+
+        // --- Populate Workshop Cards (Menu) ---
+        function populateWorkshopCards() {
+            workshopSelectionView.innerHTML = '';
+            let workshopsToDisplay = [];
+
+            if (loggedInUser === "ARGOS") {
+                workshopsToDisplay = allWorkshops;
+            } else {
+                if (allWorkshops.includes(loggedInUser)) {
+                    workshopsToDisplay = [loggedInUser];
+                }
+            }
+
+            workshopsToDisplay.forEach(workshop => {
+                const card = document.createElement('div');
+                // Adjusted card class for better mobile appearance (wider, less padding inside)
+                card.className = `
+                    bg-gray-50 rounded-lg shadow-md p-2 flex flex-col items-center justify-center
+                    cursor-pointer hover:bg-blue-50 hover:shadow-lg transition ease-in-out duration-150
+                    border border-gray-200 w-full sm:w-auto
+                `;
+                card.dataset.workshop = workshop;
+                card.addEventListener('click', () => initApp(workshop));
+
+                const img = document.createElement('img');
+                img.alt = workshopDisplayNames[workshop];
+                img.className = 'w-24 h-24 object-contain mb-3 rounded-md';
+                // Updated src to relative path
+                img.src = workshopImagePaths[workshop]; 
+                console.log(`Workshop card for ${workshop}: image src set to ${img.src}`);
+
+                const name = document.createElement('p');
+                name.textContent = workshopDisplayNames[workshop];
+                name.className = 'text-lg font-semibold text-gray-800 text-center';
+
+                card.appendChild(img);
+                card.appendChild(name);
+                workshopSelectionView.appendChild(card);
+            });
+        }
+
+        // --- Populate Equipo Dropdown ---
+        function populateEquipoDropdown() {
+            equipoSelect.innerHTML = '<option value="">Seleccione un Equipo</option>';
+            const currentEquiposData = allWorkshopsData[currentWorkshop];
+
+            if (currentEquiposData) {
+                for (const equipoName in currentEquiposData) {
+                    const option = document.createElement('option');
+                    option.value = equipoName;
+                    option.textContent = equipoName;
+                    equipoSelect.appendChild(option);
+                }
+            }
+            // Reset dependent dropdowns
+            conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
+            conjuntoSelect.disabled = true;
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
+            parteSelect.disabled = true;
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
+            textoEstandarSelect.disabled = true;
+        }
+
+        // --- Populate Conjunto Dropdown ---
+        function populateConjuntoDropdown(selectedEquipo) {
+            conjuntoSelect.innerHTML = '<option value="">Seleccione un Conjunto</option>';
+            const currentEquiposData = allWorkshopsData[currentWorkshop];
+
+            if (selectedEquipo && currentEquiposData && currentEquiposData[selectedEquipo]) {
+                for (const conjuntoName in currentEquiposData[selectedEquipo]) {
+                    const option = document.createElement('option');
+                    option.value = conjuntoName;
+                    option.textContent = conjuntoName;
+                    conjuntoSelect.appendChild(option);
+                }
+                conjuntoSelect.disabled = false;
+            } else {
+                conjuntoSelect.disabled = true;
+            }
+            // Reset dependent dropdowns
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
+            parteSelect.disabled = true;
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
+            textoEstandarSelect.disabled = true;
+        }
+
+        // --- Populate Parte Dropdown ---
+        function populateParteDropdown(selectedEquipo, selectedConjunto) {
+            parteSelect.innerHTML = '<option value="">Seleccione una Parte</option>';
+            const currentEquiposData = allWorkshopsData[currentWorkshop];
+
+            if (selectedEquipo && selectedConjunto && currentEquiposData && 
+                currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto]) {
+                for (const parteName in currentEquiposData[selectedEquipo][selectedConjunto]) {
+                    const option = document.createElement('option');
+                    option.value = parteName;
+                    option.textContent = parteName;
+                    parteSelect.appendChild(option);
+                }
+                parteSelect.disabled = false;
+            } else {
+                parteSelect.disabled = true;
+            }
+            // Reset dependent dropdown
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
+            textoEstandarSelect.disabled = true;
+        }
+
+        // --- Populate Texto Estandar Dropdown ---
+        function populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte) {
+            textoEstandarSelect.innerHTML = '<option value="">Seleccione un Texto Estandar</option>';
+            const currentEquiposData = allWorkshopsData[currentWorkshop];
+
+            if (selectedEquipo && selectedConjunto && selectedParte && currentEquiposData && 
+                currentEquiposData[selectedEquipo] && currentEquiposData[selectedEquipo][selectedConjunto] &&
+                currentEquiposData[selectedEquipo][selectedConjunto][selectedParte]) {
+                
+                const textoEstandarOptions = currentEquiposData[selectedEquipo][selectedConjunto][selectedParte];
+                textoEstandarOptions.forEach(text => {
+                    const option = document.createElement('option');
+                    option.value = text;
+                    option.textContent = text;
+                    textoEstandarSelect.appendChild(option);
+                });
+                textoEstandarSelect.disabled = false;
+            } else {
+                textoEstandarSelect.disabled = true;
+            }
+        }
+
+        // --- Handle Dependent Dropdowns ---
+        equipoSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            populateConjuntoDropdown(selectedEquipo);
+        });
+
+        conjuntoSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            populateParteDropdown(selectedEquipo, selectedConjunto);
+        });
+
+        parteSelect.addEventListener('change', () => {
+            const selectedEquipo = equipoSelect.value;
+            const selectedConjunto = conjuntoSelect.value;
+            const selectedParte = parteSelect.value;
+            populateTextoEstandarDropdown(selectedEquipo, selectedConjunto, selectedParte);
+        });
+
+        // --- Local Storage Functions ---
+        function getLocalStorageKey(workshop) {
+            return `workshop_data_${workshop.toLowerCase()}`;
+        }
+
+        function loadDataFromLocalStorage(workshop) {
+            const key = getLocalStorageKey(workshop);
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveDataToLocalStorage(workshop, data) {
+            const key = getLocalStorageKey(workshop);
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // --- Load Data from Local Storage and Render Table ---
+        function loadData() {
+            dataTableBody.innerHTML = '';
+            const records = loadDataFromLocalStorage(currentWorkshop);
+
+            if (records.length === 0) {
+                dataTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">No hay datos registrados para ${workshopDisplayNames[currentWorkshop]}.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            records.forEach((data, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.equipo || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.fecha || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.otOrigen || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.conjunto || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parte || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.textoEstandar || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.descripcionDetallada || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.prioridad || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.tecnico || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.telefono || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${data.fotoName || 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
+                        <button data-index="${index}" class="edit-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>
+                        <button data-index="${index}" class="delete-btn px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Eliminar</button>
+                    </td>
+                `;
+                dataTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const indexToDelete = parseInt(e.target.dataset.index);
+                    showCustomConfirm('¿Estás seguro de que quieres eliminar este registro?', () => {
+                        let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                        // Also remove from ARGOS data if it exists
+                        let argosRecords = loadDataFromLocalStorage("ARGOS");
+                        const recordToDelete = currentRecords[indexToDelete];
+                        if (recordToDelete && recordToDelete.recordId) {
+                            argosRecords = argosRecords.filter(rec => rec.recordId !== recordToDelete.recordId);
+                            saveDataToLocalStorage("ARGOS", argosRecords);
+                        }
+                        currentRecords.splice(indexToDelete, 1);
+                        saveDataToLocalStorage(currentWorkshop, currentRecords);
+                        loadData();
+                        console.log('Registro eliminado con éxito.');
+                    });
+                });
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const indexToEdit = parseInt(e.target.dataset.index);
+                    editRecord(indexToEdit);
+                });
+            });
+        }
+
+        // --- Edit Record Functionality ---
+        function editRecord(index) {
+            const records = loadDataFromLocalStorage(currentWorkshop);
+            const recordToEdit = records[index];
+
+            if (recordToEdit) {
+                // Populate form fields
+                document.getElementById('fecha').value = recordToEdit.fecha || '';
+                document.getElementById('otOrigen').value = recordToEdit.otOrigen || '0';
+                document.getElementById('descripcionDetallada').value = recordToEdit.descripcionDetallada || '';
+                document.getElementById('prioridad').value = recordToEdit.prioridad || '';
+                document.getElementById('tecnico').value = recordToEdit.tecnico || '';
+                document.getElementById('telefono').value = recordToEdit.telefono || '';
+
+                // Populate dependent dropdowns
+                equipoSelect.value = recordToEdit.equipo || '';
+                populateConjuntoDropdown(recordToEdit.equipo);
+                conjuntoSelect.value = recordToEdit.conjunto || '';
+                populateParteDropdown(recordToEdit.equipo, recordToEdit.conjunto);
+                parteSelect.value = recordToEdit.parte || '';
+                populateTextoEstandarDropdown(recordToEdit.equipo, recordToEdit.conjunto, recordToEdit.parte);
+                textoEstandarSelect.value = recordToEdit.textoEstandar || '';
+
+                editingRecordIndex = index;
+                saveRecordBtn.textContent = 'Actualizar Registro';
+                cancelEditBtn.style.display = 'inline-block'; // Show cancel button
+                console.log('Cargando registro para edición:', recordToEdit);
+            }
+        }
+
+        // --- Cancel Edit Functionality ---
+        cancelEditBtn.addEventListener('click', () => {
+            dataForm.reset();
+            populateEquipoDropdown(); // Reset dropdowns
+            editingRecordIndex = -1; // Exit edit mode
+            saveRecordBtn.textContent = 'Guardar Registro';
+            cancelEditBtn.style.display = 'none'; // Hide cancel button
+            console.log('Edición cancelada. Formulario restablecido.');
+        });
+
+        // --- Custom Alert/Confirm Modals ---
+        function showCustomAlert(message, callback = () => {}) {
+            const modalId = 'customAlertModal';
+            let modal = document.getElementById(modalId);
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = modalId;
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="p-8 border w-96 shadow-lg rounded-md bg-white">
+                        <p class="text-center text-lg mb-4" id="customAlertMessage"></p>
+                        <div class="flex justify-center">
+                            <button id="customAlertOkBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">OK</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('customAlertMessage').textContent = message;
+            modal.style.display = 'flex';
+            document.getElementById('customAlertOkBtn').onclick = () => {
+                modal.style.display = 'none';
+                callback();
+            };
+        }
+
+        function showCustomConfirm(message, onConfirm, onCancel = () => {}) {
+            const modalId = 'customConfirmModal';
+            let modal = document.getElementById(modalId);
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = modalId;
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="p-8 border w-96 shadow-lg rounded-md bg-white">
+                        <p class="text-center text-lg mb-4" id="customConfirmMessage"></p>
+                        <div class="flex justify-center space-x-4">
+                            <button id="customConfirmYesBtn" class="px-4 py-2 bg-customGreen text-customBlue font-semibold rounded-md shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition ease-in-out duration-150">Sí</button>
+                            <button id="customConfirmNoBtn" class="px-4 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">No</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('customConfirmMessage').textContent = message;
+            modal.style.display = 'flex';
+
+            document.getElementById('customConfirmYesBtn').onclick = () => {
+                modal.style.display = 'none';
+                onConfirm();
+            };
+            document.getElementById('customConfirmNoBtn').onclick = () => {
+                modal.style.display = 'none';
+                onCancel();
+            };
+        }
+
+        // --- Form Submission Handler ---
+        dataForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(dataForm);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            const fotoInput = document.getElementById('foto');
+            if (fotoInput.files.length > 0) {
+                data.fotoName = fotoInput.files[0].name;
+            } else {
+                data.fotoName = '';
+            }
+
+            data.timestamp = new Date().toISOString();
+
+            try {
+                let currentRecords = loadDataFromLocalStorage(currentWorkshop);
+                let argosRecords = loadDataFromLocalStorage("ARGOS"); // Load Argos data
+
+                if (editingRecordIndex > -1) {
+                    // Update existing record
+                    const recordToUpdate = currentRecords[editingRecordIndex];
+                    // Preserve the original recordId if editing
+                    data.recordId = recordToUpdate.recordId;
+
+                    // Update in current workshop's data
+                    currentRecords[editingRecordIndex] = data;
+
+                    // Update in ARGOS workshop's data
+                    const argosRecordIndex = argosRecords.findIndex(rec => rec.recordId === data.recordId);
+                    if (argosRecordIndex !== -1) {
+                        argosRecords[argosRecordIndex] = data;
+                    } else {
+                        // If for some reason the record isn't in Argos (e.g., old data before recordId was implemented), add it
+                        argosRecords.push(data);
+                    }
+                    showCustomAlert('Registro actualizado con éxito.');
+                    console.log('Registro actualizado con éxito:', data);
+
+                } else {
+                    // Add new record
+                    // Generate a unique ID for the new record
+                    data.recordId = Date.now().toString() + Math.random().toString(36).substring(2, 9);
+                    currentRecords.push(data);
+                    argosRecords.push(data); // Add to Argos as well
+                    showCustomAlert('Datos guardados con éxito.');
+                    console.log('Datos guardados con éxito:', data);
+                }
+
+                saveDataToLocalStorage(currentWorkshop, currentRecords);
+                saveDataToLocalStorage("ARGOS", argosRecords); // Save Argos data
+
+                dataForm.reset();
+                populateEquipoDropdown(); // Reset dropdowns
+                editingRecordIndex = -1; // Exit edit mode
+                saveRecordBtn.textContent = 'Guardar Registro'; // Reset button text
+                cancelEditBtn.style.display = 'none'; // Hide cancel button
+                loadData(); // Reload data for current workshop
+            } catch (error) {
+                console.error('Error al guardar datos:', error);
+                showCustomAlert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
+            }
+        });
+
+        // --- Excel Download Handler ---
+        downloadExcelBtn.addEventListener('click', () => {
+            const allData = loadDataFromLocalStorage(currentWorkshop);
+
+            if (allData.length === 0) {
+                showCustomAlert('No hay datos para descargar.'); // Using custom alert
+                return;
+            }
+
+            const dataToExport = [];
+            const headers = [
+                "Equipo", "Fecha", "OT Origen", "Conjunto", "Parte",
+                "Texto Estandar", "Descripción Detallada", "Prioridad",
+                "Técnico", "Teléfono", "Foto (Nombre)"
+            ];
+            dataToExport.push(headers);
+
+            allData.forEach(item => {
+                const rowData = [
+                    item.equipo || '',
+                    item.fecha || '',
+                    item.otOrigen || '',
+                    item.conjunto || '',
+                    item.parte || '',
+                    item.textoEstandar || '',
+                    item.descripcionDetallada || '',
+                    item.prioridad || '',
+                    item.tecnico || '',
+                    item.telefono || '',
+                    item.fotoName || 'N/A'
+                ];
+                dataToExport.push(rowData);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(dataToExport);
+
+            XLSX.utils.book_append_sheet(wb, ws, `Records ${workshopDisplayNames[currentWorkshop]}`);
+
+            XLSX.writeFile(wb, `Records_${workshopDisplayNames[currentWorkshop]}.xlsx`);
+            console.log('Excel descargado con éxito.');
+        });
+
+        // --- Back to Menu Button Handler ---
+        backToMenuBtn.addEventListener('click', () => {
+            showWorkshopSelectionView();
+        });
+
+        // Initial setup when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showLoginView(); 
+        });
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script><script>
+const supabase = supabase.createClient(
+  'https://txpezttlhtxjkwtfehme.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGV6dHRsaHR4amt3dGZlaG1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNzA1MDcsImV4cCI6MjA2OTY0NjUwN30.74iEuQQfSvlu36lbfd78e8aM6vFcZUkA7ab0oWT9yGI'
+);
+</script><script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('form');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fotoInput = document.querySelector('[name="foto"]');
+    const file = fotoInput.files[0];
+    let fotoUrl = '';
+
+    if (file) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      let { error: uploadError } = await supabase.storage
+        .from('reportefotos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        alert('Error al subir la foto: ' + uploadError.message);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('reportefotos')
+        .getPublicUrl(filePath);
+
+      fotoUrl = publicUrlData.publicUrl;
+    }
+
+    const data = {
+      equipo: document.querySelector('[name="equipo"]').value,
+      fecha: document.querySelector('[name="fecha"]').value,
+      otOrigen: parseInt(document.querySelector('[name="ot_origen"]').value),
+      conjunto: document.querySelector('[name="conjunto"]').value,
+      parte: document.querySelector('[name="parte"]').value,
+      prioridad: document.querySelector('[name="prioridad"]').value,
+      textoEstandar: document.querySelector('[name="texto_estandar"]').value,
+      descripcionDetallada: document.querySelector('[name="descripcion"]').value,
+      tecnico: document.querySelector('[name="tecnico"]').value,
+      telefono: document.querySelector('[name="telefono"]').value,
+      taller: document.querySelector('[name="taller"]').value,
+      fotoUrl: fotoUrl
+    };
+
+    const { error } = await supabase.from('reportes').insert([data]);
+    if (error) {
+      alert('Error al guardar: ' + error.message);
+    } else {
+      alert('Registro guardado exitosamente');
+      form.reset();
+    }
+  });
+});
+</script></body>
+</html>
