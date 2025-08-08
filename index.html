@@ -19,10 +19,10 @@
       }
       body {
           background-image: url(https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos//FONDO.png);
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
-          background-repeat: no-repeat;
+          background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+          background-position: center; /* Centra la imagen de fondo */
+          background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+          background-repeat: no-repeat; /* Evita que la imagen se repita */
       }
       .table-auto-layout {
         table-layout: auto;
@@ -39,11 +39,7 @@
     </style>
 </head>
 <body>
-  <div id="root">
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-size: 1.5rem; text-shadow: 2px 2px 4px #000000; text-align: center; padding: 1rem;">
-      Cargando Aplicación...
-    </div>
-  </div>
+  <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
@@ -53,6 +49,7 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGV6dHRsaHR4amt3dGZlaG1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNzA1MDcsImV4cCI6MjA2OTY0NjUwN30.74iEuQQfSvlu36lbfd78e8aM6vFcZUkA7ab0oWT9yGI';
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // PASO 1: Lista de usuarios actualizada con la información de la imagen
     const USER_DATA = {
         'jlturriago@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
         'avargasvar@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
@@ -82,9 +79,9 @@
         'mg.solucionesyservicios@hotmail.com': { taller: 'MG SOL', rol: 'USUARIO' },
         'jsaenz@jsoadvisors.com': { taller: 'JS OUT', rol: 'USUARIO' }
     };
-
-    const EQUIPOS = ['COLMX0361', 'COLMX0362', 'COLMX0383', 'COLMX0390', 'COLMX0399', 'COLMX0402', 'COLMX0406', 'COLMX0419', 'COLMX0420', 'COLMX0424', 'COLMX0426', 'COLMX0432', 'COLMX0437', 'COLMX0445', 'COLMX0448', 'COLMX0451', 'COLMX0453', 'COLMX0464', 'COLMX0467', 'COLMX0469', 'COLMX0470', 'COLMX0471', 'COLMX0473', 'COLMX0476', 'COLMX0477', 'COLMX0484', 'COLMX0485', 'COLMX0486', 'COLMX0488', 'COLMX0490', 'COLMX0491', 'COLMX0500', 'COLMX0502', 'COLMX0504', 'COLMX0506', 'COLMX0507', 'COLMX0508', 'COLMX0509', 'COLMX0510', 'COLMX0512', 'COLMX0513', 'COLMX0514', 'COLMX0515', 'COLMX0516', 'COLMX0522', 'COLMX0523', 'COLMX0524', 'COLMX0526', 'COLMX0527', 'COLMX0528', 'COLMX0553', 'COLMX0554', 'COLMX0560', 'COLMX0561', 'COLMX0571', 'COLMX0572', 'COLMX0573', 'COLMX0581', 'COLMX0592', 'COLMX0603', 'COLMX0604', 'COLMX0605', 'COLMX0608', 'COLMX0614', 'COLMX0618', 'COLMX0623', 'COLMX0628', 'COLMX0630', 'COLMX0633', 'COLMX0637', 'COLMX0650', 'COLMX0653', 'COLMX0663', 'COLMX0664', 'COLMX0668', 'COLMX0676', 'COLMX0679', 'COLMX0684', 'COLMX0685', 'COLMX0687', 'COLMX0688', 'COLMX0897', 'COLMX0904', 'COLMX0914', 'COLMX0962', 'COLMX0963', 'COLMX0964', 'COLMX0965', 'COLMX0966', 'COLMX0967', 'COLMX0968', 'COLMX0969', 'COLMX0970', 'COLMX0971', 'COLMX0972', 'COLMX0973', 'COLMX0974', 'COLMX0975', 'COLMX0976', 'COLMX0977', 'COLMX0978', 'COLMX0979', 'COLMX0980', 'COLMX0981', 'COLMX0982', 'COLMX0983', 'COLMX0984', 'COLMX0985', 'COLMX0986', 'COLMX0987', 'COLMX0988', 'COLMX0989', 'COLMX0990', 'COLMX0991', 'COLMX1015', 'COLMX1016', 'COLMX1017', 'COLMX1018', 'COLMX1019', 'COLMX1020', 'COLMX1021', 'COLMX1022', 'COLMX1023', 'COLMX1024', 'COLMX1025', 'COLMX1026', 'COLMX1027', 'COLMX1028', 'COLMX1029', 'COLMX1066', 'COLMX1067', 'COLMX1068', 'COLMX1069', 'COLMX1070', 'COLMX1071', 'COLMX1072', 'COLMX1073', 'COLMX1074', 'COLMX1075', 'COLMX1076', 'COLMX1077', 'COLMX1078', 'COLMX1079', 'COLMX1080'];
     
+    const EQUIPOS = ['COLMX0361', 'COLMX0362', 'COLMX0383', 'COLMX0390', 'COLMX0399', 'COLMX0402', 'COLMX0406', 'COLMX0419', 'COLMX0420', 'COLMX0424', 'COLMX0426', 'COLMX0432', 'COLMX0437', 'COLMX0445', 'COLMX0448', 'COLMX0451', 'COLMX0453', 'COLMX0464', 'COLMX0467', 'COLMX0469', 'COLMX0470', 'COLMX0471', 'COLMX0473', 'COLMX0476', 'COLMX0477', 'COLMX0484', 'COLMX0485', 'COLMX0486', 'COLMX0488', 'COLMX0490', 'COLMX0491', 'COLMX0500', 'COLMX0502', 'COLMX0504', 'COLMX0506', 'COLMX0507', 'COLMX0508', 'COLMX0509', 'COLMX0510', 'COLMX0512', 'COLMX0513', 'COLMX0514', 'COLMX0515', 'COLMX0516', 'COLMX0522', 'COLMX0523', 'COLMX0524', 'COLMX0526', 'COLMX0527', 'COLMX0528', 'COLMX0553', 'COLMX0554', 'COLMX0560', 'COLMX0561', 'COLMX0571', 'COLMX0572', 'COLMX0573', 'COLMX0581', 'COLMX0592', 'COLMX0603', 'COLMX0604', 'COLMX0605', 'COLMX0608', 'COLMX0614', 'COLMX0618', 'COLMX0623', 'COLMX0628', 'COLMX0630', 'COLMX0633', 'COLMX0637', 'COLMX0650', 'COLMX0653', 'COLMX0663', 'COLMX0664', 'COLMX0668', 'COLMX0676', 'COLMX0679', 'COLMX0684', 'COLMX0685', 'COLMX0687', 'COLMX0688', 'COLMX0897', 'COLMX0904', 'COLMX0914', 'COLMX0962', 'COLMX0963', 'COLMX0964', 'COLMX0965', 'COLMX0966', 'COLMX0967', 'COLMX0968', 'COLMX0969', 'COLMX0970', 'COLMX0971', 'COLMX0972', 'COLMX0973', 'COLMX0974', 'COLMX0975', 'COLMX0976', 'COLMX0977', 'COLMX0978', 'COLMX0979', 'COLMX0980', 'COLMX0981', 'COLMX0982', 'COLMX0983', 'COLMX0984', 'COLMX0985', 'COLMX0986', 'COLMX0987', 'COLMX0988', 'COLMX0989', 'COLMX0990', 'COLMX0991', 'COLMX1015', 'COLMX1016', 'COLMX1017', 'COLMX1018', 'COLMX1019', 'COLMX1020', 'COLMX1021', 'COLMX1022', 'COLMX1023', 'COLMX1024', 'COLMX1025', 'COLMX1026', 'COLMX1027', 'COLMX1028', 'COLMX1029', 'COLMX1066', 'COLMX1067', 'COLMX1068', 'COLMX1069', 'COLMX1070', 'COLMX1071', 'COLMX1072', 'COLMX1073', 'COLMX1074', 'COLMX1075', 'COLMX1076', 'COLMX1077', 'COLMX1078', 'COLMX1079', 'COLMX1080'];
+    const TALLERES = ['KAEL', 'ABFREN', 'SIMIYP', 'DRACS', 'SERVII', 'SOMEC', 'MG SOL', 'JS OUT', 'ARGOS', 'ADMIN'];
     const data = {
       "CABINA": {
         "Accesorios": ["CAMBIAR TAPETES CABINA", "REPARAR TOMA ELEC 12V CABINA", "CAMBIAR CINTA DE TIMON", "CAMBIAR INTERRUPTOR CRUCERO TIMON", "CAMBIAR INTERRUPTOR DER TIMON", "CAMBIAR TAPA CABRILLA O TIMON", "CAMBIAR ACCESORIOS CABINA", "CAMBIAR GUARDAMOTOR DERECHO", "INSTALAR CAMARA DE VIDEO REVERSA", "REPARAR CAMARA DE VIDEO REVERSA", "CAMBIAR GUARDAMOTOR IZQUIERDO"],
@@ -189,7 +186,7 @@
         "Tanque aire": ["CAMBIAR GRIFOS DE TANQUE DE AIRE", "CAMBIAR RACORES TANQUE DE AIRE", "REPARAR FISURA EN TANQUE DE AIRE", "CAMBIAR KIT DE INTERIORES SECA", "CAMBIAR TANQUE DE AIRE", "REPARAR TANQUE DE AIRE", "CAMBIAR VALVULA SISTEMA FRENOS", "CAMBIAR TANQUES DE AIRE", "REPARAR TANQUE AIRE EJE AUX", "CAMBIAR GRIFO TANQUE", "CAMBIAR VALVULA DRENAJE TANQUE AIRE", "CAMBIAR TANQUE AIRE SECUNDARIO"],
         "Ratchet": ["ENGRASAR RATCHETS", "CAMBIAR RATCHET DELANTERO", "AJUSTAR FRENOS", "CAMBIAR RATCHET POSTERIOR PREMIO", "CAMBIAR RATCHET TRASERO EJE AUX", "CAMBIAR RATCHET TRASERO", "CAMBIAR RATCHET DELANTERO POS 1", "CAMBIAR RATCHET DELANTERO POS 2", "CAMBIAR RATCHET DELANTERO POS 3", "CAMBIAR RATCHET DELANTERO POS 4", "CAMBIAR RATCHET TRASERO POS 5", "CAMBIAR RATCHET TRASERO POS 6", "CAMBIAR RATCHET TRASERO POS 7", "CAMBIAR RATCHET TRASERO POS 8", "CAMBIAR RATCHET TRASERO 9-10", "CAMBIAR RATCHET TRASERO 11-12"],
         "Manguera": ["CAMBIAR MANGUERA SISTEMA FRENOS", "CAMBIAR MANGUERA CAMARA DE FRENOS", "DESVARE EN OBRA Y/O VIA", "CAMBIAR MANGUERA AIRE", "REPARAR MANGUERA FRENO TRASERO", "REPARAR MANGUERA FRENOS", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 1-2", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 3-4", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 5-6", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 7-8", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 9-10", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 11-12", "CAMBIAR MANGUERA CAMARA DE FRENOS POS 13-14", "REPARAR MANGUERA FRENO"],
-        "Campana": ["RECTIFICAR CAMPANA DELANTERA", "RECTIFICAR CAMPANA TRASERA", "CAMBIAR CAMPANA TRASERA", "CAMBIAR CAMPANA DELANTERA POS 1", "CAMBIAR CAMPANA DELANTERA POS 2", "CAMBIAR CAMPANA DELANTERA POS 3", "CAMBIAR CAMPANA DELANTERA POS 4", "CAMBIAR CAMPANA TRASERA POS 5", "CAMBIAR CAMPANA TRASERA POS 6", "CAMBIAR CAMPANA TRASERA POS 7", "CAMBIAR CAMPANA TRASera POS 8", "CAMBIAR CAMPANA TRASERA 9-10", "CAMBIAR CAMPANA TRASERA 11-12", "RECTIFICAR CAMPANA TRASERA", "RECTIFICAR TAMBOR"],
+        "Campana": ["RECTIFICAR CAMPANA DELANTERA", "RECTIFICAR CAMPANA TRASERA", "CAMBIAR CAMPANA TRASERA", "CAMBIAR CAMPANA DELANTERA POS 1", "CAMBIAR CAMPANA DELANTERA POS 2", "CAMBIAR CAMPANA DELANTERA POS 3", "CAMBIAR CAMPANA DELANTERA POS 4", "CAMBIAR CAMPANA TRASERA POS 5", "CAMBIAR CAMPANA TRASERA POS 6", "CAMBIAR CAMPANA TRASERA POS 7", "CAMBIAR CAMPANA TRASERA POS 8", "CAMBIAR CAMPANA TRASERA 9-10", "CAMBIAR CAMPANA TRASERA 11-12", "RECTIFICAR CAMPANA TRASERA", "RECTIFICAR TAMBOR"],
         "Bomba freno": ["CAMBIAR INTERIORES BOMBA FRENOS"],
         "Accesorios": ["CAMBIAR ACCESORIOS", "DESVARE EN OBRA Y/O VIA"],
         "Gobernador": ["CAMBIAR KITS REPARACION GOBERNADOR", "DESVARE EN OBRA Y/O VIA"],
@@ -302,238 +299,306 @@
       }
     };
 
-    // Componente principal
     const App = () => {
-        const [session, setSession] = useState(null);
-        const [loading, setLoading] = useState(true);
-        const [profile, setProfile] = useState(null);
-        const [reports, setReports] = useState([]);
-        const [form, setForm] = useState({
+      const [session, setSession] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [profile, setProfile] = useState(null);
+      const [reports, setReports] = useState([]);
+      const [form, setForm] = useState({
+        equipo: '', fecha: new Date().toISOString().slice(0, 10), otOrigen: '',
+        conjunto: '', parte: '', prioridad: 'BAJA', textoEstandar: '',
+        descripcionDetallada: '', tecnico: '', telefono: '', fotoUrl: '', taller: '',
+      });
+      const [editingId, setEditingId] = useState(null);
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [reportToDelete, setReportToDelete] = useState(null);
+      const fileInputRef = useRef(null);
+      const [fotoFile, setFotoFile] = useState(null);
+
+      useEffect(() => {
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          setSession(session);
+          if (session) {
+            fetchProfile(session.user.id, session.user.email);
+          } else {
+            setProfile(null);
+            setReports([]);
+            setLoading(false);
+          }
+        });
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          setSession(session);
+          if (session) {
+            fetchProfile(session.user.id, session.user.email);
+          } else {
+            setLoading(false);
+          }
+        });
+        return () => authListener.subscription.unsubscribe();
+      }, []);
+
+      useEffect(() => {
+        if (!profile || !session) return;
+        const channel = supabase.channel('reportes_changes').on('postgres_changes', { event: '*', schema: 'public', table: 'reportes' }, 
+          (payload) => {
+            fetchReports(session.user.id, profile.taller, profile.rol);
+          }
+        ).subscribe();
+        return () => supabase.removeChannel(channel);
+      }, [profile, session]);
+      
+      const fetchProfile = async (userId, userEmail) => {
+        setLoading(true);
+        const userData = USER_DATA[userEmail] || { taller: 'Desconocido', rol: 'USUARIO' };
+        setProfile({ id: userId, taller: userData.taller, rol: userData.rol });
+        fetchReports(userId, userData.taller, userData.rol);
+        setLoading(false);
+      };
+
+      const fetchReports = async (userId, taller, rol) => {
+        if (!taller) return;
+        try {
+          let query = supabase.from('reportes').select('*');
+          if (rol !== 'ADMIN') {
+            query = query.eq('user_id', userId);
+          }
+          const { data, error } = await query;
+          if (error) throw error;
+          setReports(data || []);
+        } catch (error) {
+          console.error("Error al obtener los reportes:", error.message);
+        }
+      };
+
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm(prev => ({ ...prev, [name]: value }));
+        if (name === 'conjunto') {
+          setForm(prev => ({ ...prev, parte: '', textoEstandar: '' }));
+        }
+        if (name === 'parte') {
+          setForm(prev => ({ ...prev, textoEstandar: '' }));
+        }
+      };
+
+      const handleFileChange = (e) => {
+        setFotoFile(e.target.files[0]);
+      };
+
+      const uploadPhoto = async (file) => {
+        if (!file) return null;
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+        try {
+          const { error } = await supabase.storage.from('reportefotos').upload(filePath, file);
+          if (error) throw error;
+          const { data } = supabase.storage.from('reportefotos').getPublicUrl(filePath);
+          return data.publicUrl;
+        } catch (error) {
+          console.error("Error al subir la foto:", error.message);
+          return null;
+        }
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!session || !profile) return;
+        try {
+          let fotoUrl = form.fotoUrl;
+          if (fotoFile) {
+            fotoUrl = await uploadPhoto(fotoFile);
+          }
+          const newReport = {
+            ...form,
+            fotoUrl,
+            user_id: session.user.id,
+            taller: profile.taller,
+          };
+          if (editingId) {
+            const { error } = await supabase.from('reportes').update(newReport).eq('id', editingId);
+            if (error) throw error;
+          } else {
+            const { error } = await supabase.from('reportes').insert(newReport);
+            if (error) throw error;
+          }
+          fetchReports(session.user.id, profile.taller, profile.rol);
+          setForm({
             equipo: '', fecha: new Date().toISOString().slice(0, 10), otOrigen: '',
             conjunto: '', parte: '', prioridad: 'BAJA', textoEstandar: '',
             descripcionDetallada: '', tecnico: '', telefono: '', fotoUrl: '', taller: '',
-        });
-        const [editingId, setEditingId] = useState(null);
-        const [isModalOpen, setIsModalOpen] = useState(false);
-        const [reportToDelete, setReportToDelete] = useState(null);
-        const fileInputRef = useRef(null);
-        const [fotoFile, setFotoFile] = useState(null);
+          });
+          setEditingId(null);
+          setFotoFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        } catch (error) {
+          console.error("Error al guardar el reporte:", error.message);
+        }
+      };
 
-        useEffect(() => {
-            supabase.auth.onAuthStateChange((_event, session) => {
-                setSession(session);
-                if (session) {
-                    fetchProfile(session.user.id, session.user.email);
-                } else {
-                    setProfile(null);
-                    setReports([]);
-                    setLoading(false);
-                }
-            });
-            supabase.auth.getSession().then(({ data: { session } }) => {
-                if (session) {
-                    setSession(session);
-                    fetchProfile(session.user.id, session.user.email);
-                } else {
-                    setLoading(false);
-                }
-            });
-        }, []);
-
-        useEffect(() => {
-            if (!profile || !session) return;
-            const channel = supabase.channel('reportes_changes').on('postgres_changes', { event: '*', schema: 'public', table: 'reportes' }, 
-                () => {
-                    fetchReports(session.user.id, profile.rol);
-                }
-            ).subscribe();
-            return () => supabase.removeChannel(channel);
-        }, [profile, session]);
-        
-        const fetchProfile = async (userId, userEmail) => {
-            setLoading(true);
-            const userData = USER_DATA[userEmail] || { taller: 'Desconocido', rol: 'USUARIO' };
-            const newProfile = { id: userId, taller: userData.taller, rol: userData.rol };
-            setProfile(newProfile);
-            await fetchReports(userId, newProfile.rol);
-            setLoading(false);
-        };
-
-        const fetchReports = async (userId, rol) => {
-            try {
-                let query = supabase.from('reportes').select('*').order('created_at', { ascending: false });
-                if (rol !== 'ADMIN') {
-                    query = query.eq('user_id', userId);
-                }
-                const { data, error } = await query;
-                if (error) throw error;
-                setReports(data || []);
-            } catch (error) {
-                console.error("Error al obtener los reportes:", error.message);
-            }
-        };
-
-        const handleChange = (e) => {
-            const { name, value } = e.target;
-            setForm(prev => ({ ...prev, [name]: value }));
-            if (name === 'conjunto') setForm(prev => ({ ...prev, parte: '', textoEstandar: '' }));
-            if (name === 'parte') setForm(prev => ({ ...prev, textoEstandar: '' }));
-        };
-
-        const handleFileChange = (e) => {
-            setFotoFile(e.target.files[0]);
-        };
-
-        const uploadPhoto = async (file) => {
-            if (!file) return null;
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}.${fileExt}`;
-            const filePath = `${fileName}`;
-            try {
-                const { error } = await supabase.storage.from('reportefotos').upload(filePath, file);
-                if (error) throw error;
-                const { data } = supabase.storage.from('reportefotos').getPublicUrl(filePath);
-                return data.publicUrl;
-            } catch (error) {
-                console.error("Error al subir la foto:", error.message);
-                return null;
-            }
-        };
-
-        const handleSubmit = async (e) => {
-            e.preventDefault();
-            if (!session || !profile) return;
-            try {
-                let fotoUrl = form.fotoUrl;
-                if (fotoFile) {
-                    fotoUrl = await uploadPhoto(fotoFile);
-                }
-                const newReport = { ...form, fotoUrl, user_id: session.user.id, taller: profile.taller };
-                
-                if (editingId) {
-                    const { error } = await supabase.from('reportes').update(newReport).eq('id', editingId);
-                    if (error) throw error;
-                } else {
-                    const { error } = await supabase.from('reportes').insert([newReport]);
-                    if (error) throw error;
-                }
-                fetchReports(session.user.id, profile.rol);
-                setForm({
-                    equipo: '', fecha: new Date().toISOString().slice(0, 10), otOrigen: '',
-                    conjunto: '', parte: '', prioridad: 'BAJA', textoEstandar: '',
-                    descripcionDetallada: '', tecnico: '', telefono: '', fotoUrl: '', taller: '',
-                });
-                setEditingId(null);
-                setFotoFile(null);
-                if (fileInputRef.current) fileInputRef.current.value = '';
-            } catch (error) {
-                console.error("Error al guardar el reporte:", error.message);
-            }
-        };
-
-        const handleEdit = (report) => {
-            setEditingId(report.id);
-            setForm(report);
-            setFotoFile(null);
-            if (fileInputRef.current) fileInputRef.current.value = '';
-            window.scrollTo(0, 0);
-        };
-        
-        const handleDelete = (report) => {
-            setReportToDelete(report);
-            setIsModalOpen(true);
-        };
-
-        const confirmDelete = async () => {
-            if (!reportToDelete) return;
-            try {
-                const { error } = await supabase.from('reportes').delete().eq('id', reportToDelete.id);
-                if (error) throw error;
-                fetchReports(session.user.id, profile.rol);
-                setIsModalOpen(false);
-                setReportToDelete(null);
-            } catch (error) {
-                console.error("Error al eliminar el reporte:", error.message);
-            }
-        };
-
-        const handleExport = () => { /* ... (código de exportar sin cambios) ... */ };
-
-        if (!session) return <Auth />;
-        if (loading) return <div className="flex items-center justify-center min-h-screen"><p className="text-2xl text-white font-semibold">Cargando...</p></div>;
-
-        return (
-            <div className="min-h-screen p-8 flex flex-col items-center">
-                <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 mb-8 bg-opacity-90 backdrop-blur-sm">
-                    {/* ... Formulario ... */}
-                </div>
-                <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800">Mis Reportes</h2>
-                        <button onClick={handleExport} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">Exportar a Excel</button>
-                    </div>
-                    <div className="overflow-x-auto rounded-lg border border-gray-200">
-                        <table className="table-auto-layout min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Origen</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estándar</th>
-                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {reports.map((report) => (
-                                <tr key={report.id}>
-                                    <td className="px-3 py-2 text-sm text-gray-500">
-                                        {/* --- MODIFICACIÓN: Iconos de Editar y Borrar --- */}
-                                        <div className="flex space-x-2">
-                                            <button onClick={() => handleEdit(report)} title="Editar" className="p-1 text-white bg-blue-600 rounded-full hover:bg-blue-700">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" /></svg>
-                                            </button>
-                                            <button onClick={() => handleDelete(report)} title="Borrar" className="p-1 text-white bg-red-600 rounded-full hover:bg-red-700">
-                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">{report.fecha}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">{report.equipo}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">{report.otOrigen}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">{report.taller}</td>
-                                    <td className="px-3 py-2 text-sm">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ report.prioridad === 'URGENTE' ? 'bg-red-100 text-red-800' : report.prioridad === 'ALTA' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }`}>
-                                            {report.prioridad}
-                                        </span>
-                                    </td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">{report.textoEstandar}</td>
-                                    <td className="px-3 py-2 text-sm text-gray-500">
-                                        {report.fotoUrl && (<a href={report.fotoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">Ver Foto</a>)}
-                                    </td>
-                                </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {reports.length === 0 && (<div className="text-center py-4 text-gray-500 text-sm">No hay reportes para mostrar.</div>)}
-                    </div>
-                </div>
-                {isModalOpen && (
-                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-                    <div className="p-8 bg-white rounded-lg shadow-xl max-w-sm mx-auto">
-                        <h3 className="text-xl font-bold mb-4 text-gray-800">Confirmar Eliminación</h3>
-                        <p className="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar este reporte? Esta acción no se puede deshacer.</p>
-                        <div className="flex justify-end space-x-4">
-                        <button onClick={() => setIsModalOpen(false)} className="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-gray-400 transition-colors">Cancelar</button>
-                        <button onClick={confirmDelete} className="bg-red-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-red-600 transition-colors">Eliminar</button>
-                        </div>
-                    </div>
-                    </div>
-                )}
-            </div>
+      const handleExport = () => {
+        if (reports.length === 0) {
+          console.log('No hay reportes para exportar.');
+          return;
+        }
+        const allColumns = ['id', 'created_at', 'equipo', 'fecha', 'otOrigen', 'conjunto', 'parte', 'prioridad', 'textoEstandar', 'descripcionDetallada', 'tecnico', 'telefono', 'fotoUrl', 'taller', 'user_id'];
+        const headers = allColumns.join(',');
+        const rows = reports.map(report =>
+            allColumns.map(column => {
+                const value = report[column];
+                if (typeof value === 'string') { return `"${value.replace(/"/g, '""')}"`; }
+                return value;
+            }).join(',')
         );
+        const csvContent = `${headers}\n${rows.join('\n')}`;
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+          const url = URL.createObjectURL(blob);
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'reportes.csv');
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      };
+
+      if (!session) {
+        return <Auth />;
+      }
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center min-h-screen">
+            <p className="text-xl text-gray-700">Cargando...</p>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen p-8 flex flex-col items-center">
+          <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 mb-8 bg-opacity-90 backdrop-blur-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-3xl font-bold text-gray-800">INSPECCIÓN DE MANTENIMIENTO</h1>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
+                <button onClick={() => supabase.auth.signOut()} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Equipo</label>
+                <select name="equipo" value={form.equipo} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">Selecciona un equipo</option>
+                  {EQUIPOS.map(e => (<option key={e} value={e}>{e}</option>))}
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Fecha</label>
+                <input type="date" name="fecha" value={form.fecha} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">OT Origen</label>
+                <input type="number" name="otOrigen" value={form.otOrigen} onChange={handleChange} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Conjunto</label>
+                <select name="conjunto" value={form.conjunto} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">Selecciona un conjunto</option>
+                  {Object.keys(data).map(c => (<option key={c} value={c}>{c}</option>))}
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Parte</label>
+                <select name="parte" value={form.parte} onChange={handleChange} required disabled={!form.conjunto} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200">
+                  <option value="">Selecciona una parte</option>
+                  {form.conjunto && Object.keys(data[form.conjunto]).map(p => (<option key={p} value={p}>{p}</option>))}
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Texto Estándar</label>
+                <select name="textoEstandar" value={form.textoEstandar} onChange={handleChange} required disabled={!form.parte} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200">
+                  <option value="">Selecciona un texto</option>
+                  {form.conjunto && form.parte && data[form.conjunto][form.parte]?.map(t => (<option key={t} value={t}>{t}</option>))}
+                </select>
+              </div>
+              <div className="flex flex-col md:col-span-2">
+                <label className="text-gray-700 font-medium mb-1">Descripción Detallada</label>
+                <textarea name="descripcionDetallada" value={form.descripcionDetallada} onChange={handleChange} rows="4" required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Técnico</label>
+                <input type="text" name="tecnico" value={form.tecnico} onChange={handleChange} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Teléfono</label>
+                <input type="text" name="telefono" value={form.telefono} onChange={handleChange} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Prioridad</label>
+                <select name="prioridad" value={form.prioridad} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="BAJA">BAJA</option>
+                  <option value="ALTA">ALTA</option>
+                  <option value="URGENTE">URGENTE</option>
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-medium mb-1">Foto</label>
+                <input type="file" name="fotoUrl" onChange={handleFileChange} ref={fileInputRef} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+              </div>
+              <div className="md:col-span-2 flex justify-end space-x-4 mt-4">
+                <button type="submit" className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                  {editingId ? 'Actualizar Reporte' : 'Guardar Reporte'}
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Mis Reportes</h2>
+              <button onClick={handleExport} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                Exportar a Excel
+              </button>
+            </div>
+            <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <table className="table-auto-layout min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipo</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Origen</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estándar</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {reports.map((report) => (
+                    <tr key={report.id}>
+                      <td className="px-3 py-2 text-sm text-gray-500">{report.fecha}</td>
+                      <td className="px-3 py-2 text-sm text-gray-500">{report.equipo}</td>
+                      <td className="px-3 py-2 text-sm text-gray-500">{report.otOrigen}</td>
+                      <td className="px-3 py-2 text-sm text-gray-500">{report.taller}</td>
+                      <td className="px-3 py-2 text-sm">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ report.prioridad === 'URGENTE' ? 'bg-red-100 text-red-800' : report.prioridad === 'ALTA' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }`}>
+                          {report.prioridad}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-sm text-gray-500">{report.textoEstandar}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {reports.length === 0 && (
+                <div className="text-center py-4 text-gray-500 text-sm">No hay reportes para mostrar.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
     };
 
     const Auth = () => {
@@ -580,7 +645,6 @@
         </div>
       );
     };
-
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
