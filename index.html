@@ -312,6 +312,7 @@
       const [session, setSession] = useState(null);
       const [loading, setLoading] = useState(true);
       const [profile, setProfile] = useState(null);
+      const [selectedView, setSelectedView] = useState(null);
       const [reports, setReports] = useState([]);
       const [form, setForm] = useState({
         equipo: '', fecha: new Date().toISOString().slice(0, 10), otOrigen: '',
@@ -663,6 +664,78 @@
               {reports.length === 0 && (
                 <div className="text-center py-4 text-gray-500 text-sm">No hay reportes para mostrar.</div>
               )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const MainMenu = ({ onSelectView, profile }) => {
+      return (
+        <div className="min-h-screen p-8 flex flex-col items-center">
+          <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-800">SISTEMA DE MANTENIMIENTO</h1>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
+                <button onClick={() => supabase.auth.signOut()} className="bg-red-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-red-600 transition-colors">
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Opción ENTREGA */}
+              <div 
+                onClick={() => onSelectView('ENTREGA')}
+                className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
+              >
+                <div className="text-center">
+                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <img 
+                      src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/ENTREGA.png" 
+                      alt="Logo ENTREGA" 
+                      className="w-24 h-24 mx-auto object-contain"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">ENTREGA</h3>
+                  <p className="text-blue-100 text-sm">Gestión de entregas y recepciones de equipos</p>
+                </div>
+              </div>
+
+              {/* Opción PRODUCCIÓN */}
+              <div 
+                onClick={() => onSelectView('PRODUCCION')}
+                className="bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
+              >
+                <div className="text-center">
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    ⚙️
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">PRODUCCIÓN</h3>
+                  <p className="text-green-100 text-sm">Control de procesos productivos y operativos</p>
+                  {/* Comentario para el logo: PEGA AQUÍ LA URL PARA EL LOGO PRODUCCIÓN */}
+                </div>
+              </div>
+
+              {/* Opción DISTRIBUCIÓN */}
+              <div 
+                onClick={() => onSelectView('DISTRIBUCION')}
+                className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
+              >
+                <div className="text-center">
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    🚚
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">DISTRIBUCIÓN</h3>
+                  <p className="text-purple-100 text-sm">Inspección de mantenimiento y reportes</p>
+                  {/* Comentario para el logo: PEGA AQUÍ LA URL PARA EL LOGO DISTRIBUCIÓN */}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center text-gray-600 text-sm">
+              <p>Selecciona una opción para continuar</p>
             </div>
           </div>
         </div>
