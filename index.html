@@ -32,14 +32,91 @@
           font-size: 0.75rem; /* text-xs en Tailwind */
       }
       
-      /* Estilos para los botones de acción */
-      .action-button {
-          transition: all 0.2s ease-in-out;
+      /* Estilos específicos para los botones de acciones */
+      .btn-edit {
+          background-color: #3b82f6 !important;
+          color: white !important;
+          border: none !important;
+          padding: 6px 12px !important;
+          border-radius: 6px !important;
+          font-size: 11px !important;
+          cursor: pointer !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          text-decoration: none !important;
+          transition: background-color 0.2s !important;
       }
       
-      .action-button:hover {
-          transform: scale(1.1);
+      .btn-edit:hover {
+          background-color: #2563eb !important;
       }
+      
+      .btn-delete {
+          background-color: #ef4444 !important;
+          color: white !important;
+          border: none !important;
+          padding: 6px 12px !important;
+          border-radius: 6px !important;
+          font-size: 11px !important;
+          cursor: pointer !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          text-decoration: none !important;
+          transition: background-color 0.2s !important;
+      }
+      
+      .btn-delete:hover {
+          background-color: #dc2626 !important;
+      }
+      
+      .btn-photo {
+          background-color: #10b981 !important;
+          color: white !important;
+          border: none !important;
+          padding: 6px 12px !important;
+          border-radius: 6px !important;
+          font-size: 11px !important;
+          cursor: pointer !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          text-decoration: none !important;
+          transition: background-color 0.2s !important;
+      }
+      
+      .btn-photo:hover {
+          background-color: #059669 !important;
+      }
+      
+      /* Estilos para el menú principal */
+      .menu-item {
+          transition: all 0.3s ease-in-out;
+      }
+      
+      .menu-item:hover {
+          transform: translateY(-10px) scale(1.05);
+          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+      }
+      
+      .menu-icon {
+          width: 7rem;
+          height: 7rem;
+          margin-bottom: 0.75rem;
+          object-fit: contain;
+      }
+      
+      /* Estilos para el nuevo diseño */
+      .text-shadow {
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+      
+      .bg-black-overlay {
+          background-color: rgba(0, 0, 0, 0.5);
+      }
+      
+
     </style>
     <style>
       /* Estilos de Tailwind CSS */
@@ -48,7 +125,10 @@
     </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- La aplicación React se renderizará aquí -->
+    <p>Cargando aplicación...</p>
+  </div>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
@@ -56,7 +136,12 @@
 
     const SUPABASE_URL = 'https://txpezttlhtxjkwtfehme.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGV6dHRsaHR4amt3dGZlaG1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNzA1MDcsImV4cCI6MjA2OTY0NjUwN30.74iEuQQfSvlu36lbfd78e8aM6vFcZUkA7ab0oWT9yGI';
+    
+    console.log('URL de Supabase:', SUPABASE_URL);
+    console.log('Clave anónima de Supabase:', SUPABASE_ANON_KEY);
+    console.log('Creando cliente de Supabase...');
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Cliente de Supabase creado:', supabase);
 
     // PASO 1: Lista de usuarios actualizada con la información de la imagen
     const USER_DATA = {
@@ -308,11 +393,12 @@
       }
     };
 
+    console.log('Definiendo componente App...');
     const App = () => {
+      console.log('Componente App inicializándose...');
       const [session, setSession] = useState(null);
       const [loading, setLoading] = useState(true);
       const [profile, setProfile] = useState(null);
-      const [selectedView, setSelectedView] = useState(null);
       const [reports, setReports] = useState([]);
       const [form, setForm] = useState({
         equipo: '', fecha: new Date().toISOString().slice(0, 10), otOrigen: '',
@@ -320,13 +406,14 @@
         descripcionDetallada: '', tecnico: '', telefono: '', fotoUrl: '', taller: '',
       });
       const [editingId, setEditingId] = useState(null);
-      const [isModalOpen, setIsModalOpen] = useState(false);
-      const [reportToDelete, setReportToDelete] = useState(null);
+      const [selectedModule, setSelectedModule] = useState(null);
       const fileInputRef = useRef(null);
       const [fotoFile, setFotoFile] = useState(null);
 
       useEffect(() => {
+        console.log('useEffect de autenticación ejecutándose...');
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          console.log('Cambio de estado de autenticación:', event, session);
           setSession(session);
           if (session) {
             fetchProfile(session.user.id, session.user.email);
@@ -337,6 +424,7 @@
           }
         });
         supabase.auth.getSession().then(({ data: { session } }) => {
+          console.log('Sesión obtenida:', session);
           setSession(session);
           if (session) {
             fetchProfile(session.user.id, session.user.email);
@@ -358,14 +446,17 @@
       }, [profile, session]);
       
       const fetchProfile = async (userId, userEmail) => {
+        console.log('fetchProfile ejecutándose para:', userId, userEmail);
         setLoading(true);
         const userData = USER_DATA[userEmail] || { taller: 'Desconocido', rol: 'USUARIO' };
+        console.log('Datos de usuario obtenidos:', userData);
         setProfile({ id: userId, taller: userData.taller, rol: userData.rol });
         fetchReports(userId, userData.taller, userData.rol);
         setLoading(false);
       };
 
       const fetchReports = async (userId, taller, rol) => {
+        console.log('fetchReports ejecutándose para:', userId, taller, rol);
         if (!taller) return;
         try {
           let query = supabase.from('reportes').select('*');
@@ -374,6 +465,7 @@
           }
           const { data, error } = await query;
           if (error) throw error;
+          console.log('Reportes obtenidos:', data);
           setReports(data || []);
         } catch (error) {
           console.error("Error al obtener los reportes:", error.message);
@@ -446,46 +538,6 @@
         }
       };
 
-      const handleEdit = (report) => {
-        setForm({
-          equipo: report.equipo,
-          fecha: report.fecha,
-          otOrigen: report.otOrigen,
-          conjunto: report.conjunto,
-          parte: report.parte,
-          prioridad: report.prioridad,
-          textoEstandar: report.textoEstandar,
-          descripcionDetallada: report.descripcionDetallada,
-          tecnico: report.tecnico,
-          telefono: report.telefono,
-          fotoUrl: report.fotoUrl,
-          taller: report.taller,
-        });
-        setEditingId(report.id);
-        setFotoFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        // Scroll to the form
-        document.querySelector('form').scrollIntoView({ behavior: 'smooth' });
-      };
-
-      const handleDelete = async (reportId) => {
-        if (confirm('¿Estás seguro de que quieres eliminar este reporte? Esta acción no se puede deshacer.')) {
-          try {
-            const { error } = await supabase.from('reportes').delete().eq('id', reportId);
-            if (error) throw error;
-            
-            // Refresh the reports list
-            fetchReports(session.user.id, profile.taller, profile.rol);
-            
-            // Show success message
-            alert('Reporte eliminado exitosamente');
-          } catch (error) {
-            console.error("Error al eliminar el reporte:", error.message);
-            alert('Error al eliminar el reporte: ' + error.message);
-          }
-        }
-      };
-
       const handleExport = () => {
         if (reports.length === 0) {
           console.log('No hay reportes para exportar.');
@@ -514,11 +566,50 @@
         }
       };
 
+      const handleEdit = (report) => {
+        setForm({
+          equipo: report.equipo,
+          fecha: report.fecha,
+          otOrigen: report.otOrigen,
+          conjunto: report.conjunto,
+          parte: report.parte,
+          prioridad: report.prioridad,
+          textoEstandar: report.textoEstandar,
+          descripcionDetallada: report.descripcionDetallada,
+          tecnico: report.tecnico,
+          telefono: report.telefono,
+          fotoUrl: report.fotoUrl,
+          taller: report.taller,
+        });
+        setEditingId(report.id);
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const handleDelete = async (id) => {
+        if (window.confirm('¿Estás seguro de que quieres eliminar este reporte?')) {
+          try {
+            const { error } = await supabase.from('reportes').delete().eq('id', id);
+            if (error) throw error;
+            fetchReports(session.user.id, profile.taller, profile.rol);
+          } catch (error) {
+            console.error("Error al eliminar el reporte:", error.message);
+            alert('Error al eliminar el reporte: ' + error.message);
+          }
+        }
+      };
+
+      console.log('Estado de la sesión:', session);
+      console.log('Estado de loading:', loading);
+      console.log('Estado del perfil:', profile);
+      
       if (!session) {
+        console.log('No hay sesión, mostrando componente Auth');
         return <Auth />;
       }
 
       if (loading) {
+        console.log('Mostrando pantalla de loading...');
         return (
           <div className="flex items-center justify-center min-h-screen">
             <p className="text-xl text-gray-700">Cargando...</p>
@@ -526,18 +617,109 @@
         );
       }
 
-      return (
-        <div className="min-h-screen p-8 flex flex-col items-center">
-          <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 mb-8 bg-opacity-90 backdrop-blur-sm">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-3xl font-bold text-gray-800">INSPECCIÓN DE MANTENIMIENTO</h1>
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
-                <button onClick={() => supabase.auth.signOut()} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
-                  Cerrar Sesión
-                </button>
+      // Si no hay módulo seleccionado, mostrar menú principal
+      if (!selectedModule) {
+        console.log('Mostrando menú principal...');
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center bg-black-overlay backdrop-blur-sm p-4">
+            {/* Título del sistema */}
+            <header className="text-center mb-30">
+              <h1 className="text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] font-bold text-white tracking-tight text-shadow">Inspección de Mantenimiento</h1>
+            </header>
+
+            {/* Contenedor del menú con los ítems */}
+            <main className="flex flex-row items-center justify-center gap-24 md:gap-40">
+              {/* Opción 1: Entrega */}
+              <button
+                onClick={() => setSelectedModule('entrega')}
+                className="flex flex-col items-center justify-center gap-3 group cursor-pointer w-40 h-40 md:w-48 md:h-48"
+              >
+                <div className="relative w-full h-full">
+                  <img 
+                    src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/entrega.png" 
+                    alt="Logo de Entrega" 
+                    className="w-full h-full object-cover rounded-full border-4 border-white shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl"
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-base md:text-lg font-bold text-white bg-black/70 px-3 py-1 rounded-full shadow-lg">ENTREGA</span>
+                  </div>
+                </div>
+              </button>
+
+              {/* Opción 2: Producción */}
+              <button
+                onClick={() => setSelectedModule('produccion')}
+                className="flex flex-col items-center justify-center gap-3 group cursor-pointer w-40 h-40 md:w-48 md:h-48"
+              >
+                <div className="relative w-full h-full">
+                  <img 
+                    src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/planta.png" 
+                    alt="Logo de Producción" 
+                    className="w-full h-full object-cover rounded-full border-4 border-white shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl"
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-base md:text-lg font-bold text-white bg-black/70 px-3 py-1 rounded-full shadow-lg">PRODUCCIÓN</span>
+                  </div>
+                </div>
+              </button>
+
+              {/* Opción 3: Distribución */}
+              <button
+                onClick={() => setSelectedModule('distribucion')}
+                className="flex flex-col items-center justify-center gap-3 group cursor-pointer w-40 h-40 md:w-48 md:h-48"
+              >
+                <div className="relative w-full h-full">
+                  <img 
+                    src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/camion.png" 
+                    alt="Logo de Distribución" 
+                    className="w-full h-full object-cover rounded-full border-4 border-white shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl"
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-base md:text-lg font-bold text-white bg-black/70 px-3 py-1 rounded-full shadow-lg">DISTRIBUCIÓN</span>
+                  </div>
+                </div>
+              </button>
+            </main>
+
+            {/* Botón de Cerrar Sesión */}
+            <footer className="mt-16">
+              <button 
+                onClick={() => supabase.auth.signOut()} 
+                className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </footer>
+          </div>
+        );
+      }
+
+            // Si el módulo seleccionado es DISTRIBUCIÓN, mostrar el formulario actual
+      if (selectedModule === 'distribucion') {
+        console.log('Mostrando módulo de distribución...');
+        return (
+          <div className="min-h-screen p-8 flex flex-col items-center">
+            <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 mb-8 bg-opacity-90 backdrop-blur-sm">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSelectedModule(null)}
+                    className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
+                  >
+                    ← Volver al Menú
+                  </button>
+                  <h1 className="text-3xl font-bold text-gray-800">DISTRIBUCIÓN</h1>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
+                  <button onClick={() => supabase.auth.signOut()} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                    Cerrar Sesión
+                  </button>
+                </div>
               </div>
-            </div>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col">
                 <label className="text-gray-700 font-medium mb-1">Equipo</label>
@@ -623,6 +805,7 @@
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridad</th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Texto Estándar</th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                   </tr>
                 </thead>
@@ -640,20 +823,40 @@
                       </td>
                       <td className="px-3 py-2 text-sm text-gray-500">{report.textoEstandar}</td>
                       <td className="px-3 py-2 text-sm text-gray-500">
-                        <div className="flex space-x-2">
+                        {report.fotoUrl ? (
+                          <button
+                            onClick={() => window.open(report.fotoUrl, '_blank')}
+                            className="btn-photo"
+                            title="Ver foto"
+                          >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                            </svg>
+                            Ver Foto
+                          </button>
+                        ) : (
+                          <span className="text-gray-400 text-xs">Sin foto</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-sm text-gray-500">
+                        <div className="flex space-x-4">
                           <button
                             onClick={() => handleEdit(report)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors action-button"
+                            className="btn-edit"
                             title="Editar reporte"
                           >
-                            ✏️
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                            </svg>
                           </button>
                           <button
                             onClick={() => handleDelete(report.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-colors action-button"
+                            className="btn-delete"
                             title="Eliminar reporte"
                           >
-                            🗑️
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"/>
+                            </svg>
                           </button>
                         </div>
                       </td>
@@ -668,81 +871,92 @@
           </div>
         </div>
       );
-    };
+      }
 
-    const MainMenu = ({ onSelectView, profile }) => {
-      return (
-        <div className="min-h-screen p-8 flex flex-col items-center">
-          <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-4xl font-bold text-gray-800">SISTEMA DE MANTENIMIENTO</h1>
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
-                <button onClick={() => supabase.auth.signOut()} className="bg-red-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-red-600 transition-colors">
-                  Cerrar Sesión
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Opción ENTREGA */}
-              <div 
-                onClick={() => onSelectView('ENTREGA')}
-                className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
-              >
-                <div className="text-center">
-                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <img 
-                      src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/ENTREGA.png" 
-                      alt="Logo ENTREGA" 
-                      className="w-24 h-24 mx-auto object-contain"
-                    />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">ENTREGA</h3>
-                  <p className="text-blue-100 text-sm">Gestión de entregas y recepciones de equipos</p>
+      // Módulo PRODUCCIÓN (estructura preparada para futura implementación)
+      if (selectedModule === 'produccion') {
+        console.log('Mostrando módulo de producción...');
+        return (
+          <div className="min-h-screen p-8 flex flex-col items-center">
+            <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSelectedModule(null)}
+                    className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
+                  >
+                    ← Volver al Menú
+                  </button>
+                  <h1 className="text-3xl font-bold text-gray-800">PRODUCCIÓN</h1>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-600 font-medium">Taller: <span className="font-bold text-blue-600">{profile?.taller}</span></span>
+                  <button onClick={() => supabase.auth.signOut()} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                    Cerrar Sesión
+                  </button>
                 </div>
               </div>
-
-              {/* Opción PRODUCCIÓN */}
-              <div 
-                onClick={() => onSelectView('PRODUCCION')}
-                className="bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
-              >
-                <div className="text-center">
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    ⚙️
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">PRODUCCIÓN</h3>
-                  <p className="text-green-100 text-sm">Control de procesos productivos y operativos</p>
-                  {/* Comentario para el logo: PEGA AQUÍ LA URL PARA EL LOGO PRODUCCIÓN */}
-                </div>
+              
+              <div className="text-center py-20">
+                <img 
+                  src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/LOGO-PLANTA.png" 
+                  alt="PRODUCCIÓN" 
+                  className="w-32 h-32 mx-auto mb-6 opacity-50"
+                />
+                <h2 className="text-4xl font-bold text-blue-800 mb-4">MÓDULO PRODUCCIÓN</h2>
+                <p className="text-xl text-gray-600">En desarrollo - Próximamente disponible</p>
+                <p className="text-lg text-gray-500 mt-2">Aquí se implementará las plantas</p>
               </div>
-
-              {/* Opción DISTRIBUCIÓN */}
-              <div 
-                onClick={() => onSelectView('DISTRIBUCION')}
-                className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
-              >
-                <div className="text-center">
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    🚚
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">DISTRIBUCIÓN</h3>
-                  <p className="text-purple-100 text-sm">Inspección de mantenimiento y reportes</p>
-                  {/* Comentario para el logo: PEGA AQUÍ LA URL PARA EL LOGO DISTRIBUCIÓN */}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center text-gray-600 text-sm">
-              <p>Selecciona una opción para continuar</p>
             </div>
           </div>
-        </div>
-      );
+        );
+      }
+
+      // Módulo ENTREGA (estructura preparada para futura implementación)
+      if (selectedModule === 'entrega') {
+        console.log('Mostrando módulo de entrega...');
+        return (
+          <div className="min-h-screen p-8 flex flex-col items-center">
+            <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 bg-opacity-90 backdrop-blur-sm">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSelectedModule(null)}
+                    className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
+                  >
+                    ← Volver al Menú
+                  </button>
+                  <h1 className="text-3xl font-bold text-gray-800">ENTREGA</h1>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-600 font-medium">Taller: <span className="text-green-600 font-bold">{profile?.taller}</span></span>
+                  <button onClick={() => supabase.auth.signOut()} className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
+                    Cerrar Sesión
+                  </button>
+                </div>
+              </div>
+              
+              <div className="text-center py-20">
+                <img 
+                  src="https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos/LOGO-ENTREGA.png" 
+                  alt="ENTREGA" 
+                  className="w-32 h-32 mx-auto mb-6 opacity-50"
+                />
+                <h2 className="text-4xl font-bold text-green-800 mb-4">MÓDULO ENTREGA</h2>
+                <p className="text-xl text-gray-600">En desarrollo - Próximamente disponible</p>
+                <p className="text-lg text-gray-500 mt-2">Aquí se implementará </p>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      
+      console.log('Componente App renderizado completamente');
     };
 
+    console.log('Definiendo componente Auth...');
     const Auth = () => {
+      console.log('Componente Auth renderizado');
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const [loading, setLoading] = useState(false);
@@ -787,7 +1001,44 @@
       );
     };
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    console.log('Inicializando aplicación inmediatamente...');
+    
+    // Función para inicializar la aplicación
+    const initializeApp = () => {
+      console.log('Ejecutando función de inicialización...');
+      
+      // Verificar que el elemento root existe
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        console.error('Elemento root no encontrado');
+        return;
+      }
+      
+      // Verificar que React y ReactDOM estén disponibles
+      if (!React || !ReactDOM) {
+        console.error('React o ReactDOM no están disponibles');
+        return;
+      }
+      
+      console.log('Inicializando aplicación...');
+      
+      try {
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(<App />);
+        console.log('Aplicación renderizada correctamente');
+      } catch (error) {
+        console.error('Error al renderizar la aplicación:', error);
+      }
+    };
+    
+    // Intentar inicializar inmediatamente si el DOM está listo
+    if (document.readyState === 'loading') {
+      console.log('DOM aún cargando, configurando event listener...');
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      console.log('DOM ya está listo, inicializando inmediatamente...');
+      initializeApp();
+    }
   </script>
 </body>
 </html>
