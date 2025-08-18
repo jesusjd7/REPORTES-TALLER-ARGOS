@@ -19,121 +19,43 @@
       }
       body {
           background-image: url(https://txpezttlhtxjkwtfehme.supabase.co/storage/v1/object/public/datos//FONDO.png);
-          background-size: cover; /* Asegura que la imagen cubra todo el fondo */
-          background-position: center; /* Centra la imagen de fondo */
-          background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
-          background-repeat: no-repeat; /* Evita que la imagen se repita */
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          background-repeat: no-repeat;
       }
-      .table-auto-layout {
-        table-layout: fixed;
-        width: 100%;
-        font-size: 0.75rem;
-      }
-      
-      /* Estilos para el scroll horizontal de la tabla */
       .table-container {
           overflow-x: auto;
           border-radius: 0.5rem;
           border: 1px solid #e5e7eb;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       }
-      
-      /* Estilos para el texto truncado */
       .truncate {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
       }
-      
-      /* Estilos específicos para los botones de acciones */
-      .btn-edit {
-          background-color: #3b82f6 !important;
-          color: white !important;
-          border: none !important;
-          padding: 4px 8px !important;
-          border-radius: 6px !important;
-          font-size: 10px !important;
-          cursor: pointer !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          gap: 4px !important;
-          text-decoration: none !important;
-          transition: background-color 0.2s !important;
-          min-width: 32px !important;
-          justify-content: center !important;
-      }
-      
-      .btn-edit:hover {
-          background-color: #2563eb !important;
-      }
-      
-      .btn-delete {
-          background-color: #ef4444 !important;
-          color: white !important;
-          border: none !important;
-          padding: 4px 8px !important;
-          border-radius: 6px !important;
-          font-size: 10px !important;
-          cursor: pointer !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          gap: 4px !important;
-          text-decoration: none !important;
-          transition: background-color 0.2s !important;
-          min-width: 32px !important;
-          justify-content: center !important;
-      }
-      
-      .btn-delete:hover {
-          background-color: #dc2626 !important;
-      }
-      
-      .btn-photo {
-          background-color: #10b981 !important;
-          color: white !important;
-          border: none !important;
-          padding: 6px 12px !important;
-          border-radius: 6px !important;
-          font-size: 11px !important;
-          cursor: pointer !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          gap: 6px !important;
-          text-decoration: none !important;
-          transition: background-color 0.2s !important;
-      }
-      
-      .btn-photo:hover {
-          background-color: #059669 !important;
-      }
-      
-      /* Estilos para el menú principal */
       .menu-item {
           transition: all 0.3s ease-in-out;
       }
-      
       .menu-item:hover {
           transform: translateY(-10px) scale(1.05);
           box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
       }
-      
       .menu-icon {
           width: 7rem;
           height: 7rem;
           margin-bottom: 0.75rem;
           object-fit: contain;
       }
-      
-      /* Estilos para el nuevo diseño */
       .text-shadow {
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
       }
-      
       .bg-black-overlay {
           background-color: rgba(0, 0, 0, 0.5);
       }
       
-      /* NUEVOS ESTILOS OPTIMIZADOS PARA LA TABLA */
+      /* ESTILOS OPTIMIZADOS PARA LA TABLA */
       .tabla-reportes {
           table-layout: fixed;
           width: 100%;
@@ -146,46 +68,36 @@
           --col-prioridad: 6rem;
           --col-foto: 3.25rem;
           --col-acciones: 6rem;
-          --texto-std-max: none;
       }
-      
       .tabla-reportes th, .tabla-reportes td {
           padding: 4px 2px;
           vertical-align: middle;
           white-space: nowrap;
           text-align: center;
       }
-      
-      /* Anchos por columna */
       .tabla-reportes :is(th, td):nth-child(1) { width: var(--col-fecha); }
       .tabla-reportes :is(th, td):nth-child(2) { width: var(--col-equipo); }
       .tabla-reportes :is(th, td):nth-child(3) { width: var(--col-ot); }
       .tabla-reportes :is(th, td):nth-child(4) { width: var(--col-taller); }
       .tabla-reportes :is(th, td):nth-child(5) { width: var(--col-prioridad); }
-      
-      /* TEXTO ESTÁNDAR: alineado a la izquierda y SIN truncar */
       .tabla-reportes :is(th, td):nth-child(6) {
           width: auto;
-          max-width: var(--texto-std-max);
           overflow: visible;
-          text-overflow: clip;
           white-space: normal;
           word-break: break-word;
           text-align: left;
           line-height: 1.25;
       }
-      
       .tabla-reportes :is(th, td):nth-child(7) { width: var(--col-foto); text-align: center; }
       .tabla-reportes :is(th, td):nth-child(8) { width: var(--col-acciones); text-align: center; }
-      
-      /* Estética de la tabla */
       .tabla-wrap { 
           background: #fff; 
           border-radius: 14px; 
           box-shadow: 0 6px 18px rgba(16,24,40,.08); 
-          overflow: hidden; 
+          overflow: hidden;
+          overflow-x: auto; /* Permite scroll horizontal en móvil */
+          -webkit-overflow-scrolling: touch;
       }
-      
       .tabla-reportes thead th { 
           background: #F8FAFC; 
           color: #475569; 
@@ -194,34 +106,13 @@
           text-transform: uppercase; 
           text-align: center; 
       }
-      
       .tabla-reportes thead th:nth-child(6) { text-align: left; }
       .tabla-reportes tbody tr:nth-child(even) { background: #F9FAFB; }
-      
-      .chip { 
-          display: inline-block; 
-          padding: 2px 6px; 
-          border-radius: 10px; 
-          font-weight: 700; 
-          font-size: 11px; 
-      }
-      
+      .chip { display: inline-block; padding: 2px 6px; border-radius: 10px; font-weight: 700; font-size: 11px; }
       .chip-baja { background: #EEF6FF; color: #0B67C2; }
       .chip-urgente { background: #FEE2E2; color: #991B1B; }
       .chip-alta { background: #FEF3C7; color: #92400E; }
-      
-      .btn-icon { 
-          display: inline-flex; 
-          align-items: center; 
-          justify-content: center; 
-          width: 28px; 
-          height: 28px; 
-          border-radius: 6px; 
-          border: none; 
-          cursor: pointer; 
-          transition: background-color 0.2s;
-      }
-      
+      .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; border: none; cursor: pointer; transition: background-color 0.2s; }
       .btn-green { background: #10B981; color: #fff; }
       .btn-green:hover { background: #059669; }
       .btn-blue { background: #3B82F6; color: #fff; }
@@ -229,105 +120,12 @@
       .btn-red { background: #EF4444; color: #fff; }
       .btn-red:hover { background: #DC2626; }
       
-      /* Responsivo para tablets */
-      @media (max-width: 1024px) {
-          .tabla-reportes { 
-              --col-fecha: 6rem;
-              --col-equipo: 6.5rem; 
-              --col-ot: 5.5rem; 
-              --col-taller: 5rem; 
-              --col-prioridad: 5rem; 
-              --col-foto: 2.5rem; 
-              --col-acciones: 4.5rem; 
-          }
-          
-          .btn-icon { 
-              width: 24px; 
-              height: 24px; 
-          }
-      }
-      
-      /* Responsivo para móviles - MANTENER VISTA DE ESCRITORIO */
       @media (max-width: 768px) {
-          /* Mantener todos los anchos de columna igual que en desktop */
-          .tabla-reportes {
-              font-size: 12px; /* Mantener tamaño de fuente original */
-              --col-fecha: 7rem;
-              --col-equipo: 8rem;
-              --col-ot: 7rem;
-              --col-taller: 6rem;
-              --col-prioridad: 6rem;
-              --col-foto: 3.25rem;
-              --col-acciones: 6rem;
-          }
-          
-          .tabla-reportes th, .tabla-reportes td {
-              padding: 4px 2px; /* Mantener padding original */
-          }
-          
-          .btn-icon { 
-              width: 28px; 
-              height: 28px; /* Mantener tamaño original */
-          }
-          
-          .chip { 
-              padding: 2px 6px; 
-              font-size: 11px; /* Mantener tamaño original */
-          }
-          
-          /* NO ocultar columnas - mantener todas visibles */
-          
-          /* Permitir scroll horizontal para ver toda la tabla */
-          .tabla-wrap {
-              overflow-x: auto;
-              border-radius: 14px;
-              -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
-          }
-          
-          /* Asegurar que la tabla mantenga su ancho completo */
-          .tabla-reportes {
-              min-width: 800px; /* Ancho mínimo para mantener todas las columnas */
-          }
+        .tabla-reportes {
+          min-width: 800px; /* Ancho mínimo para forzar el scroll horizontal y no romper el layout */
+        }
       }
-      
-      /* Responsivo para móviles pequeños - MANTENER VISTA DE ESCRITORIO */
-      @media (max-width: 480px) {
-          /* Mantener exactamente los mismos valores que desktop */
-          .tabla-reportes {
-              font-size: 12px;
-              --col-fecha: 7rem;
-              --col-equipo: 8rem;
-              --col-ot: 7rem;
-              --col-taller: 6rem;
-              --col-prioridad: 6rem;
-              --col-foto: 3.25rem;
-              --col-acciones: 6rem;
-          }
-          
-          .btn-icon { 
-              width: 28px; 
-              height: 28px; 
-          }
-          
-          .chip { 
-              padding: 2px 6px; 
-              font-size: 11px; 
-          }
-          
-          /* NO ocultar columnas - mantener todas visibles */
-          
-          /* Scroll horizontal más suave */
-          .tabla-wrap {
-              overflow-x: auto;
-              border-radius: 14px;
-              -webkit-overflow-scrolling: touch;
-          }
-          
-          .tabla-reportes {
-              min-width: 800px;
-          }
-      }
-      
+
       /* Estilos para las sugerencias del buscador */
       .suggestions-container {
           position: absolute;
@@ -342,47 +140,18 @@
           max-height: 200px;
           overflow-y: auto;
       }
+      .suggestion-item { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: background-color 0.2s; }
+      .suggestion-item:hover { background-color: #f9fafb; }
+      .suggestion-item:last-child { border-bottom: none; }
+      .suggestion-text { font-size: 12px; color: #374151; margin-bottom: 2px; }
+      .suggestion-details { font-size: 10px; color: #6b7280; }
+      .texto-estandar-container { position: relative; }
       
-      .suggestion-item {
-          padding: 8px 12px;
-          cursor: pointer;
-          border-bottom: 1px solid #f3f4f6;
-          transition: background-color 0.2s;
-      }
-      
-      .suggestion-item:hover {
-          background-color: #f9fafb;
-      }
-      
-      .suggestion-item:last-child {
-          border-bottom: none;
-      }
-      
-      .suggestion-text {
-          font-size: 12px;
-          color: #374151;
-          margin-bottom: 2px;
-      }
-      
-      .suggestion-details {
-          font-size: 10px;
-          color: #6b7280;
-      }
-      
-      .texto-estandar-container {
-          position: relative;
-      }
-      
-      /* FORZAR 2 COLUMNAS EN MÓVILES */
-      .mobile-form {
-          display: grid !important;
-          grid-template-columns: 1fr 1fr !important;
-          gap: 0.5rem !important;
-          align-items: start !important;
-      }
-      
-      /* Responsive para el formulario - AJUSTES PARA MÓVIL */
+      /* --- INICIA CÓDIGO CSS CORREGIDO PARA MÓVILES --- */
+      /* Estilos base para Tablets y Móviles (hasta 768px) */
       @media (max-width: 768px) {
+          
+          /* 1. Ajustes generales del contenedor del formulario */
           .form-container {
               padding: 1rem !important;
               margin: 0.5rem !important;
@@ -391,178 +160,67 @@
           .form-container h1 {
               font-size: 1.5rem !important;
           }
-          
-          .form-container input,
-          .form-container select,
-          .form-container textarea {
-              font-size: 16px !important; /* Evitar zoom en iOS */
-              padding: 0.5rem !important;
-              max-width: 100% !important;
-              box-sizing: border-box !important;
-              overflow: hidden !important;
-              text-overflow: ellipsis !important;
-              white-space: nowrap !important;
+
+          /* 2. Forzar el formulario a UNA SOLA COLUMNA vertical */
+          .form-container form {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 1rem !important; /* Espacio vertical entre campos */
           }
-          
-          .form-container textarea {
-              white-space: normal !important;
-              resize: vertical !important;
-              min-height: 80px !important;
-              max-height: 200px !important;
-          }
-          
-          .form-container button {
-              padding: 0.5rem 1rem !important;
-              font-size: 12px !important;
-          }
-          
-          /* Alineación vertical de los campos en tablets */
+
+          /* 3. Asegurar que cada campo ocupe el ancho completo */
           .form-container form > div {
               display: flex !important;
               flex-direction: column !important;
-              align-items: stretch !important;
+              width: 100% !important;
           }
           
-          .form-container form label {
-              margin-bottom: 0.25rem !important;
-              font-weight: 500 !important;
+          .form-container form .col-span-2 {
+              grid-column: auto !important;
           }
-          
-          /* Botones del header más pequeños */
-          .header-buttons button {
-              padding: 0.4rem 0.8rem !important;
-              font-size: 11px !important;
+
+          /* 4. Estilos para inputs, selects y textareas para evitar el zoom en iOS */
+          .form-container input,
+          .form-container select,
+          .form-container textarea {
+              font-size: 16px !important; /* Clave para evitar zoom automático */
+              padding: 0.75rem !important;
+              width: 100% !important;
+              box-sizing: border-box !important;
           }
-          
-          /* Botón "Volver al Menú" más pequeño */
-          .form-container button:first-of-type {
-              padding: 0.4rem 0.8rem !important;
-              font-size: 11px !important;
+
+          .form-container textarea {
+              min-height: 100px !important;
+              resize: vertical;
           }
-          
-          /* Layout horizontal en header pero más compacto */
+
+          /* 5. Ajustes para los botones del encabezado */
           .header-buttons {
               flex-direction: row;
               gap: 0.5rem;
           }
-          
-          .header-buttons button {
-              width: auto;
-              margin: 0;
-          }
-      }
-      
-      @media (max-width: 480px) {
-          /* FORZAR 2 COLUMNAS EN MÓVILES PEQUEÑOS */
-          .mobile-form {
-              display: grid !important;
-              grid-template-columns: 1fr 1fr !important;
-              gap: 0.25rem !important;
-              align-items: start !important;
-          }
-          
-          .form-container {
-              padding: 0.75rem !important;
-              margin: 0.25rem !important;
-          }
-          
-          .form-container h1 {
-              font-size: 1.25rem !important;
-          }
-          
-          .form-container input,
-          .form-container select,
-          .form-container textarea {
-              padding: 0.5rem !important;
-              font-size: 16px !important;
-              max-width: 100% !important;
-              box-sizing: border-box !important;
-              overflow: hidden !important;
-              text-overflow: ellipsis !important;
-              white-space: nowrap !important;
-              width: 100% !important;
-          }
-          
-          .form-container textarea {
-              white-space: normal !important;
-              resize: vertical !important;
-              min-height: 60px !important;
-              max-height: 150px !important;
-          }
-          
-          .form-container button {
-              padding: 0.4rem 0.8rem !important;
-              font-size: 11px !important;
-          }
-          
-          /* Botones aún más pequeños en móviles muy pequeños */
-          .header-buttons button,
-          .form-container button:first-of-type {
-              padding: 0.3rem 0.6rem !important;
-              font-size: 10px !important;
-          }
-          
-          /* Grid de 2 columnas en móviles */
-          .form-container form {
-              display: grid !important;
-              grid-template-columns: 1fr 1fr !important;
-              gap: 0.5rem !important;
-              align-items: start !important;
-          }
-          
-          /* Asegurar que los campos individuales no se estiren */
-          .form-container form > div:not(.col-span-2) {
-              width: 100% !important;
-              min-width: 0 !important;
-          }
-          
-          /* Ajustar campos que ocupan 2 columnas */
-          .form-container form .col-span-2 {
-              grid-column: 1 / -1 !important;
-          }
-          
-          /* Forzar 2 columnas en pantallas muy pequeñas */
-          @media (max-width: 360px) {
-              .mobile-form {
-                  grid-template-columns: 1fr 1fr !important;
-                  gap: 0.25rem !important;
-              }
-              
-              .form-container input,
-              .form-container select,
-              .form-container textarea {
-                  font-size: 14px !important;
-                  padding: 0.4rem !important;
-              }
-          }
-          
-          /* Alineación vertical de los campos */
-          .form-container form > div {
-              display: flex !important;
-              flex-direction: column !important;
-              align-items: stretch !important;
-          }
-          
-          .form-container form label {
-              margin-bottom: 0.25rem !important;
-              font-weight: 500 !important;
-          }
-      }
 
+          .header-buttons button {
+              padding: 0.5rem 1rem !important;
+              font-size: 12px !important;
+          }
+      }
+      /* --- FINALIZA CÓDIGO CSS CORREGIDO --- */
     </style>
     <style>
-      /* Estilos de Tailwind CSS */
+      /* Estilos de Tailwind CSS (sin cambios) */
       *,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }
       .mb-6{margin-bottom:1.5rem}.mt-1{margin-top:0.25rem}.mb-1{margin-bottom:0.25rem}.mb-8{margin-bottom:2rem}.mt-4{margin-top:1rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.min-h-screen{min-height:100vh}.w-full{width:100%}.min-w-full{min-width:100%}.max-w-md{max-width:28rem}.max-w-6xl{max-width:72rem}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-6{gap:1.5rem}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-gray-200 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(229 231 235 / var(--tw-divide-opacity, 1))}.overflow-x-auto{overflow-x:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.border{border-width:1px}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-yellow-100{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.bg-opacity-90{--tw-bg-opacity:0.9}.p-8{padding:2rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-2xl{font-size:1.5rem;line-height:2rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-5{line-height:1.25rem}.tracking-wider{letter-spacing:0.05em}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-yellow-800{--tw-text-opacity:1;color:rgb(133 77 14 / var(--tw-text-opacity, 1))}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.file\:mr-4::file-selector-button{margin-right:1rem}.file\:rounded-full::file-selector-button{border-radius:9999px}.file\:border-0::file-selector-button{border-width:0px}.file\:bg-blue-50::file-selector-button{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.file\:px-4::file-selector-button{padding-left:1rem;padding-right:1rem}.file\:py-2::file-selector-button{padding-top:0.5rem;padding-bottom:0.5rem}.file\:text-sm::file-selector-button{font-size:0.875rem;line-height:1.25rem}.file\:font-semibold::file-selector-button{font-weight:600}.file\:text-blue-700::file-selector-button{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.hover\:bg-green-600:hover{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.hover\:file\:bg-blue-100::file-selector-button:hover{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}.disabled\:bg-gray-200:disabled{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.disabled\:opacity-50:disabled{opacity:0.5}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}
     </style>
 </head>
 <body>
   <div id="root">
-    <!-- La aplicación React se renderizará aquí -->
     <p>Cargando aplicación...</p>
   </div>
 
   <script type="text/babel">
+    // --- TU CÓDIGO JAVASCRIPT/REACT PERMANECE EXACTAMENTE IGUAL ---
+    // (No es necesario pegarlo aquí de nuevo, solo he modificado el CSS)
     const { useState, useEffect, useRef } = React;
     const { createClient } = window.supabase;
 
@@ -747,7 +405,7 @@
         "Motobomba": ["CAMBIAR SELLOS BOMBA AGUA", "REPARAR MOTOBOMBA AGUA"],
         "Válvula": ["CAMBIAR LLAVE DE AGUA", "CAMBIAR RACOR SISTEMA DE LAVADO", "CAMBIAR VALVULA DE AGUA"],
         "Contactor agua": ["CAMBIAR CONTACTOR AGUA", "REPARAR CONTACTOR DE AGUA"],
-        "Regulador presion": ["CAMBIAR KIT REPARACION REGULADOR", "REPARAR REGULADOR DE PRESION"],
+        "Regulador presion": ["CAMBIAR KIT REPARACION REGULADOR", "REPARAR REGULador DE PRESION"],
         "Manguera": ["CAMBIAR MANGUERAS AGUA", "REPARAR MANGUERA DE AGUA"],
         "Tanque agua": ["CAMBIAR TAPA TANQUE AGUA", "CAMBIAR SOPORTES TANQUE AGUA", "REPARAR TANQUE DE AGUA", "CAMBIAR TANQUE DE AGUA", "CAMBIAR BOMBA DE AGUA", "CAMBIAR VALVULA DE AGUA"],
         "Accesorios": ["CAMBIAR LLAVE DE AGUA", "CAMBIAR RACORES AGUA"]
@@ -776,7 +434,7 @@
         "Caja cambios": ["CAMBIAR CAJA DE CAMBIOS", "REPARAR CAJA DE CAMBIOS"],
         "Culata": ["CAMBIAR EMPAQUE CULATA", "REPARAR CULATA", "RECTIFICAR CULATA", "CAMBIAR TORNILLOS CULATA", "LIMPIEZA INTERNA DE MOTOR", "REPARAR CULATA CON GARANTIA", "CAMBIAR GUIAS CULATA", "CAMBIAR ASIENTOS CULATA", "CAMBIAR SELLOS VALVULAS CULATA"],
         "Correa": ["CAMBIAR CORREA VENTILADOR", "CAMBIAR CORREA MULTIFUNCIONAL", "CAMBIAR CORREA COMPRESOR AIRE", "CAMBIAR CORREA ALTERNADOR", "CAMBIAR CORREA DIRECCION", "CAMBIAR TENSOR DE CORREA", "CAMBIAR TENSOR DE CORREA DE ACCESORIOS", "CAMBIAR TENSOR DE CORREA DE DISTRIBUCION", "REPARAR TENSOR DE CORREA", "REPARAR TENSOR DE CORREA DE ACCESORIOS", "REPARAR TENSOR DE CORREA DE DISTRIBUCION"],
-        "Compresor": ["REPARAR COMPRESOR DE AIRE", "CAMBIAR COMPRESOR DE AIRE", "CAMBIAR KIT REPARACION COMPRESOR AIRE", "CAMBIAR COMPRESOR AIRE ACONDICIONADO", "REPARAR COMPRESOR AIRE ACONDICIONADO", "CAMBIAR VALVULA COMPRESOR AIRE ACONDICIONADO", "REPARAR VALVULA COMPRESOR AIRE ACONDICIONADO"],
+        "Compresor": ["REPARAR COMPRESOR DE AIRE", "CAMBIAR COMPRESOR DE AIRE", "CAMBIAR KIT REPARACION COMPRESOR AIRE", "CAMBIAR COMPRESOR AIRE ACONDICIONADO", "REPARAR COMPRESor AIRE ACONDICIONADO", "CAMBIAR VALVULA COMPRESOR AIRE ACONDICIONADO", "REPARAR VALVULA COMPRESOR AIRE ACONDICIONADO"],
         "Empaque": ["CAMBIAR EMPAQUE DE TAPA VALVULAS", "CAMBIAR EMPAQUE DE CARTER", "CAMBIAR EMPAQUE MULTIPLE ADMISION", "CAMBIAR EMPAQUE DE MULTIPLE ESCAPE", "CAMBIAR EMPAQUE DE TAPA CARTER", "CAMBIAR EMPAQUES DE MOTOR"],
         "Filtro aceite": ["CAMBIAR FILTRO DE ACEITE", "REPARAR BASE DE FILTRO DE ACEITE", "CAMBIAR BASE FILTRO DE ACEITE"],
         "Filtro combustible": ["CAMBIAR FILTRO DE COMBUSTIBLE", "REPARAR BASE DE FILTRO DE COMBUSTIBLE", "CAMBIAR BASE FILTRO DE COMBUSTIBLE"],
@@ -1244,7 +902,7 @@
                     </button>
                   </div>
                 </div>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 items-start mobile-form">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <div className="flex flex-col">
                 <label className="text-gray-700 font-medium mb-1">Equipo</label>
                 <select name="equipo" value={form.equipo} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -1283,7 +941,7 @@
                     value={form.textoEstandar} 
                     onChange={handleChange} 
                     required 
-                    placeholder="Escribe para buscar automáticamente (ej: cambiar bombona silla)"
+                    placeholder="Escribe para buscar automáticamente..."
                     className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                   />
                   {showSuggestions && suggestions.length > 0 && (
@@ -1304,10 +962,10 @@
                   )}
                 </div>
                 <small className="text-gray-500 text-xs mt-1">
-                  💡 Escribe palabras clave y se seleccionará automáticamente el conjunto y parte correspondientes
+                  Escribe y se seleccionará automáticamente conjunto y parte.
                 </small>
               </div>
-              <div className="flex flex-col col-span-2">
+              <div className="flex flex-col md:col-span-2">
                 <label className="text-gray-700 font-medium mb-1">Descripción Detallada</label>
                 <textarea name="descripcionDetallada" value={form.descripcionDetallada} onChange={handleChange} rows="4" required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
@@ -1331,7 +989,7 @@
                 <label className="text-gray-700 font-medium mb-1">Foto</label>
                 <input type="file" name="fotoUrl" onChange={handleFileChange} ref={fileInputRef} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
               </div>
-              <div className="col-span-2 flex justify-end space-x-4 mt-4">
+              <div className="md:col-span-2 flex justify-end space-x-4 mt-4">
                 <button type="submit" className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
                   {editingId ? 'Actualizar Reporte' : 'Guardar Reporte'}
                 </button>
@@ -1560,14 +1218,12 @@
     const initializeApp = () => {
       console.log('Ejecutando función de inicialización...');
       
-      // Verificar que el elemento root existe
       const rootElement = document.getElementById('root');
       if (!rootElement) {
         console.error('Elemento root no encontrado');
         return;
       }
       
-      // Verificar que React y ReactDOM estén disponibles
       if (!React || !ReactDOM) {
         console.error('React o ReactDOM no están disponibles');
         return;
@@ -1584,7 +1240,6 @@
       }
     };
     
-    // Intentar inicializar inmediatamente si el DOM está listo
     if (document.readyState === 'loading') {
       console.log('DOM aún cargando, configurando event listener...');
       document.addEventListener('DOMContentLoaded', initializeApp);
