@@ -471,27 +471,28 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('Cliente de Supabase creado:', supabase);
 
-    // PASO 1: Lista de usuarios actualizada con la información de la imagen
+        // PASO 1: Lista de usuarios actualizada con la información de la imagen
     const USER_DATA = {
-        'jlturriago@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'avargasvar@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'eramirezra@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'nmartinezb@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'farcos@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'jospinob@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'antonio.palacio@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'rlopez@argos.com.co': { taller: 'ARGOS', rol: 'ADMIN' },
-        'jean.barros@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'carlos.segovia@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'motalora@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'djuliao@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'ymagallanes@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'aris.perez@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'jean.ormaza@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'scanchano@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'eortizo@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'rayalae@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
-        'kmorales@argos.com.co': { taller: 'ARGOS', rol: 'USUARIO' },
+        'rvergaran@argos.com.co': { taller: 'rvergaran', rol: 'ADMIN' },
+        'jlturriago@argos.com.co': { taller: 'jlturriago', rol: 'ADMIN' },
+        'avargasvar@argos.com.co': { taller: 'avargasvar', rol: 'ADMIN' },
+        'eramirezra@argos.com.co': { taller: 'eramirezra', rol: 'ADMIN' },
+        'nmartinezb@argos.com.co': { taller: 'nmartinezb', rol: 'ADMIN' },
+        'farcos@argos.com.co': { taller: 'farcos', rol: 'ADMIN' },
+        'jospinob@argos.com.co': { taller: 'jospinob', rol: 'ADMIN' },
+        'apalacio65@argos.com.co': { taller: 'apalacio65', rol: 'ADMIN' },
+        'rlopez@argos.com.co': { taller: 'rlopez', rol: 'ADMIN' },
+        'jean.barros@argos.com.co': { taller: 'jean.barros', rol: 'USUARIO' },
+        'carlos.segovia@argos.com.co': { taller: 'carlos.segovia', rol: 'USUARIO' },
+        'motalora@argos.com.co': { taller: 'motalora', rol: 'USUARIO' },
+        'djuliao@argos.com.co': { taller: 'djuliao', rol: 'USUARIO' },
+        'ymagallanes@argos.com.co': { taller: 'ymagallanes', rol: 'USUARIO' },
+        'aris.perez@argos.com.co': { taller: 'aris.perez', rol: 'USUARIO' },
+        'jean.ormaza@argos.com.co': { taller: 'jean.ormaza', rol: 'USUARIO' },
+        'scanchano@argos.com.co': { taller: 'scanchano', rol: 'USUARIO' },
+        'eortizo@argos.com.co': { taller: 'eortizo', rol: 'USUARIO' },
+        'rayalae@argos.com.co': { taller: 'rayalae', rol: 'USUARIO' },
+        'kmorales@argos.com.co': { taller: 'kmorales', rol: 'USUARIO' },
         'contratos@kael.com.co': { taller: 'KAEL', rol: 'USUARIO' },
         'abfrenosaire@hotmail.com': { taller: 'ABFREN', rol: 'USUARIO' },
         'gerenciageneral@simiyp.net': { taller: 'SIMIYP', rol: 'USUARIO' },
@@ -503,7 +504,11 @@
     };
     
     const EQUIPOS = ['COLMX0361', 'COLMX0362', 'COLMX0383', 'COLMX0390', 'COLMX0399', 'COLMX0402', 'COLMX0406', 'COLMX0419', 'COLMX0420', 'COLMX0424', 'COLMX0426', 'COLMX0432', 'COLMX0437', 'COLMX0445', 'COLMX0448', 'COLMX0451', 'COLMX0453', 'COLMX0464', 'COLMX0467', 'COLMX0469', 'COLMX0470', 'COLMX0471', 'COLMX0473', 'COLMX0476', 'COLMX0477', 'COLMX0484', 'COLMX0485', 'COLMX0486', 'COLMX0488', 'COLMX0490', 'COLMX0491', 'COLMX0500', 'COLMX0502', 'COLMX0504', 'COLMX0506', 'COLMX0507', 'COLMX0508', 'COLMX0509', 'COLMX0510', 'COLMX0512', 'COLMX0513', 'COLMX0514', 'COLMX0515', 'COLMX0516', 'COLMX0522', 'COLMX0523', 'COLMX0524', 'COLMX0526', 'COLMX0527', 'COLMX0528', 'COLMX0553', 'COLMX0554', 'COLMX0560', 'COLMX0561', 'COLMX0571', 'COLMX0572', 'COLMX0573', 'COLMX0581', 'COLMX0592', 'COLMX0603', 'COLMX0604', 'COLMX0605', 'COLMX0608', 'COLMX0614', 'COLMX0618', 'COLMX0623', 'COLMX0628', 'COLMX0630', 'COLMX0633', 'COLMX0637', 'COLMX0650', 'COLMX0653', 'COLMX0663', 'COLMX0664', 'COLMX0668', 'COLMX0676', 'COLMX0679', 'COLMX0684', 'COLMX0685', 'COLMX0687', 'COLMX0688', 'COLMX0897', 'COLMX0904', 'COLMX0914', 'COLMX0962', 'COLMX0963', 'COLMX0964', 'COLMX0965', 'COLMX0966', 'COLMX0967', 'COLMX0968', 'COLMX0969', 'COLMX0970', 'COLMX0971', 'COLMX0972', 'COLMX0973', 'COLMX0974', 'COLMX0975', 'COLMX0976', 'COLMX0977', 'COLMX0978', 'COLMX0979', 'COLMX0980', 'COLMX0981', 'COLMX0982', 'COLMX0983', 'COLMX0984', 'COLMX0985', 'COLMX0986', 'COLMX0987', 'COLMX0988', 'COLMX0989', 'COLMX0990', 'COLMX0991', 'COLMX1015', 'COLMX1016', 'COLMX1017', 'COLMX1018', 'COLMX1019', 'COLMX1020', 'COLMX1021', 'COLMX1022', 'COLMX1023', 'COLMX1024', 'COLMX1025', 'COLMX1026', 'COLMX1027', 'COLMX1028', 'COLMX1029', 'COLMX1066', 'COLMX1067', 'COLMX1068', 'COLMX1069', 'COLMX1070', 'COLMX1071', 'COLMX1072', 'COLMX1073', 'COLMX1074', 'COLMX1075', 'COLMX1076', 'COLMX1077', 'COLMX1078', 'COLMX1079', 'COLMX1080'];
-    const TALLERES = ['KAEL', 'ABFREN', 'SIMIYP', 'DRACS', 'SERVII', 'SOMEC', 'MG SOL', 'JS OUT', 'ARGOS', 'ADMIN'];
+    const TALLERES = [
+        'rvergaran', 'jlturriago', 'avargasvar', 'eramirezra', 'nmartinezb', 'farcos', 'jospinob', 'apalacio65', 'rlopez',
+        'jean.barros', 'carlos.segovia', 'motalora', 'djuliao', 'ymagallanes', 'aris.perez', 'jean.ormaza', 'scanchano', 
+        'eortizo', 'rayalae', 'kmorales', 'KAEL', 'ABFREN', 'SIMIYP', 'DRACS', 'SERVII', 'SOMEC', 'MG SOL', 'JS OUT', 'ADMIN'
+    ];
     const data = {
       "CABINA": {
         "Accesorios": ["CAMBIAR TAPETES CABINA", "REPARAR TOMA ELEC 12V CABINA", "CAMBIAR CINTA DE TIMON", "CAMBIAR INTERRUPTOR CRUCERO TIMON", "CAMBIAR INTERRUPTOR DER TIMON", "CAMBIAR TAPA CABRILLA O TIMON", "CAMBIAR ACCESORIOS CABINA", "CAMBIAR GUARDAMOTOR DERECHO", "INSTALAR CAMARA DE VIDEO REVERSA", "REPARAR CAMARA DE VIDEO REVERSA", "CAMBIAR GUARDAMOTOR IZQUIERDO"],
