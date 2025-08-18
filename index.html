@@ -373,75 +373,141 @@
           position: relative;
       }
       
-      /* Responsive para el formulario - MANTENER VISTA DE ESCRITORIO */
+      /* Responsive para el formulario - AJUSTES PARA MÓVIL */
       @media (max-width: 768px) {
           .form-container {
-              padding: 1.5rem !important;
+              padding: 1rem !important;
               margin: 0.5rem !important;
           }
           
           .form-container h1 {
-              font-size: 2rem !important; /* Mantener tamaño similar */
+              font-size: 1.5rem !important;
           }
           
           .form-container input,
           .form-container select,
           .form-container textarea {
-              font-size: 14px !important; /* Mantener legibilidad */
-              padding: 0.75rem !important;
+              font-size: 16px !important; /* Evitar zoom en iOS */
+              padding: 0.5rem !important;
+              max-width: 100% !important;
+              box-sizing: border-box !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              white-space: nowrap !important;
+          }
+          
+          .form-container textarea {
+              white-space: normal !important;
+              resize: vertical !important;
+              min-height: 80px !important;
+              max-height: 200px !important;
           }
           
           .form-container button {
-              padding: 0.75rem 1.5rem !important;
-              font-size: 14px !important;
+              padding: 0.5rem 1rem !important;
+              font-size: 12px !important;
           }
           
-          /* Mantener layout horizontal en header */
+          /* Alineación vertical de los campos en tablets */
+          .form-container form > div {
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: stretch !important;
+          }
+          
+          .form-container form label {
+              margin-bottom: 0.25rem !important;
+              font-weight: 500 !important;
+          }
+          
+          /* Botones del header más pequeños */
+          .header-buttons button {
+              padding: 0.4rem 0.8rem !important;
+              font-size: 11px !important;
+          }
+          
+          /* Botón "Volver al Menú" más pequeño */
+          .form-container button:first-of-type {
+              padding: 0.4rem 0.8rem !important;
+              font-size: 11px !important;
+          }
+          
+          /* Layout horizontal en header pero más compacto */
           .header-buttons {
               flex-direction: row;
-              gap: 1rem;
+              gap: 0.5rem;
           }
           
           .header-buttons button {
               width: auto;
               margin: 0;
           }
-          
-          /* Permitir scroll horizontal en el formulario si es necesario */
-          .form-container {
-              overflow-x: auto;
-              -webkit-overflow-scrolling: touch;
-          }
       }
       
       @media (max-width: 480px) {
           .form-container {
-              padding: 1rem !important;
+              padding: 0.75rem !important;
               margin: 0.25rem !important;
           }
           
           .form-container h1 {
-              font-size: 1.75rem !important;
+              font-size: 1.25rem !important;
           }
           
           .form-container input,
           .form-container select,
           .form-container textarea {
-              padding: 0.75rem !important;
-              font-size: 14px !important;
+              padding: 0.5rem !important;
+              font-size: 16px !important;
+              max-width: 100% !important;
+              box-sizing: border-box !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              white-space: nowrap !important;
           }
           
-          /* Mantener grid de 2 columnas pero con scroll */
+          .form-container textarea {
+              white-space: normal !important;
+              resize: vertical !important;
+              min-height: 60px !important;
+              max-height: 150px !important;
+          }
+          
+          .form-container button {
+              padding: 0.4rem 0.8rem !important;
+              font-size: 11px !important;
+          }
+          
+          /* Botones aún más pequeños en móviles muy pequeños */
+          .header-buttons button,
+          .form-container button:first-of-type {
+              padding: 0.3rem 0.6rem !important;
+              font-size: 10px !important;
+          }
+          
+          /* Grid de 2 columnas en móviles */
           .form-container form {
-              min-width: 600px; /* Ancho mínimo para mantener 2 columnas */
               display: grid !important;
-              grid-template-columns: 1fr 1fr !important; /* Forzar 2 columnas */
+              grid-template-columns: 1fr 1fr !important;
               gap: 1rem !important;
+              align-items: start !important;
           }
           
           /* Ajustar campos que ocupan 2 columnas */
-          .form-container form .xl\\:col-span-2 {
+          .form-container form .md\\:col-span-2 {
               grid-column: 1 / -1 !important;
+          }
+          
+          /* Alineación vertical de los campos */
+          .form-container form > div {
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: stretch !important;
+          }
+          
+          .form-container form label {
+              margin-bottom: 0.25rem !important;
+              font-weight: 500 !important;
           }
       }
 
@@ -1121,10 +1187,10 @@
       if (selectedModule === 'distribucion') {
         console.log('Mostrando módulo de distribución...');
         return (
-          <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
+          <div className="min-h-screen p-2 md:p-8 flex flex-col items-center">
             <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-6 mb-8 bg-opacity-90 backdrop-blur-sm form-container">
-                              <div className="flex justify-between items-center mb-6">
-                  <div className="flex items-center space-x-4">
+                              <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <div className="flex items-center space-x-2 md:space-x-4">
                     <button
                       onClick={() => setSelectedModule(null)}
                       className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
@@ -1140,7 +1206,7 @@
                     </button>
                   </div>
                 </div>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
               <div className="flex flex-col">
                 <label className="text-gray-700 font-medium mb-1">Equipo</label>
                 <select name="equipo" value={form.equipo} onChange={handleChange} required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -1203,7 +1269,7 @@
                   💡 Escribe palabras clave y se seleccionará automáticamente el conjunto y parte correspondientes
                 </small>
               </div>
-              <div className="flex flex-col xl:col-span-2">
+              <div className="flex flex-col md:col-span-2">
                 <label className="text-gray-700 font-medium mb-1">Descripción Detallada</label>
                 <textarea name="descripcionDetallada" value={form.descripcionDetallada} onChange={handleChange} rows="4" required className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
@@ -1227,7 +1293,7 @@
                 <label className="text-gray-700 font-medium mb-1">Foto</label>
                 <input type="file" name="fotoUrl" onChange={handleFileChange} ref={fileInputRef} className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
               </div>
-              <div className="xl:col-span-2 flex justify-end space-x-4 mt-4">
+              <div className="md:col-span-2 flex justify-end space-x-4 mt-4">
                 <button type="submit" className="bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition-colors">
                   {editingId ? 'Actualizar Reporte' : 'Guardar Reporte'}
                 </button>
